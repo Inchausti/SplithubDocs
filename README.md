@@ -6,13 +6,18 @@ Site estático de documentação da API da Splithub. HTML, CSS e JS puros — se
 
 ```
 splithub-docs/
-├── index.html          → Home (landing com links para os guias)
-├── visao-geral.html     → Guia: Visão geral da API
-├── autenticacao.html    → Guia: Autenticação (JWT)
-├── em-breve.html        → Placeholder para páginas ainda não escritas
+├── index.html              → Home (landing com links para os guias)
+├── visao-geral.html         → Guia: Visão geral da API
+├── autenticacao.html        → Guia: Autenticação (JWT)
+├── ingestao-dfs.html        → Recurso: Ingestão DFs
+├── rad.html                 → Recurso: RAD (Recolhimento pelo Adquirente)
+├── garantia-credito.html    → Recurso: Garantia de crédito
+├── automacoes.html          → Recurso: Automações
+├── contratos.html           → Recurso: Contratos
+├── em-breve.html            → Placeholder para páginas ainda não escritas
 ├── assets/
-│   ├── style.css        → Estilos compartilhados por todas as páginas
-│   └── script.js        → Copiar código, menu mobile, destaque do índice
+│   ├── style.css            → Estilos compartilhados por todas as páginas
+│   └── script.js            → Copiar código, menu mobile, destaque do índice
 └── README.md
 ```
 
@@ -58,6 +63,6 @@ Depois acesse `http://localhost:8000` no navegador.
 
 ## Próximos passos sugeridos
 
-- Escrever o conteúdo real de "Filtros e paginação" e "Tratamento de erros" (hoje redirecionam para `em-breve.html`)
+- Revisar o conteúdo de exemplo das páginas de Recursos (Ingestão DFs, RAD, Garantia de crédito, Automações, Contratos) com os detalhes reais de cada endpoint
 - Adicionar uma seção de Referência de endpoints
 - Trocar o `search-box` visual por uma busca funcional (ex: Lunr.js ou Algolia DocSearch)
