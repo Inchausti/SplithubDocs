@@ -169,6 +169,7 @@ pre{
 .toc-method-post{background:#e3edff;color:#2454c7;}
 .toc-method-patch{background:#fff1d6;color:#9a6400;}
 .toc-method-delete{background:#fde2e1;color:#b3261e;}
+.toc-method-webhook{background:#f1e6fb;color:#6b32a8;}
 .help-box{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);}
 .help-box p{font-size:12.5px;margin:0 0 10px;}
 .help-btn{

@@ -83,66 +83,65 @@
       O RAD está relacionado ao split payment previsto na Reforma Tributária: parte do valor da transação pode deixar de transitar pela conta do lojista, sendo recolhida automaticamente pelo adquirente.
     </div>
 
-    <h2 id="webhook-darf">Webhook: recepção de guia DARF</h2>
+    <h2 id="webhook-darf">Webhook event: guia de DARF recebida</h2>
     <p>
-      Endpoint que a instituição responsável por gerar o DARF no fluxo de RAD deve chamar para
-      entregar a guia ao Splithub assim que ela for emitida.
+      Assim que uma guia de DARF (CBS ou IBS) é gerada no fluxo de RAD, o Splithub dispara este
+      evento por <strong>POST</strong> para a URL de webhook configurada na sua conta — você não
+      chama nenhum endpoint do Splithub para isso, apenas recebe o evento.
     </p>
 
     <div class="callout">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      Nesta versão só é suportada a <code class="inline">modalidadePagamento</code> RAD (Recolhimento pelo Adquirente); PRESP (Pagamento pelo Responsável) fica reservado para uma versão futura. Como cada chamada se refere a um único tributo, adicionamos o campo <code class="inline">tipoDarf</code> (<code class="inline">ibs</code> ou <code class="inline">cbs</code>) para identificar qual guia está sendo entregue.
+      Nesta versão só é suportada a <code class="inline">modalidadePagamento</code> RAD (Recolhimento pelo Adquirente); PRESP (Pagamento pelo Responsável) fica reservado para uma versão futura. Como cada evento se refere a um único tributo, incluímos o campo <code class="inline">tipoDarf</code> (<code class="inline">ibs</code> ou <code class="inline">cbs</code>) para identificar qual guia foi recebida.
     </div>
 
     <div class="code-block">
       <div class="code-head">
-        <span>POST /v1/rad/webhooks/darf</span>
+        <span>POST {sua_url_de_webhook}</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/rad/webhooks/darf</span> \
-  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
-  -H <span class="tok-s">"Content-Type: application/json"</span> \
-  -d <span class="tok-s">'{
-    "chaveDfe": "35260714200166000187550010000012341234567890",
-    "tipoDarf": "cbs",
-    "cdRetorno": "DARF_GERADO",
-    "chavePix": "34028316000103",
-    "codBarras": "858100000012345678901234567890123456789012",
-    "linkDarfPdf": "https://sistema.rfb.gov.br/darf/df_8f3a1c2b.pdf",
-    "valorDarfPrincipal": 57.60,
-    "valorDarfMulta": 0.00,
-    "valorDarfJuros": 0.00,
-    "valorDarfTotal": 57.60
-  }'</span></pre>
+      <pre>{
+  <span class="tok-k">"event"</span>: <span class="tok-s">"rad.darf_recebida"</span>,
+  <span class="tok-k">"createdAt"</span>: <span class="tok-s">"2026-07-29T12:00:00.000Z"</span>,
+  <span class="tok-k">"data"</span>: {
+    <span class="tok-k">"chaveDfe"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
+    <span class="tok-k">"tipoDarf"</span>: <span class="tok-s">"cbs"</span>,
+    <span class="tok-k">"cdRetorno"</span>: <span class="tok-s">"DARF_GERADO"</span>,
+    <span class="tok-k">"chavePix"</span>: <span class="tok-s">"34028316000103"</span>,
+    <span class="tok-k">"codBarras"</span>: <span class="tok-s">"858100000012345678901234567890123456789012"</span>,
+    <span class="tok-k">"linkDarfPdf"</span>: <span class="tok-s">"https://sistema.rfb.gov.br/darf/df_8f3a1c2b.pdf"</span>,
+    <span class="tok-k">"valorDarfPrincipal"</span>: <span class="tok-s">57.60</span>,
+    <span class="tok-k">"valorDarfMulta"</span>: <span class="tok-s">0.00</span>,
+    <span class="tok-k">"valorDarfJuros"</span>: <span class="tok-s">0.00</span>,
+    <span class="tok-k">"valorDarfTotal"</span>: <span class="tok-s">57.60</span>
+  }
+}</pre>
     </div>
 
-    <p>O Splithub confirma o recebimento da guia:</p>
+    <p>Seu endpoint deve responder <code class="inline">200 OK</code> para confirmar o recebimento. Sem essa confirmação, o Splithub reenvia o evento.</p>
 
     <div class="code-block">
-      <div class="code-head"><span>Resposta 200 OK</span></div>
-      <pre>{
-  <span class="tok-k">"id"</span>: <span class="tok-s">"darf_9f21ab"</span>,
-  <span class="tok-k">"chaveDfe"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
-  <span class="tok-k">"tipoDarf"</span>: <span class="tok-s">"cbs"</span>,
-  <span class="tok-k">"status"</span>: <span class="tok-s">"recebido"</span>
-}</pre>
+      <div class="code-head"><span>Resposta esperada do seu endpoint</span></div>
+      <pre>200 OK</pre>
     </div>
 
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>chaveDfe</td><td>string</td><td>Chave de acesso do DF-e ao qual a guia se refere</td></tr>
-      <tr><td>tipoDarf</td><td>string</td><td>Tributo da guia: ibs ou cbs</td></tr>
-      <tr><td>cdRetorno</td><td>string</td><td>DARF_GERADO, DFE_NAO_ENCONTRADO ou VALOR_PARCIAL_SUPERIOR_DFE</td></tr>
-      <tr><td>chavePix</td><td>string</td><td>Chave PIX disponível para pagamento do DARF</td></tr>
-      <tr><td>codBarras</td><td>string</td><td>Código de barras para pagamento do DARF</td></tr>
-      <tr><td>linkDarfPdf</td><td>string</td><td>Link para download do PDF do DARF</td></tr>
-      <tr><td>valorDarfPrincipal</td><td>number</td><td>Valor principal considerado na emissão do DARF</td></tr>
-      <tr><td>valorDarfMulta</td><td>number</td><td>Valor de multa considerado na emissão do DARF</td></tr>
-      <tr><td>valorDarfJuros</td><td>number</td><td>Valor de juros considerado na emissão do DARF</td></tr>
-      <tr><td>valorDarfTotal</td><td>number</td><td>Valor total considerado na emissão do DARF</td></tr>
+      <tr><td>event</td><td>string</td><td>Nome do evento: rad.darf_recebida</td></tr>
+      <tr><td>createdAt</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
+      <tr><td>data.chaveDfe</td><td>string</td><td>Chave de acesso do DF-e ao qual a guia se refere</td></tr>
+      <tr><td>data.tipoDarf</td><td>string</td><td>Tributo da guia: ibs ou cbs</td></tr>
+      <tr><td>data.cdRetorno</td><td>string</td><td>DARF_GERADO, DFE_NAO_ENCONTRADO ou VALOR_PARCIAL_SUPERIOR_DFE</td></tr>
+      <tr><td>data.chavePix</td><td>string</td><td>Chave PIX disponível para pagamento do DARF</td></tr>
+      <tr><td>data.codBarras</td><td>string</td><td>Código de barras para pagamento do DARF</td></tr>
+      <tr><td>data.linkDarfPdf</td><td>string</td><td>Link para download do PDF do DARF</td></tr>
+      <tr><td>data.valorDarfPrincipal</td><td>number</td><td>Valor principal considerado na emissão do DARF</td></tr>
+      <tr><td>data.valorDarfMulta</td><td>number</td><td>Valor de multa considerado na emissão do DARF</td></tr>
+      <tr><td>data.valorDarfJuros</td><td>number</td><td>Valor de juros considerado na emissão do DARF</td></tr>
+      <tr><td>data.valorDarfTotal</td><td>number</td><td>Valor total considerado na emissão do DARF</td></tr>
     </table>
 
     <h2 id="comprovante-pagamento">Enviar comprovante de pagamento</h2>
@@ -213,7 +212,7 @@
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#webhook-darf" class="toc-link active"><span class="toc-method toc-method-post">POST</span>Webhook: recepção de guia DARF</a>
+    <a href="#webhook-darf" class="toc-link active"><span class="toc-method toc-method-webhook">WEBHOOK</span>Guia de DARF recebida</a>
     <a href="#comprovante-pagamento" class="toc-link"><span class="toc-method toc-method-post">POST</span>Enviar comprovante de pagamento</a>
 
     <div class="help-box">
