@@ -101,7 +101,7 @@
 
     <div class="callout">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      Aceitamos o XML assinado do documento fiscal ou um JSON estruturado equivalente aos grupos da NF-e 4.0 (ide, emit, dest, det, total). O processamento é assíncrono; use o endpoint de consulta para acompanhar o status.
+      Aceitamos o XML assinado do documento fiscal ou um JSON estruturado equivalente aos grupos da NF-e 4.0 atualizados pela Nota Técnica 2025.002 — o Grupo UB (IBS/CBS por item, dentro de <code class="inline">det/imposto</code>) e o Grupo W03 (totais de IBS/CBS da nota). Sem esses grupos preenchidos, a partir de 03/08/2026 a nota é rejeitada pela SEFAZ. O processamento na Splithub é assíncrono; use o endpoint de consulta para acompanhar o status.
     </div>
 
     <h2 id="criar-documento">Criar um documento fiscal</h2>
@@ -109,7 +109,8 @@
       Envie o XML do documento em base64 ou os campos já estruturados, seguindo os grupos do
       layout da NF-e 4.0: <code class="inline">ide</code> (identificação), <code class="inline">emit</code>
       (emitente), <code class="inline">dest</code> (destinatário), <code class="inline">itens</code>
-      (equivalente ao grupo <code class="inline">det</code>) e <code class="inline">total</code>.
+      (equivalente ao grupo <code class="inline">det</code>, já com o Grupo UB de IBS/CBS por item)
+      e <code class="inline">total</code> (com o Grupo W03 de totais de IBS/CBS).
       A API retorna um identificador para acompanhar o processamento.
     </p>
 
@@ -151,14 +152,34 @@
         "cfop": "5102",
         "quantidade": 2,
         "valorUnitario": 3200.00,
-        "valorTotal": 6400.00
+        "valorTotal": 6400.00,
+        "imposto": {
+          "ibsCbs": {
+            "CST": "000",
+            "cClassTrib": "000001",
+            "vBC": 6400.00,
+            "gIBSUF": { "pIBSUF": 0.05, "vIBSUF": 3.20 },
+            "gIBSMun": { "pIBSMun": 0.05, "vIBSMun": 3.20 },
+            "gCBS": { "pCBS": 0.9, "vCBS": 57.60 }
+          }
+        }
       }
     ],
     "total": {
       "valorProdutos": 6400.00,
-      "valorTotalNota": 6553.60
+      "valorTotalNota": 6400.00,
+      "ibsCbsTotal": {
+        "vBC": 6400.00,
+        "vTotIBS": 6.40,
+        "vTotCBS": 57.60
+      }
     }
   }'</span></pre>
+    </div>
+
+    <div class="callout">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Durante 2026, <code class="inline">vTotIBS</code> e <code class="inline">vTotCBS</code> não compõem o <code class="inline">valorTotalNota</code> — eles são informados à parte no Grupo W03, refletindo a fase de testes com cobrança simbólica (0,9% CBS + 0,1% IBS, dividido entre <code class="inline">gIBSUF</code> e <code class="inline">gIBSMun</code>).
     </div>
 
     <p>A resposta confirma o recebimento e o status inicial do processamento:</p>
@@ -200,10 +221,11 @@
   <span class="tok-k">"tipo"</span>: <span class="tok-s">"nfe"</span>,
   <span class="tok-k">"emit"</span>: { <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>, <span class="tok-k">"razaoSocial"</span>: <span class="tok-s">"Fornecedor Exemplo LTDA"</span> },
   <span class="tok-k">"dest"</span>: { <span class="tok-k">"cnpjCpf"</span>: <span class="tok-s">"98765432000188"</span>, <span class="tok-k">"nome"</span>: <span class="tok-s">"Cliente Exemplo LTDA"</span> },
-  <span class="tok-k">"valorTotal"</span>: <span class="tok-s">6553.60</span>,
-  <span class="tok-k">"tributosIdentificados"</span>: {
-    <span class="tok-k">"cbs"</span>: <span class="tok-s">57.60</span>,
-    <span class="tok-k">"ibs"</span>: <span class="tok-s">6.40</span>
+  <span class="tok-k">"valorTotal"</span>: <span class="tok-s">6400.00</span>,
+  <span class="tok-k">"ibsCbsTotal"</span>: {
+    <span class="tok-k">"vBC"</span>: <span class="tok-s">6400.00</span>,
+    <span class="tok-k">"vTotIBS"</span>: <span class="tok-s">6.40</span>,
+    <span class="tok-k">"vTotCBS"</span>: <span class="tok-s">57.60</span>
   }
 }</pre>
     </div>
@@ -308,8 +330,9 @@
       <tr><td>status</td><td>string</td><td>pendente, processando, concluido ou erro</td></tr>
       <tr><td>ide / emit / dest</td><td>object</td><td>Grupos de identificação, emitente e destinatário, no padrão da NF-e 4.0</td></tr>
       <tr><td>itens</td><td>array</td><td>Itens do documento, equivalentes ao grupo det da NF-e 4.0</td></tr>
-      <tr><td>valorTotal</td><td>number</td><td>Valor total do documento fiscal</td></tr>
-      <tr><td>tributosIdentificados</td><td>object</td><td>Valores de CBS e IBS identificados no documento</td></tr>
+      <tr><td>itens[].imposto.ibsCbs</td><td>object</td><td>Grupo UB por item: CST, cClassTrib, vBC e os subgrupos gIBSUF, gIBSMun e gCBS (Nota Técnica 2025.002)</td></tr>
+      <tr><td>valorTotal</td><td>number</td><td>Valor total do documento fiscal (sem somar IBS/CBS, conforme regra de 2026)</td></tr>
+      <tr><td>total.ibsCbsTotal</td><td>object</td><td>Grupo W03: vBC, vTotIBS e vTotCBS — totais de IBS e CBS da nota</td></tr>
     </table>
 
     <div class="page-footer-nav">
@@ -327,11 +350,11 @@
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
     <a href="#tipos-de-dfs" class="toc-link active">Tipos de documentos fiscais (DFs)</a>
-    <a href="#criar-documento" class="toc-link">Criar um documento fiscal</a>
-    <a href="#consultar-documento" class="toc-link">Consultar um documento fiscal</a>
-    <a href="#listar-documentos" class="toc-link">Listar documentos fiscais</a>
-    <a href="#atualizar-documento" class="toc-link">Atualizar um documento fiscal</a>
-    <a href="#remover-documento" class="toc-link">Remover um documento fiscal</a>
+    <a href="#criar-documento" class="toc-link"><span class="toc-method toc-method-post">POST</span>Criar um documento fiscal</a>
+    <a href="#consultar-documento" class="toc-link"><span class="toc-method toc-method-get">GET</span>Consultar um documento fiscal</a>
+    <a href="#listar-documentos" class="toc-link"><span class="toc-method toc-method-get">GET</span>Listar documentos fiscais</a>
+    <a href="#atualizar-documento" class="toc-link"><span class="toc-method toc-method-patch">PATCH</span>Atualizar um documento fiscal</a>
+    <a href="#remover-documento" class="toc-link"><span class="toc-method toc-method-delete">DELETE</span>Remover um documento fiscal</a>
 
     <div class="help-box">
       <p>Precisa de ajuda?</p>
