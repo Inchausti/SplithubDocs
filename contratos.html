@@ -72,13 +72,13 @@
     <div class="breadcrumb">Recursos / Contratos</div>
     <h1>Contratos</h1>
     <p class="lede">
-      A sincronização de contratos vincula os contratos do seu sistema à Splithub, associando
+      A sincronização de contratos vincula os contratos do seu sistema ao Splithub, associando
       obrigações fiscais e financeiras — como garantias e regras de RAD — a cada contrato.
     </p>
 
     <div class="callout">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      Mantenha o <code class="inline">contratoExternoId</code> estável entre sincronizações: é ele que a Splithub usa para atualizar (e não duplicar) um contrato já existente.
+      Mantenha o <code class="inline">contratoExternoId</code> estável entre sincronizações: é ele que o Splithub usa para atualizar (e não duplicar) um contrato já existente.
     </div>
 
     <h2 id="sincronizar-contrato">Sincronizar um contrato</h2>
@@ -144,7 +144,7 @@
 
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>id</td><td>string</td><td>Identificador único do contrato na Splithub</td></tr>
+      <tr><td>id</td><td>string</td><td>Identificador único do contrato no Splithub</td></tr>
       <tr><td>contratoExternoId</td><td>string</td><td>Identificador do contrato no seu sistema de origem</td></tr>
       <tr><td>statusSync</td><td>string</td><td>sincronizado, pendente ou erro</td></tr>
       <tr><td>ultimaSincronizacao</td><td>timestamp</td><td>Data e hora da última sincronização bem-sucedida</td></tr>

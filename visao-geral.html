@@ -72,9 +72,11 @@
     <div class="breadcrumb">Introdução e aspectos gerais / Visão geral</div>
     <h1>Visão geral</h1>
     <p class="lede">
-      A Splithub automatiza a separação dos impostos diretamente no sistema, tornando a gestão
-      financeira e operacional mais ágil e precisa. Esta seção cobre os conceitos essenciais antes
-      de fazer sua primeira chamada.
+      O Splithub dá à sua empresa governança completa sobre o recolhimento de tributos junto aos
+      fornecedores: operamos o RAD, cuidamos da conciliação financeira e identificamos
+      inconsistências em cada etapa do processo, para que nada fique fora do seu controle. Esta
+      documentação reúne todas as integrações disponíveis na plataforma, para você conectar o
+      Splithub à sua operação com confiança.
     </p>
 
     <div class="callout">
@@ -82,43 +84,10 @@
       Todos os endpoints usam a base <code class="inline">https://api.splithub.com.br/v1</code> e respondem em JSON.
     </div>
 
-    <h2 id="o-que-e">O que é a API</h2>
-    <p>
-      A API expõe recursos como transações, regras de separação e relatórios fiscais através
-      de endpoints REST. Cada recurso segue as mesmas convenções de autenticação, paginação e
-      tratamento de erros.
-    </p>
-
-    <div class="code-block">
-      <div class="code-head">
-        <span>Requisição de exemplo</span>
-        <button>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copiar
-        </button>
-      </div>
-      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/transacoes</span> \
-  -H <span class="tok-s">"Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."</span></pre>
-    </div>
-
-    <h2 id="casos-de-uso">Casos de uso</h2>
-    <p>
-      Times financeiros usam a Splithub para separar impostos no momento da transação,
-      eliminar etapas manuais de conciliação e manter informações confiáveis para a tomada
-      de decisão, em linha com a Reforma Tributária.
-    </p>
-
-    <table class="response-table">
-      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>id</td><td>string</td><td>Identificador único da transação</td></tr>
-      <tr><td>status</td><td>string</td><td>Estado atual da separação de impostos</td></tr>
-      <tr><td>created_at</td><td>timestamp</td><td>Data de criação em UTC</td></tr>
-    </table>
-
     <h2 id="proximos-passos">Próximos passos</h2>
     <p>
-      Continue para Autenticação para gerar seu token, ou vá direto para Filtros e paginação
-      se já tiver um token ativo.
+      Continue para Autenticação para gerar seu token, ou vá direto para um dos recursos
+      (Ingestão DFs, RAD, Garantia de crédito, Automações ou Contratos) se já tiver um token ativo.
     </p>
 
     <div class="page-footer-nav">
@@ -135,9 +104,7 @@
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#o-que-e" class="toc-link active">O que é a API</a>
-    <a href="#casos-de-uso" class="toc-link">Casos de uso</a>
-    <a href="#proximos-passos" class="toc-link">Próximos passos</a>
+    <a href="#proximos-passos" class="toc-link active">Próximos passos</a>
 
     <div class="help-box">
       <p>Precisa de ajuda?</p>

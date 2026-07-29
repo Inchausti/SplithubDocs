@@ -1,6 +1,6 @@
 # Documentação Splithub
 
-Site estático de documentação da API da Splithub. HTML, CSS e JS puros — sem build, sem dependências de node.
+Site estático de documentação da API do Splithub. HTML, CSS e JS puros — sem build, sem dependências de node.
 
 ## Estrutura
 
@@ -38,7 +38,7 @@ Depois acesse `http://localhost:8000` no navegador.
    ```bash
    git init
    git add .
-   git commit -m "Documentação inicial da Splithub"
+   git commit -m "Documentação inicial do Splithub"
    git branch -M main
    git remote add origin https://github.com/SEU_USUARIO/splithub-docs.git
    git push -u origin main

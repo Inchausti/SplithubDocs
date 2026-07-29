@@ -72,20 +72,45 @@
     <div class="breadcrumb">Recursos / Ingestão DFs</div>
     <h1>Ingestão DFs</h1>
     <p class="lede">
-      A Splithub permite enviar (ingerir) Documentos Fiscais — NF-e, NFC-e e CT-e — para que os
-      tributos de cada documento sejam identificados e processados automaticamente pelas regras
-      de separação.
+      O Splithub permite enviar (ingerir) Documentos Fiscais para que os tributos de cada
+      documento sejam identificados e processados automaticamente pelas regras de separação.
+      Com a Reforma Tributária, o Fisco passa a trabalhar com 10 tipos de DFs (Documentos
+      Fiscais Eletrônicos), cada um cobrindo uma categoria diferente de operação.
     </p>
+
+    <h2 id="tipos-de-dfs">Tipos de documentos fiscais (DFs)</h2>
+    <p>
+      Estes são os 10 tipos de DF-e previstos, com o modelo oficial e o tipo de operação que
+      cada um documenta. Informe o tipo correto no campo <code class="inline">tipo</code> ao
+      criar um documento.
+    </p>
+
+    <table class="response-table">
+      <tr><th>Sigla</th><th>Nome</th><th>Modelo</th><th>Cobre</th></tr>
+      <tr><td>nfe</td><td>Nota Fiscal Eletrônica (NF-e)</td><td>55</td><td>Circulação de mercadorias entre empresas</td></tr>
+      <tr><td>nfce</td><td>Nota Fiscal de Consumidor Eletrônica (NFC-e)</td><td>65</td><td>Vendas ao consumidor final, presenciais ou por entrega</td></tr>
+      <tr><td>cte</td><td>Conhecimento de Transporte Eletrônico (CT-e)</td><td>57</td><td>Prestação de serviço de transporte de cargas</td></tr>
+      <tr><td>cte-os</td><td>CT-e para Outros Serviços (CT-e OS)</td><td>67</td><td>Transporte de passageiros intermunicipal, interestadual ou internacional</td></tr>
+      <tr><td>mdfe</td><td>Manifesto de Documentos Fiscais Eletrônicos (MDF-e)</td><td>58</td><td>Reúne os documentos fiscais vinculados a uma carga transportada</td></tr>
+      <tr><td>nfcom</td><td>Nota Fiscal Fatura de Serviços de Comunicação (NFCom)</td><td>62</td><td>Cobrança de serviços de comunicação/telecomunicação</td></tr>
+      <tr><td>nf3e</td><td>Nota Fiscal de Energia Elétrica Eletrônica (NF3-e)</td><td>66</td><td>Consumo de energia elétrica</td></tr>
+      <tr><td>nfag</td><td>Nota Fiscal da Água e Saneamento Eletrônica (NFAg)</td><td>75</td><td>Consumo de água e serviços de saneamento</td></tr>
+      <tr><td>nfgas</td><td>Nota Fiscal Eletrônica do Gás (NFGás)</td><td>76</td><td>Distribuição de gás canalizado</td></tr>
+      <tr><td>nfe-abi</td><td>NF-e de Alienação de Bens Imóveis (NF-e ABI)</td><td>77</td><td>Venda/alienação de bens imóveis</td></tr>
+    </table>
 
     <div class="callout">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      Aceitamos o XML assinado do documento fiscal ou um JSON estruturado equivalente. O processamento é assíncrono; use o endpoint de consulta para acompanhar o status.
+      Aceitamos o XML assinado do documento fiscal ou um JSON estruturado equivalente aos grupos da NF-e 4.0 (ide, emit, dest, det, total). O processamento é assíncrono; use o endpoint de consulta para acompanhar o status.
     </div>
 
-    <h2 id="enviar-documento">Enviar um documento fiscal</h2>
+    <h2 id="criar-documento">Criar um documento fiscal</h2>
     <p>
-      Envie o XML do documento fiscal em base64 ou os campos já estruturados. A API retorna um
-      identificador para acompanhar o processamento.
+      Envie o XML do documento em base64 ou os campos já estruturados, seguindo os grupos do
+      layout da NF-e 4.0: <code class="inline">ide</code> (identificação), <code class="inline">emit</code>
+      (emitente), <code class="inline">dest</code> (destinatário), <code class="inline">itens</code>
+      (equivalente ao grupo <code class="inline">det</code>) e <code class="inline">total</code>.
+      A API retorna um identificador para acompanhar o processamento.
     </p>
 
     <div class="code-block">
@@ -101,8 +126,38 @@
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "tipo": "nfe",
+    "modelo": "55",
     "chaveAcesso": "35260714200166000187550010000012341234567890",
-    "xmlBase64": "PD94bWwgdmVyc2lvbj0iMS4wIj8+..."
+    "ide": {
+      "numero": "123456",
+      "serie": "1",
+      "dataEmissao": "2026-07-29T10:00:00-03:00"
+    },
+    "emit": {
+      "cnpj": "14200166000187",
+      "razaoSocial": "Fornecedor Exemplo LTDA",
+      "uf": "SP"
+    },
+    "dest": {
+      "cnpjCpf": "98765432000188",
+      "nome": "Cliente Exemplo LTDA",
+      "uf": "RJ"
+    },
+    "itens": [
+      {
+        "codigo": "SKU-1029",
+        "descricao": "Notebook 15pol 16GB",
+        "ncm": "84713012",
+        "cfop": "5102",
+        "quantidade": 2,
+        "valorUnitario": 3200.00,
+        "valorTotal": 6400.00
+      }
+    ],
+    "total": {
+      "valorProdutos": 6400.00,
+      "valorTotalNota": 6553.60
+    }
   }'</span></pre>
     </div>
 
@@ -114,11 +169,12 @@
   <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>,
   <span class="tok-k">"status"</span>: <span class="tok-s">"processando"</span>,
   <span class="tok-k">"tipo"</span>: <span class="tok-s">"nfe"</span>,
+  <span class="tok-k">"modelo"</span>: <span class="tok-s">"55"</span>,
   <span class="tok-k">"chaveAcesso"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>
 }</pre>
     </div>
 
-    <h2 id="consultar-status">Consultar status da ingestão</h2>
+    <h2 id="consultar-documento">Consultar um documento fiscal</h2>
     <p>
       Use o <code class="inline">id</code> retornado para consultar o andamento do processamento
       e os tributos identificados no documento.
@@ -141,19 +197,117 @@
       <pre>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>,
   <span class="tok-k">"status"</span>: <span class="tok-s">"concluido"</span>,
-  <span class="tok-k">"valorTotal"</span>: <span class="tok-s">15420.00</span>,
+  <span class="tok-k">"tipo"</span>: <span class="tok-s">"nfe"</span>,
+  <span class="tok-k">"emit"</span>: { <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>, <span class="tok-k">"razaoSocial"</span>: <span class="tok-s">"Fornecedor Exemplo LTDA"</span> },
+  <span class="tok-k">"dest"</span>: { <span class="tok-k">"cnpjCpf"</span>: <span class="tok-s">"98765432000188"</span>, <span class="tok-k">"nome"</span>: <span class="tok-s">"Cliente Exemplo LTDA"</span> },
+  <span class="tok-k">"valorTotal"</span>: <span class="tok-s">6553.60</span>,
   <span class="tok-k">"tributosIdentificados"</span>: {
-    <span class="tok-k">"cbs"</span>: <span class="tok-s">138.78</span>,
-    <span class="tok-k">"ibs"</span>: <span class="tok-s">15.42</span>
+    <span class="tok-k">"cbs"</span>: <span class="tok-s">57.60</span>,
+    <span class="tok-k">"ibs"</span>: <span class="tok-s">6.40</span>
   }
 }</pre>
+    </div>
+
+    <h2 id="listar-documentos">Listar documentos fiscais</h2>
+    <p>
+      Liste os documentos ingeridos, com filtros opcionais por <code class="inline">tipo</code> e
+      <code class="inline">status</code>.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>GET /v1/documentos-fiscais</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/documentos-fiscais?tipo=nfe&status=concluido"</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"data"</span>: [
+    { <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>, <span class="tok-k">"tipo"</span>: <span class="tok-s">"nfe"</span>, <span class="tok-k">"status"</span>: <span class="tok-s">"concluido"</span>, <span class="tok-k">"valorTotal"</span>: <span class="tok-s">6553.60</span> }
+  ],
+  <span class="tok-k">"page"</span>: <span class="tok-s">1</span>,
+  <span class="tok-k">"perPage"</span>: <span class="tok-s">20</span>,
+  <span class="tok-k">"total"</span>: <span class="tok-s">1</span>
+}</pre>
+    </div>
+
+    <h2 id="atualizar-documento">Atualizar um documento fiscal</h2>
+    <p>
+      Corrija campos de um documento antes de ele ser concluído — por exemplo, dados do
+      destinatário ou itens registrados com erro.
+    </p>
+
+    <div class="callout">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Só é possível atualizar um documento com status <code class="inline">pendente</code> ou <code class="inline">erro</code>. Documentos com status <code class="inline">concluido</code> são imutáveis, refletindo a legislação fiscal.
+    </div>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>PATCH /v1/documentos-fiscais/{id}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/df_8f3a1c2b</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "dest": {
+      "cnpjCpf": "98765432000188",
+      "nome": "Cliente Exemplo LTDA - Matriz"
+    }
+  }'</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"pendente"</span>,
+  <span class="tok-k">"dest"</span>: { <span class="tok-k">"cnpjCpf"</span>: <span class="tok-s">"98765432000188"</span>, <span class="tok-k">"nome"</span>: <span class="tok-s">"Cliente Exemplo LTDA - Matriz"</span> }
+}</pre>
+    </div>
+
+    <h2 id="remover-documento">Remover um documento fiscal</h2>
+    <p>
+      Remove o registro de ingestão da Splithub — não é o mesmo que cancelar o documento junto
+      ao Fisco, que continua sendo feito no seu sistema emissor.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>DELETE /v1/documentos-fiscais/{id}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X DELETE <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/df_8f3a1c2b</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 204 No Content</span></div>
+      <pre></pre>
     </div>
 
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
       <tr><td>id</td><td>string</td><td>Identificador único do documento fiscal ingerido</td></tr>
-      <tr><td>tipo</td><td>string</td><td>Tipo do documento: nfe, nfce ou cte</td></tr>
-      <tr><td>status</td><td>string</td><td>processando, concluido ou erro</td></tr>
+      <tr><td>tipo</td><td>string</td><td>Um dos 10 tipos de DF (nfe, nfce, cte, cte-os, mdfe, nfcom, nf3e, nfag, nfgas, nfe-abi)</td></tr>
+      <tr><td>modelo</td><td>string</td><td>Número do modelo oficial do documento (ex.: 55 para NF-e)</td></tr>
+      <tr><td>status</td><td>string</td><td>pendente, processando, concluido ou erro</td></tr>
+      <tr><td>ide / emit / dest</td><td>object</td><td>Grupos de identificação, emitente e destinatário, no padrão da NF-e 4.0</td></tr>
+      <tr><td>itens</td><td>array</td><td>Itens do documento, equivalentes ao grupo det da NF-e 4.0</td></tr>
       <tr><td>valorTotal</td><td>number</td><td>Valor total do documento fiscal</td></tr>
       <tr><td>tributosIdentificados</td><td>object</td><td>Valores de CBS e IBS identificados no documento</td></tr>
     </table>
@@ -172,8 +326,12 @@
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#enviar-documento" class="toc-link active">Enviar um documento fiscal</a>
-    <a href="#consultar-status" class="toc-link">Consultar status da ingestão</a>
+    <a href="#tipos-de-dfs" class="toc-link active">Tipos de documentos fiscais (DFs)</a>
+    <a href="#criar-documento" class="toc-link">Criar um documento fiscal</a>
+    <a href="#consultar-documento" class="toc-link">Consultar um documento fiscal</a>
+    <a href="#listar-documentos" class="toc-link">Listar documentos fiscais</a>
+    <a href="#atualizar-documento" class="toc-link">Atualizar um documento fiscal</a>
+    <a href="#remover-documento" class="toc-link">Remover um documento fiscal</a>
 
     <div class="help-box">
       <p>Precisa de ajuda?</p>
