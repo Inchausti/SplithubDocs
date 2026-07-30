@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fornecedores · Splithub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <button class="menu-toggle" aria-label="Abrir menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <div class="brand"><span class="mark"></span><span class="wordmark">splithub</span></div>
+  <nav class="topnav">
+    <a href="visao-geral.html" class="active">Guias</a>
+    <a href="em-breve.html">Referência</a>
+    <a href="changelog.html">Changelog</a>
+  </nav>
+  <div class="topbar-right">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      Buscar na documentação
+      <span class="kbd">⌘K</span>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <a href="index.html" class="nav-flat">Home</a>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Introdução e aspectos gerais
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="visao-geral.html" class="nav-item">Visão geral</a>
+        <a href="autenticacao.html" class="nav-item">Autenticação</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Recursos
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="ingestao-dfs.html" class="nav-item">Ingestão DFs</a>
+        <a href="rad.html" class="nav-item">RAD</a>
+        <a href="garantia-credito.html" class="nav-item">Garantia de crédito</a>
+        <a href="automacoes.html" class="nav-item">Automações</a>
+        <a href="contratos.html" class="nav-item">Contratos</a>
+        <a href="fornecedores.html" class="nav-item active">Fornecedores</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Webhooks
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="breadcrumb">Recursos / Fornecedores</div>
+    <h1>Fornecedores</h1>
+    <p class="lede">
+      Gerencie a base de fornecedores da sua empresa no Splithub. Cada fornecedor sincroniza seus
+      dados cadastrais (CNPJ, endereço, contato) e informações do representante fiscal, permitindo
+      rastreabilidade completa e cálculo correto de créditos tributários sobre as compras.
+    </p>
+
+    <div class="callout">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Os dados de CNPJ e do representante fiscal são essenciais para o cálculo correto de créditos de IBS/CBS; mantenha sempre atualizados. CNPJs aceitos em formato alfanumérico conforme <a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/cnpj-alfanumerico" target="_blank">especificação da Receita Federal</a>.
+    </div>
+
+    <h2 id="criar-fornecedor">Criar um fornecedor</h2>
+    <p>
+      Registre um novo fornecedor com seus dados cadastrais, informações de contato e dados do
+      representante fiscal responsável.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST /v1/fornecedores</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/fornecedores</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "cnpj": "14200166000187",
+    "legal_name": "Empresa Fornecedora Ltda",
+    "trade_name": "Fornecedora",
+    "founding_date": "2010-05-15",
+    "registration_status": "active",
+    "legal_nature": "206",
+    "tax_regime": "lucro_presumido",
+    "economic_activity": "4711302",
+    "address": {
+      "street": "Avenida Principal",
+      "number": "1000",
+      "complement": "Sala 200",
+      "neighborhood": "Centro",
+      "city": "São Paulo",
+      "state": "SP",
+      "zipcode": "01234567"
+    },
+    "contact": {
+      "email": "contato@fornecedora.com.br",
+      "phone": "1133334444"
+    },
+    "fiscal_representative": {
+      "cpf": "12345678910",
+      "name": "John Smith",
+      "email": "john@fornecedora.com.br",
+      "phone": "11987654321",
+      "rg": "123456789",
+      "issuing_body": "SSP"
+    }
+  }'</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 201 Created</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"forn_abc123"</span>,
+  <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
+  <span class="tok-k">"legal_name"</span>: <span class="tok-s">"Empresa Fornecedora Ltda"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
+}</pre>
+    </div>
+
+    <h2 id="listar-fornecedores">Listar fornecedores</h2>
+    <p>
+      Liste todos os fornecedores registrados com suporte a paginação e filtros por status ou
+      razão social.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>GET /v1/fornecedores</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/fornecedores?status=ativo&page=1&limit=20"</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"data"</span>: [
+    {
+      <span class="tok-k">"id"</span>: <span class="tok-s">"forn_abc123"</span>,
+      <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
+      <span class="tok-k">"legal_name"</span>: <span class="tok-s">"Empresa Fornecedora Ltda"</span>,
+      <span class="tok-k">"trade_name"</span>: <span class="tok-s">"Fornecedora"</span>,
+      <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
+      <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
+    }
+  ],
+  <span class="tok-k">"total"</span>: <span class="tok-s">1</span>,
+  <span class="tok-k">"page"</span>: <span class="tok-s">1</span>,
+  <span class="tok-k">"limit"</span>: <span class="tok-s">20</span>
+}</pre>
+    </div>
+
+    <h2 id="consultar-fornecedor">Consultar um fornecedor</h2>
+    <p>
+      Obtenha os dados completos de um fornecedor, incluindo endereço, contato e informações do
+      representante fiscal.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>GET /v1/fornecedores/{id}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/forn_abc123</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"forn_abc123"</span>,
+  <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
+  <span class="tok-k">"legal_name"</span>: <span class="tok-s">"Empresa Fornecedora Ltda"</span>,
+  <span class="tok-k">"trade_name"</span>: <span class="tok-s">"Fornecedora"</span>,
+  <span class="tok-k">"founding_date"</span>: <span class="tok-s">"2010-05-15"</span>,
+  <span class="tok-k">"registration_status"</span>: <span class="tok-s">"active"</span>,
+  <span class="tok-k">"legal_nature"</span>: <span class="tok-s">"206"</span>,
+  <span class="tok-k">"tax_regime"</span>: <span class="tok-s">"lucro_presumido"</span>,
+  <span class="tok-k">"economic_activity"</span>: <span class="tok-s">"4711302"</span>,
+  <span class="tok-k">"address"</span>: {
+    <span class="tok-k">"street"</span>: <span class="tok-s">"Avenida Principal"</span>,
+    <span class="tok-k">"number"</span>: <span class="tok-s">"1000"</span>,
+    <span class="tok-k">"complement"</span>: <span class="tok-s">"Sala 200"</span>,
+    <span class="tok-k">"neighborhood"</span>: <span class="tok-s">"Centro"</span>,
+    <span class="tok-k">"city"</span>: <span class="tok-s">"São Paulo"</span>,
+    <span class="tok-k">"state"</span>: <span class="tok-s">"SP"</span>,
+    <span class="tok-k">"zipcode"</span>: <span class="tok-s">"01234567"</span>
+  },
+  <span class="tok-k">"contact"</span>: {
+    <span class="tok-k">"email"</span>: <span class="tok-s">"contato@fornecedora.com.br"</span>,
+    <span class="tok-k">"phone"</span>: <span class="tok-s">"1133334444"</span>
+  },
+  <span class="tok-k">"fiscal_representative"</span>: {
+    <span class="tok-k">"cpf"</span>: <span class="tok-s">"12345678910"</span>,
+    <span class="tok-k">"name"</span>: <span class="tok-s">"John Smith"</span>,
+    <span class="tok-k">"email"</span>: <span class="tok-s">"john@fornecedora.com.br"</span>,
+    <span class="tok-k">"phone"</span>: <span class="tok-s">"11987654321"</span>,
+    <span class="tok-k">"rg"</span>: <span class="tok-s">"123456789"</span>,
+    <span class="tok-k">"issuing_body"</span>: <span class="tok-s">"SSP"</span>
+  },
+  <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>,
+  <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
+}</pre>
+    </div>
+
+    <h2 id="atualizar-fornecedor">Atualizar um fornecedor</h2>
+    <p>
+      Atualize os dados de um fornecedor. Você pode atualizar qualquer campo: dados cadastrais,
+      endereço, contato ou informações do representante fiscal.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>PATCH /v1/fornecedores/{id}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/forn_abc123</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "trade_name": "Fornecedora Premium",
+    "contact": {
+      "email": "novo@fornecedora.com.br",
+      "phone": "1144445555"
+    }
+  }'</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"forn_abc123"</span>,
+  <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
+  <span class="tok-k">"trade_name"</span>: <span class="tok-s">"Fornecedora Premium"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
+  <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-07-29T16:45:00.000Z"</span>
+}</pre>
+    </div>
+
+    <h2 id="deletar-fornecedor">Deletar um fornecedor</h2>
+    <p>
+      Remova um fornecedor do sistema. Uma vez deletado, o fornecedor não poderá ser selecionado
+      em novas operações, mas os históricos permanecerão para auditoria.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>DELETE /v1/fornecedores/{id}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X DELETE <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/forn_abc123</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 204 No Content</span></div>
+      <pre></pre>
+    </div>
+
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+      <tr><td>id</td><td>string</td><td>Identificador único do fornecedor no Splithub</td></tr>
+      <tr><td>cnpj</td><td>string</td><td>CNPJ do fornecedor (alfanumérico: letras e números)</td></tr>
+      <tr><td>razaoSocial</td><td>string</td><td>Razão social conforme Receita Federal</td></tr>
+      <tr><td>nomeFantasia</td><td>string</td><td>Nome fantasia do fornecedor</td></tr>
+      <tr><td>dataAbertura</td><td>date</td><td>Data de abertura da empresa (YYYY-MM-DD)</td></tr>
+      <tr><td>situacaoCadastral</td><td>string</td><td>ativa, inativa, suspensa ou cancelada</td></tr>
+      <tr><td>naturezaJuridica</td><td>string</td><td>Código de natureza jurídica (3 dígitos)</td></tr>
+      <tr><td>regimeTributario</td><td>string</td><td>lucro_real, lucro_presumido ou simples_nacional</td></tr>
+      <tr><td>atividadeEconomica</td><td>string</td><td>Código CNAE principal (7 dígitos)</td></tr>
+      <tr><td>endereco.logradouro</td><td>string</td><td>Nome da rua/avenida/praça</td></tr>
+      <tr><td>endereco.numero</td><td>string</td><td>Número do endereço</td></tr>
+      <tr><td>endereco.complemento</td><td>string</td><td>Complemento (apto, sala, etc.)</td></tr>
+      <tr><td>endereco.bairro</td><td>string</td><td>Bairro</td></tr>
+      <tr><td>endereco.cidade</td><td>string</td><td>Município</td></tr>
+      <tr><td>endereco.estado</td><td>string</td><td>UF (2 letras, ex: SP, RJ)</td></tr>
+      <tr><td>endereco.cep</td><td>string</td><td>CEP (8 dígitos, sem formatação)</td></tr>
+      <tr><td>contato.email</td><td>string</td><td>Email de contato da empresa</td></tr>
+      <tr><td>contato.telefone</td><td>string</td><td>Telefone de contato (com DDD)</td></tr>
+      <tr><td>representanteFiscal.cpf</td><td>string</td><td>CPF do representante fiscal (11 dígitos)</td></tr>
+      <tr><td>representanteFiscal.nome</td><td>string</td><td>Nome completo do representante fiscal</td></tr>
+      <tr><td>representanteFiscal.email</td><td>string</td><td>Email do representante fiscal</td></tr>
+      <tr><td>representanteFiscal.telefone</td><td>string</td><td>Telefone do representante fiscal</td></tr>
+      <tr><td>representanteFiscal.rg</td><td>string</td><td>RG do representante fiscal</td></tr>
+      <tr><td>representanteFiscal.orgaoExpedidor</td><td>string</td><td>Órgão que expediu o RG (ex: SSP, PC)</td></tr>
+      <tr><td>status</td><td>string</td><td>ativo ou inativo</td></tr>
+      <tr><td>criadoEm</td><td>timestamp</td><td>Data e hora da criação</td></tr>
+      <tr><td>updated_at</td><td>timestamp</td><td>Data e hora da última atualização</td></tr>
+    </table>
+
+    <div class="page-footer-nav">
+      <a href="contratos.html">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        <span><span class="side-label">Anterior</span>Contratos</span>
+      </a>
+      <a href="em-breve.html">
+        <span style="text-align:right;"><span class="side-label">Próximo</span>Webhooks</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+    </div>
+  </main>
+
+  <aside class="toc">
+    <div class="toc-label">Nesta página</div>
+    <a href="#criar-fornecedor" class="toc-link active"><span class="toc-method toc-method-post">POST</span>Criar um fornecedor</a>
+    <a href="#listar-fornecedores" class="toc-link"><span class="toc-method toc-method-get">GET</span>Listar fornecedores</a>
+    <a href="#consultar-fornecedor" class="toc-link"><span class="toc-method toc-method-get">GET</span>Consultar um fornecedor</a>
+    <a href="#atualizar-fornecedor" class="toc-link"><span class="toc-method toc-method-patch">PATCH</span>Atualizar um fornecedor</a>
+    <a href="#deletar-fornecedor" class="toc-link"><span class="toc-method toc-method-delete">DELETE</span>Deletar um fornecedor</a>
+
+    <div class="help-box">
+      <p>Precisa de ajuda?</p>
+      <button class="help-btn">Falar com suporte</button>
+    </div>
+  </aside>
+
+</div>
+
+<div class="site-footer">
+  <span class="wordmark">splithub</span>
+  <span>Sua tributação simplificada.</span>
+  <span class="partner">POSITIVO<span>SOLUÇÕES EM PAGAMENTOS</span></span>
+</div>
+
+<script src="assets/script.js"></script>
+</body>
+</html>

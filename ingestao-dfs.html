@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ingestão DFs · Splithub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <button class="menu-toggle" aria-label="Abrir menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <div class="brand"><span class="mark"></span><span class="wordmark">splithub</span></div>
+  <nav class="topnav">
+    <a href="visao-geral.html" class="active">Guias</a>
+    <a href="em-breve.html">Referência</a>
+    <a href="changelog.html">Changelog</a>
+  </nav>
+  <div class="topbar-right">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      Buscar na documentação
+      <span class="kbd">⌘K</span>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <a href="index.html" class="nav-flat">Home</a>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Introdução e aspectos gerais
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="visao-geral.html" class="nav-item">Visão geral</a>
+        <a href="autenticacao.html" class="nav-item">Autenticação</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Recursos
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="ingestao-dfs.html" class="nav-item active">Ingestão DFs</a>
+        <a href="rad.html" class="nav-item">RAD</a>
+        <a href="garantia-credito.html" class="nav-item">Garantia de crédito</a>
+        <a href="automacoes.html" class="nav-item">Automações</a>
+        <a href="contratos.html" class="nav-item">Contratos</a>
+        <a href="fornecedores.html" class="nav-item">Fornecedores</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Webhooks
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="breadcrumb">Recursos / Ingestão DFs</div>
+    <h1>Ingestão DFs</h1>
+    <p class="lede">
+      O Splithub permite enviar (ingerir) Documentos Fiscais para que os tributos de cada
+      documento sejam identificados e processados automaticamente pelas regras de separação.
+      Com a Reforma Tributária, o Fisco passa a trabalhar com 10 tipos de DFs (Documentos
+      Fiscais Eletrônicos), cada um cobrindo uma categoria diferente de operação.
+    </p>
+
+    <h2 id="tipos-de-dfs">Tipos de documentos fiscais (DFs)</h2>
+    <p>
+      Estes são os 10 tipos de DF-e previstos, com o modelo oficial e o tipo de operação que
+      cada um documenta. Informe o tipo correto no campo <code class="inline">tipo</code> ao
+      criar um documento.
+    </p>
+
+    <table class="response-table">
+      <tr><th>Sigla</th><th>Nome</th><th>Modelo</th><th>Cobre</th></tr>
+      <tr><td>nfe</td><td>Nota Fiscal Eletrônica (NF-e)</td><td>55</td><td>Circulação de mercadorias entre empresas</td></tr>
+      <tr><td>nfce</td><td>Nota Fiscal de Consumidor Eletrônica (NFC-e)</td><td>65</td><td>Vendas ao consumidor final, presenciais ou por entrega</td></tr>
+      <tr><td>cte</td><td>Conhecimento de Transporte Eletrônico (CT-e)</td><td>57</td><td>Prestação de serviço de transporte de cargas</td></tr>
+      <tr><td>cte-os</td><td>CT-e para Outros Serviços (CT-e OS)</td><td>67</td><td>Transporte de passageiros intermunicipal, interestadual ou internacional</td></tr>
+      <tr><td>mdfe</td><td>Manifesto de Documentos Fiscais Eletrônicos (MDF-e)</td><td>58</td><td>Reúne os documentos fiscais vinculados a uma carga transportada</td></tr>
+      <tr><td>nfcom</td><td>Nota Fiscal Fatura de Serviços de Comunicação (NFCom)</td><td>62</td><td>Cobrança de serviços de comunicação/telecomunicação</td></tr>
+      <tr><td>nf3e</td><td>Nota Fiscal de Energia Elétrica Eletrônica (NF3-e)</td><td>66</td><td>Consumo de energia elétrica</td></tr>
+      <tr><td>nfag</td><td>Nota Fiscal da Água e Saneamento Eletrônica (NFAg)</td><td>75</td><td>Consumo de água e serviços de saneamento</td></tr>
+      <tr><td>nfgas</td><td>Nota Fiscal Eletrônica do Gás (NFGás)</td><td>76</td><td>Distribuição de gás canalizado</td></tr>
+      <tr><td>nfe-abi</td><td>NF-e de Alienação de Bens Imóveis (NF-e ABI)</td><td>77</td><td>Venda/alienação de bens imóveis</td></tr>
+    </table>
+
+    <div class="callout">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Aceitamos o XML assinado do documento fiscal ou um JSON estruturado equivalente aos grupos da NF-e 4.0 atualizados pela Nota Técnica 2025.002 — o Grupo UB (IBS/CBS por item, dentro de <code class="inline">det/imposto</code>) e o Grupo W03 (totais de IBS/CBS da nota). Sem esses grupos preenchidos, a partir de 03/08/2026 a nota é rejeitada pela SEFAZ. O processamento na Splithub é assíncrono; use o endpoint de consulta para acompanhar o status.
+    </div>
+
+    <h2 id="criar-documento">Criar um documento fiscal</h2>
+    <p>
+      Envie o XML do documento em base64 ou os campos já estruturados, seguindo os grupos do
+      layout da NF-e 4.0: <code class="inline">ide</code> (identificação), <code class="inline">emit</code>
+      (emitente), <code class="inline">dest</code> (destinatário), <code class="inline">itens</code>
+      (equivalente ao grupo <code class="inline">det</code>, já com o Grupo UB de IBS/CBS por item)
+      e <code class="inline">total</code> (com o Grupo W03 de totais de IBS/CBS).
+      A API retorna um identificador para acompanhar o processamento.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST /v1/documentos-fiscais</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "type": "nfe",
+    "model": "55",
+    "access_key": "35260714200166000187550010000012341234567890",
+    "identification": {
+      "number": "123456",
+      "series": "1",
+      "emission_date": "2026-07-29T10:00:00-03:00"
+    },
+    "emission": {
+      "cnpj": "14200166000187",
+      "legal_name": "Fornecedor Exemplo LTDA",
+      "state": "SP"
+    },
+    "destination": {
+      "cnpj_cpf": "98765432000188",
+      "name": "Cliente Exemplo LTDA",
+      "state": "RJ"
+    },
+    "items": [
+      {
+        "code": "SKU-1029",
+        "description": "Notebook 15pol 16GB",
+        "ncm": "84713012",
+        "cfop": "5102",
+        "quantity": 2,
+        "unit_price": 3200.00,
+        "total_value": 6400.00,
+        "tax": {
+          "ibs_cbs": {
+            "CST": "000",
+            "cClassTrib": "000001",
+            "vBC": 6400.00,
+            "gIBSUF": { "pIBSUF": 0.05, "vIBSUF": 3.20 },
+            "gIBSMun": { "pIBSMun": 0.05, "vIBSMun": 3.20 },
+            "gCBS": { "pCBS": 0.9, "vCBS": 57.60 }
+          }
+        }
+      }
+    ],
+    "total": {
+      "products_value": 6400.00,
+      "total_note_value": 6400.00,
+      "ibs_cbs_total": {
+        "vBC": 6400.00,
+        "vTotIBS": 6.40,
+        "vTotCBS": 57.60
+      }
+    }
+  }'</span></pre>
+    </div>
+
+    <div class="callout">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Durante 2026, <code class="inline">vTotIBS</code> e <code class="inline">vTotCBS</code> não compõem o <code class="inline">valorTotalNota</code> — eles são informados à parte no Grupo W03, refletindo a fase de testes com cobrança simbólica (0,9% CBS + 0,1% IBS, dividido entre <code class="inline">gIBSUF</code> e <code class="inline">gIBSMun</code>).
+    </div>
+
+    <p>A resposta confirma o recebimento e o status inicial do processamento:</p>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 202 Accepted</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"processing"</span>,
+  <span class="tok-k">"type"</span>: <span class="tok-s">"nfe"</span>,
+  <span class="tok-k">"model"</span>: <span class="tok-s">"55"</span>,
+  <span class="tok-k">"access_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>
+}</pre>
+    </div>
+
+    <h2 id="consultar-documento">Consultar um documento fiscal</h2>
+    <p>
+      Use o <code class="inline">id</code> retornado para consultar o andamento do processamento
+      e os tributos identificados no documento.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>GET /v1/documentos-fiscais/{id}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/df_8f3a1c2b</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"completed"</span>,
+  <span class="tok-k">"type"</span>: <span class="tok-s">"nfe"</span>,
+  <span class="tok-k">"emission"</span>: { <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>, <span class="tok-k">"legal_name"</span>: <span class="tok-s">"Fornecedor Exemplo LTDA"</span> },
+  <span class="tok-k">"destination"</span>: { <span class="tok-k">"cnpj_cpf"</span>: <span class="tok-s">"98765432000188"</span>, <span class="tok-k">"name"</span>: <span class="tok-s">"Cliente Exemplo LTDA"</span> },
+  <span class="tok-k">"total_value"</span>: <span class="tok-s">6400.00</span>,
+  <span class="tok-k">"ibs_cbs_total"</span>: {
+    <span class="tok-k">"vBC"</span>: <span class="tok-s">6400.00</span>,
+    <span class="tok-k">"vTotIBS"</span>: <span class="tok-s">6.40</span>,
+    <span class="tok-k">"vTotCBS"</span>: <span class="tok-s">57.60</span>
+  }
+}</pre>
+    </div>
+
+    <h2 id="listar-documentos">Listar documentos fiscais</h2>
+    <p>
+      Liste os documentos ingeridos, com filtros opcionais por <code class="inline">tipo</code> e
+      <code class="inline">status</code>.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>GET /v1/documentos-fiscais</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/documentos-fiscais?tipo=nfe&status=concluido"</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"data"</span>: [
+    { <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>, <span class="tok-k">"type"</span>: <span class="tok-s">"nfe"</span>, <span class="tok-k">"status"</span>: <span class="tok-s">"completed"</span>, <span class="tok-k">"total_value"</span>: <span class="tok-s">6553.60</span> }
+  ],
+  <span class="tok-k">"page"</span>: <span class="tok-s">1</span>,
+  <span class="tok-k">"perPage"</span>: <span class="tok-s">20</span>,
+  <span class="tok-k">"total"</span>: <span class="tok-s">1</span>
+}</pre>
+    </div>
+
+    <h2 id="atualizar-documento">Atualizar um documento fiscal</h2>
+    <p>
+      Corrija campos de um documento antes de ele ser concluído — por exemplo, dados do
+      destinatário ou itens registrados com erro.
+    </p>
+
+    <div class="callout">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Só é possível atualizar um documento com status <code class="inline">pendente</code> ou <code class="inline">erro</code>. Documentos com status <code class="inline">concluido</code> são imutáveis, refletindo a legislação fiscal.
+    </div>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>PATCH /v1/documentos-fiscais/{id}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/df_8f3a1c2b</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "destination": {
+      "cnpj_cpf": "98765432000188",
+      "name": "Cliente Exemplo LTDA - Matriz"
+    }
+  }'</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"pending"</span>,
+  <span class="tok-k">"destination"</span>: { <span class="tok-k">"cnpj_cpf"</span>: <span class="tok-s">"98765432000188"</span>, <span class="tok-k">"name"</span>: <span class="tok-s">"Cliente Exemplo LTDA - Matriz"</span> }
+}</pre>
+    </div>
+
+    <h2 id="remover-documento">Remover um documento fiscal</h2>
+    <p>
+      Remove o registro de ingestão da Splithub — não é o mesmo que cancelar o documento junto
+      ao Fisco, que continua sendo feito no seu sistema emissor.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>DELETE /v1/documentos-fiscais/{id}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X DELETE <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/df_8f3a1c2b</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 204 No Content</span></div>
+      <pre></pre>
+    </div>
+
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+      <tr><td>id</td><td>string</td><td>Identificador único do documento fiscal ingerido</td></tr>
+      <tr><td>tipo</td><td>string</td><td>Um dos 10 tipos de DF (nfe, nfce, cte, cte-os, mdfe, nfcom, nf3e, nfag, nfgas, nfe-abi)</td></tr>
+      <tr><td>modelo</td><td>string</td><td>Número do modelo oficial do documento (ex.: 55 para NF-e)</td></tr>
+      <tr><td>status</td><td>string</td><td>pendente, processando, concluido ou erro</td></tr>
+      <tr><td>ide / emit / dest</td><td>object</td><td>Grupos de identificação, emitente e destinatário, no padrão da NF-e 4.0</td></tr>
+      <tr><td>itens</td><td>array</td><td>Itens do documento, equivalentes ao grupo det da NF-e 4.0</td></tr>
+      <tr><td>itens[].imposto.ibsCbs</td><td>object</td><td>Grupo UB por item: CST, cClassTrib, vBC e os subgrupos gIBSUF, gIBSMun e gCBS (Nota Técnica 2025.002)</td></tr>
+      <tr><td>valorTotal</td><td>number</td><td>Valor total do documento fiscal (sem somar IBS/CBS, conforme regra de 2026)</td></tr>
+      <tr><td>total.ibsCbsTotal</td><td>object</td><td>Grupo W03: vBC, vTotIBS e vTotCBS — totais de IBS e CBS da nota</td></tr>
+    </table>
+
+    <div class="page-footer-nav">
+      <a href="autenticacao.html">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        <span><span class="side-label">Anterior</span>Autenticação</span>
+      </a>
+      <a href="rad.html">
+        <span style="text-align:right;"><span class="side-label">Próximo</span>RAD</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+    </div>
+  </main>
+
+  <aside class="toc">
+    <div class="toc-label">Nesta página</div>
+    <a href="#tipos-de-dfs" class="toc-link active">Tipos de documentos fiscais (DFs)</a>
+    <a href="#criar-documento" class="toc-link"><span class="toc-method toc-method-post">POST</span>Criar um documento fiscal</a>
+    <a href="#consultar-documento" class="toc-link"><span class="toc-method toc-method-get">GET</span>Consultar um documento fiscal</a>
+    <a href="#listar-documentos" class="toc-link"><span class="toc-method toc-method-get">GET</span>Listar documentos fiscais</a>
+    <a href="#atualizar-documento" class="toc-link"><span class="toc-method toc-method-patch">PATCH</span>Atualizar um documento fiscal</a>
+    <a href="#remover-documento" class="toc-link"><span class="toc-method toc-method-delete">DELETE</span>Remover um documento fiscal</a>
+
+    <div class="help-box">
+      <p>Precisa de ajuda?</p>
+      <button class="help-btn">Falar com suporte</button>
+    </div>
+  </aside>
+
+</div>
+
+<div class="site-footer">
+  <span class="wordmark">splithub</span>
+  <span>Sua tributação simplificada.</span>
+  <span class="partner">POSITIVO<span>SOLUÇÕES EM PAGAMENTOS</span></span>
+</div>
+
+<script src="assets/script.js"></script>
+</body>
+</html>

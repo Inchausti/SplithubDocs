@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Changelog · Splithub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="mark"></span><span class="wordmark">splithub</span></div>
+  <nav class="topnav">
+    <a href="visao-geral.html" class="active">Guias</a>
+    <a href="em-breve.html">Referência</a>
+    <a href="changelog.html" class="active">Changelog</a>
+  </nav>
+  <div class="topbar-right">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      Buscar na documentação
+      <span class="kbd">⌘K</span>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <a href="index.html" class="nav-flat">Home</a>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Introdução e aspectos gerais
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="visao-geral.html" class="nav-item">Visão geral</a>
+        <a href="autenticacao.html" class="nav-item">Autenticação</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Recursos
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="ingestao-dfs.html" class="nav-item">Ingestão DFs</a>
+        <a href="rad.html" class="nav-item">RAD</a>
+        <a href="garantia-credito.html" class="nav-item">Garantia de crédito</a>
+        <a href="automacoes.html" class="nav-item">Automações</a>
+        <a href="contratos.html" class="nav-item">Contratos</a>
+        <a href="fornecedores.html" class="nav-item">Fornecedores</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Webhooks
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="breadcrumb">Changelog</div>
+    <h1>Histórico de Releases</h1>
+    <p class="lede">
+      Acompanhe o histórico completo de mudanças, melhorias e novas funcionalidades na
+      documentação da API do Splithub.
+    </p>
+
+    <h2 id="v1-0-0">v1.0.0 — 29 de julho de 2026</h2>
+    <p>Lançamento inicial da documentação da API do Splithub com suporte completo à Reforma Tributária 2026.</p>
+
+    <h3>✨ Novas funcionalidades</h3>
+    <ul>
+      <li><strong>Gerenciamento de Fornecedores</strong> — Endpoints CRUD completos (POST/GET/GET{id}/PATCH/DELETE) para gerenciar fornecedores com campos de CNPJ (incluindo formato alfanumérico), razão social, endereço, contato e representante fiscal.</li>
+      <li><strong>Gerenciamento de Contratos</strong> — Endpoints CRUD para registrar e gerenciar contratos entre CNPJs com suporte a referência ERP (<code>contratoExternoId</code>), datas de vigência, valor total, condições de pagamento e opção de elegibilidade RAD.</li>
+      <li><strong>RAD - Recolhimento pelo Adquirente</strong> — Webhook event <code>rad.darf_recebida</code> para notificar recebimento de guias DARF (CBS/IBS) com detalhes de códigos de barras, PIX e PDFs, além de endpoint POST para envio de comprovantes de pagamento PIX.</li>
+      <li><strong>Garantia de Crédito e Débito</strong> — Dois webhook events para rastreamento de ciclo de vida:
+        <ul>
+          <li><code>credito.status_alterado</code> — Notifica transições de crédito (nao_apropriado → apropriado → utilizado)</li>
+          <li><code>debito.status_alterado</code> — Notifica transições de débito (nao_extinto → extinto) com motivo de extinção</li>
+        </ul>
+      </li>
+      <li><strong>Busca funcional na documentação</strong> — Modal de busca acessível via Ctrl+K / Cmd+K ou clique no ícone de lupa, com indexação de 8 recursos principais e navegação em tempo real.</li>
+    </ul>
+
+    <h3>🛠️ Melhorias técnicas</h3>
+    <ul>
+      <li><strong>Conformidade com Reforma Tributária 2026</strong> — Toda a documentação alinhada com IBS/CBS, incluindo campos de estrutura NF-e 4.0 (Grupo UB e W03) com cálculo de créditos e débitos não-cumulativos.</li>
+      <li><strong>Suporte a CNPJ alfanumérico</strong> — Implementado em todas as seções de Fornecedores, Contratos e Ingestão DFs conforme <a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/cnpj-alfanumerico" target="_blank">especificação oficial da Receita Federal</a> (vigente desde 27/07/2026).</li>
+      <li><strong>HTTP method badges</strong> — Todos os endpoints agora exibem badges de cores distintivas nas tabelas de conteúdo:
+        <ul>
+          <li><span class="toc-method toc-method-post">POST</span> Criar recursos</li>
+          <li><span class="toc-method toc-method-get">GET</span> Consultar recursos</li>
+          <li><span class="toc-method toc-method-patch">PATCH</span> Atualizar recursos</li>
+          <li><span class="toc-method toc-method-delete">DELETE</span> Remover recursos</li>
+          <li><span class="toc-method toc-method-webhook">WEBHOOK</span> Eventos assíncronos</li>
+        </ul>
+      </li>
+      <li><strong>Navegação reorganizada</strong> — Fornecedores posicionado como última seção de Recursos, imediatamente antes de Webhooks, para maior clareza na hierarquia de informações.</li>
+      <li><strong>Home page expandida</strong> — Oito cards principais cobrindo todas as seções: Visão geral, Autenticação, Fornecedores, Ingestão DFs, RAD, Garantia de crédito, Automações e Contratos.</li>
+    </ul>
+
+    <h3>📝 Detalhes dos commits</h3>
+    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
+      <p><code>45c1cdd</code> — Cria seção de Fornecedores com CRUD completo (POST/GET/GET{id}/PATCH/DELETE), campos de CNPJ, razão social, fantasia, data de abertura, situação cadastral, natureza jurídica, regime tributário, atividade econômica, endereço e contato com representante fiscal.</p>
+    </div>
+
+    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
+      <p><code>aec4e30</code> — Refatora seção de Contratos, expandindo de apenas endpoints de sincronização para CRUD completo (POST/GET/GET{id}/PATCH/DELETE) com campos de contrato externo, descrição, CNPJs de contratante/contratado, datas de vigência, valor total, condição de pagamento, status e observações.</p>
+    </div>
+
+    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
+      <p><code>d12ddce</code> — Adiciona campo <code>optanteRAD</code> (booleano) à documentação de Contratos para indicar elegibilidade à modalidade de Recolhimento pelo Adquirente.</p>
+    </div>
+
+    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
+      <p><code>47f4230</code> — Implementa conformidade com Reforma Tributária 2026 em Ingestão DFs incluindo estrutura NF-e 4.0 (Grupo UB com CST/cClassTrib/vBC/gIBSUF/gIBSMun e Grupo W03), transforma RAD de endpoints de configuração para webhook event <code>rad.darf_recebida</code> com detalhes de guias DARF, e adiciona HTTP method badges coloridas em todas as tabelas de conteúdo.</p>
+    </div>
+
+    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
+      <p><code>f4dd5c3</code> — Refatora seção de Garantia de crédito com dois webhook events independentes: <code>credito.status_alterado</code> (nao_apropriado → apropriado → utilizado com motivo de alteração) e <code>debito.status_alterado</code> (nao_extinto → extinto com modalidade de extinção e créditos utilizados), removendo endpoints de CRUD anteriores.</p>
+    </div>
+
+    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
+      <p><code>9148b60</code> — Reposiciona seção de Fornecedores como última seção de Recursos na sidebar, imediatamente antes da seção de Webhooks, melhorando a hierarquia visual da navegação.</p>
+    </div>
+
+    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
+      <p><code>c73058d</code> — Implementa suporte a CNPJ alfanumérico em todas as seções de documentação (Fornecedores, Contratos, Ingestão DFs), atualizando descrições de campos de "14 dígitos" para "alfanumérico (letras e números)".</p>
+    </div>
+
+    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
+      <p><code>248c301</code> — Adiciona link de referência oficial da Receita Federal com especificação de CNPJ alfanumérico e data de implementação (27/07/2026) em Fornecedores e Contratos.</p>
+    </div>
+
+    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
+      <p><code>1f18aa1</code> — Resolve conflito de callouts em Contratos dividindo informação única em dois callouts distintos: um para estabilidade de <code>contratoExternoId</code> e outro especificamente para CNPJ alfanumérico com link da Receita Federal.</p>
+    </div>
+
+    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
+      <p><code>4f030b9</code> — Expande página home (index.html) de 4 para 8 cards principais, adicionando novas seções de Fornecedores, Garantia de crédito, Automações e Contratos, com atualizações na descrição hero para enfatizar governança, gerenciamento de fornecedores e automação fiscal.</p>
+    </div>
+
+    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
+      <p><code>126a071</code> — Implementa busca funcional completa na documentação com modal acessível via Ctrl+K/Cmd+K, indexação de 8 recursos (Visão Geral, Autenticação, Fornecedores, Ingestão DFs, RAD, Garantia de Crédito, Automações, Contratos), filtragem em tempo real e navegação por clique em resultados.</p>
+    </div>
+
+    <h3>🔧 Mudanças estruturais</h3>
+    <ul>
+      <li>Todos os 10 arquivos HTML principais tiveram a aba "SDKs" removida da navegação principal.</li>
+      <li>Changelog adicionado como aba principal na navegação de topo ao lado de "Referência".</li>
+      <li>Asset CSS: Nova classe <code>.toc-method-webhook</code> com estilo roxo (#f1e6fb/#6b32a8) para diferenciação de eventos webhook.</li>
+      <li>Asset JS: Expansão de ~100 linhas no script.js para busca modal com indexação e navegação.</li>
+    </ul>
+
+    <h3>📚 Recursos documentados</h3>
+    <p>Total de 8 recursos principais com documentação completa:</p>
+    <ul>
+      <li>🔐 Autenticação (Bearer tokens, JWT)</li>
+      <li>📦 Fornecedores (CRUD de cadastro)</li>
+      <li>📄 Ingestão DFs (Upload e análise de documentos fiscais)</li>
+      <li>💳 RAD (Webhook de guias, comprovantes PIX)</li>
+      <li>✅ Garantia de crédito (Webhooks de ciclo de vida)</li>
+      <li>⚙️ Automações (Regras de disparo de ações)</li>
+      <li>📋 Contratos (CRUD de contratos)</li>
+    </ul>
+
+    <div class="page-footer-nav" style="margin-top: 48px;">
+      <a href="index.html">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        <span><span class="side-label">Anterior</span>Home</span>
+      </a>
+      <a href="em-breve.html">
+        <span style="text-align:right;"><span class="side-label">Próximo</span>Referência</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+    </div>
+  </main>
+
+  <aside class="toc">
+    <div class="toc-label">Nesta página</div>
+    <a href="#v1-0-0" class="toc-link active">v1.0.0 — 29 de julho de 2026</a>
+
+    <div class="help-box">
+      <p>Precisa de ajuda?</p>
+      <button class="help-btn">Falar com suporte</button>
+    </div>
+  </aside>
+
+</div>
+
+<div class="site-footer">
+  <span class="wordmark">splithub</span>
+  <span>Sua tributação simplificada.</span>
+  <span class="partner">POSITIVO<span>SOLUÇÕES EM PAGAMENTOS</span></span>
+</div>
+
+<script src="assets/script.js"></script>
+</body>
+</html>

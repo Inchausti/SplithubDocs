@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garantia de crédito · Splithub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <button class="menu-toggle" aria-label="Abrir menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <div class="brand"><span class="mark"></span><span class="wordmark">splithub</span></div>
+  <nav class="topnav">
+    <a href="visao-geral.html" class="active">Guias</a>
+    <a href="em-breve.html">Referência</a>
+    <a href="changelog.html">Changelog</a>
+  </nav>
+  <div class="topbar-right">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      Buscar na documentação
+      <span class="kbd">⌘K</span>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <a href="index.html" class="nav-flat">Home</a>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Introdução e aspectos gerais
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="visao-geral.html" class="nav-item">Visão geral</a>
+        <a href="autenticacao.html" class="nav-item">Autenticação</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Recursos
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="ingestao-dfs.html" class="nav-item">Ingestão DFs</a>
+        <a href="rad.html" class="nav-item">RAD</a>
+        <a href="garantia-credito.html" class="nav-item active">Garantia de crédito</a>
+        <a href="automacoes.html" class="nav-item">Automações</a>
+        <a href="contratos.html" class="nav-item">Contratos</a>
+        <a href="fornecedores.html" class="nav-item">Fornecedores</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Webhooks
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="breadcrumb">Recursos / Garantia de crédito</div>
+    <h1>Garantia de crédito</h1>
+    <p class="lede">
+      Um Documento Fiscal (DF) de entrada gera crédito tributário de IBS/CBS para o comprador; um
+      DF de saída gera débito para quem vende. Pela Lei Complementar 214/2025, a apuração do
+      IBS/CBS é não cumulativa e opera por compensação "tributo contra tributo": o débito de uma
+      saída é settled abatendo-se os créditos já appropriateds. O Splithub acompanha esse ciclo de
+      vida por valor de cada DF e avisa seu sistema a cada mudança de status através de dois
+      webhooks.
+    </p>
+
+    <div class="callout">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Diferente do ICMS, em que bastava o destaque do imposto na nota, o direito ao crédito de IBS/CBS depende do pagamento efetivo do tributo na própria NF de entrada. Na apuração da IBS/CBS, débitos e créditos são compensados de forma agregada por período; o Splithub modela esse ciclo por valor de cada DF para dar rastreabilidade a cada crédito e débito individualmente.
+    </div>
+
+    <h2 id="ciclo-de-vida">Ciclo de vida do crédito e do débito</h2>
+    <p>
+      Fluxo completo, por valor de cada DF:
+    </p>
+    <p>
+      1. O fornecedor emite uma NF de entrada para o comprador → nasce um crédito <code class="inline">not_appropriated</code>.<br>
+      2. O tributo dessa NF de entrada é pago → o crédito passa a <code class="inline">appropriated</code>.<br>
+      3. O adquirente (o mesmo comprador, agora na ponta de venda) emite uma NF de saída → nasce um débito <code class="inline">not_settled</code>.<br>
+      4. Essa NF de saída é abatida pelos créditos appropriateds disponíveis (compensação tributo contra tributo) → o crédito utilized nessa compensação passa a <code class="inline">utilized</code> e o débito correspondente passa a <code class="inline">settled</code>, simultaneamente.
+    </p>
+
+    <table class="response-table">
+      <tr><th>Tributo</th><th>Status</th><th>Quando ocorre</th></tr>
+      <tr><td>Crédito</td><td>not_appropriated</td><td>NF de entrada emitida pelo fornecedor; o tributo dessa NF ainda não foi pago</td></tr>
+      <tr><td>Crédito</td><td>appropriated</td><td>O tributo da NF de entrada foi pago</td></tr>
+      <tr><td>Crédito</td><td>utilized</td><td>O crédito appropriated foi usado para abater (compensar) o débito de uma NF de saída</td></tr>
+      <tr><td>Débito</td><td>not_settled</td><td>NF de saída emitida pelo adquirente; ainda não foi abatida por créditos</td></tr>
+      <tr><td>Débito</td><td>settled</td><td>A NF de saída foi abatida pelos créditos appropriateds disponíveis (compensação tributo contra tributo)</td></tr>
+    </table>
+
+    <h2 id="webhook-credito">Webhook event: mudança de status do crédito</h2>
+    <p>
+      Disparado sempre que o crédito tributário referente a um DF de entrada muda de status
+      (<code class="inline">not_appropriated</code> → <code class="inline">appropriated</code> →
+      <code class="inline">utilized</code>). No exemplo abaixo, o crédito acabou de ser
+      utilized para compensar o débito de uma NF de saída — por isso o evento traz também a
+      <code class="inline">compensated_debt_dfe_key</code>.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST {sua_url_de_webhook}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>{
+  <span class="tok-k">"event"</span>: <span class="tok-s">"credito.status_alterado"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:00:00.000Z"</span>,
+  <span class="tok-k">"data"</span>: {
+    <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
+    <span class="tok-k">"tax_type"</span>: <span class="tok-s">"cbs"</span>,
+    <span class="tok-k">"credit_amount"</span>: <span class="tok-s">9.00</span>,
+    <span class="tok-k">"previous_status"</span>: <span class="tok-s">"appropriated"</span>,
+    <span class="tok-k">"current_status"</span>: <span class="tok-s">"utilized"</span>,
+    <span class="tok-k">"change_reason"</span>: <span class="tok-s">"outbound_debt_offset"</span>,
+    <span class="tok-k">"compensated_debt_dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000098769876543210"</span>
+  }
+}</pre>
+    </div>
+
+    <p>Seu endpoint deve responder <code class="inline">200 OK</code> para confirmar o recebimento. Sem essa confirmação, o Splithub reenvia o evento.</p>
+
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+      <tr><td>event</td><td>string</td><td>Nome do evento: credito.status_alterado</td></tr>
+      <tr><td>createdAt</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
+      <tr><td>data.chaveDfe</td><td>string</td><td>Chave de acesso do DF de entrada que originou o crédito</td></tr>
+      <tr><td>data.tax_type</td><td>string</td><td>Tributo do crédito: ibs ou cbs</td></tr>
+      <tr><td>data.credit_amount</td><td>number</td><td>Valor do crédito referente a este DF</td></tr>
+      <tr><td>data.previous_status / current_status</td><td>string</td><td>not_appropriated, appropriated ou utilized</td></tr>
+      <tr><td>data.change_reason</td><td>string</td><td>pagamento_tributo_nf_entrada (not_appropriated → appropriated) ou outbound_debt_offset (appropriated → utilized)</td></tr>
+      <tr><td>data.compensated_debt_dfe_key</td><td>string</td><td>Presente quando current_status é utilized: chave da NF de saída cujo débito foi compensado por este crédito</td></tr>
+    </table>
+
+    <h2 id="webhook-debito">Webhook event: mudança de status do débito</h2>
+    <p>
+      Disparado sempre que o débito tributário referente a um DF de saída muda de status
+      (<code class="inline">not_settled</code> → <code class="inline">settled</code>). A
+      extinção ocorre quando a NF de saída é abatida pelos créditos appropriateds disponíveis —
+      por isso o evento traz também <code class="inline">utilized_credits</code>, com a
+      chave e o valor de cada crédito usado na compensação.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST {sua_url_de_webhook}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>{
+  <span class="tok-k">"event"</span>: <span class="tok-s">"debito.status_alterado"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:00:00.000Z"</span>,
+  <span class="tok-k">"data"</span>: {
+    <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000098769876543210"</span>,
+    <span class="tok-k">"tax_type"</span>: <span class="tok-s">"ibs"</span>,
+    <span class="tok-k">"debt_amount"</span>: <span class="tok-s">1.00</span>,
+    <span class="tok-k">"previous_status"</span>: <span class="tok-s">"not_settled"</span>,
+    <span class="tok-k">"current_status"</span>: <span class="tok-s">"settled"</span>,
+    <span class="tok-k">"extinction_type"</span>: <span class="tok-s">"inbound_credit_offset"</span>,
+    <span class="tok-k">"utilized_credits"</span>: [
+      { <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>, <span class="tok-k">"utilized_amount"</span>: <span class="tok-s">1.00</span> }
+    ]
+  }
+}</pre>
+    </div>
+
+    <p>Seu endpoint deve responder <code class="inline">200 OK</code> para confirmar o recebimento. Sem essa confirmação, o Splithub reenvia o evento.</p>
+
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+      <tr><td>event</td><td>string</td><td>Nome do evento: debito.status_alterado</td></tr>
+      <tr><td>createdAt</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
+      <tr><td>data.chaveDfe</td><td>string</td><td>Chave de acesso do DF de saída que originou o débito</td></tr>
+      <tr><td>data.tax_type</td><td>string</td><td>Tributo do débito: ibs ou cbs</td></tr>
+      <tr><td>data.debt_amount</td><td>number</td><td>Valor do débito referente a este DF</td></tr>
+      <tr><td>data.previous_status / current_status</td><td>string</td><td>not_settled ou settled</td></tr>
+      <tr><td>data.extinction_type</td><td>string</td><td>inbound_credit_offset</td></tr>
+      <tr><td>data.utilized_credits</td><td>array</td><td>Créditos (chaveDfe + utilized_amount) usados para compensar este débito</td></tr>
+    </table>
+
+    <div class="page-footer-nav">
+      <a href="rad.html">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        <span><span class="side-label">Anterior</span>RAD</span>
+      </a>
+      <a href="automacoes.html">
+        <span style="text-align:right;"><span class="side-label">Próximo</span>Automações</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+    </div>
+  </main>
+
+  <aside class="toc">
+    <div class="toc-label">Nesta página</div>
+    <a href="#ciclo-de-vida" class="toc-link active">Ciclo de vida do crédito e do débito</a>
+    <a href="#webhook-credito" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Status do crédito</a>
+    <a href="#webhook-debito" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Status do débito</a>
+
+    <div class="help-box">
+      <p>Precisa de ajuda?</p>
+      <button class="help-btn">Falar com suporte</button>
+    </div>
+  </aside>
+
+</div>
+
+<div class="site-footer">
+  <span class="wordmark">splithub</span>
+  <span>Sua tributação simplificada.</span>
+  <span class="partner">POSITIVO<span>SOLUÇÕES EM PAGAMENTOS</span></span>
+</div>
+
+<script src="assets/script.js"></script>
+</body>
+</html>
