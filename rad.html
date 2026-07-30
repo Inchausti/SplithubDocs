@@ -105,18 +105,18 @@
       </div>
       <pre>{
   <span class="tok-k">"event"</span>: <span class="tok-s">"rad.darf_recebida"</span>,
-  <span class="tok-k">"createdAt"</span>: <span class="tok-s">"2026-07-29T12:00:00.000Z"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T12:00:00.000Z"</span>,
   <span class="tok-k">"data"</span>: {
-    <span class="tok-k">"chaveDfe"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
-    <span class="tok-k">"tipoDarf"</span>: <span class="tok-s">"cbs"</span>,
-    <span class="tok-k">"cdRetorno"</span>: <span class="tok-s">"DARF_GERADO"</span>,
-    <span class="tok-k">"chavePix"</span>: <span class="tok-s">"34028316000103"</span>,
-    <span class="tok-k">"codBarras"</span>: <span class="tok-s">"858100000012345678901234567890123456789012"</span>,
-    <span class="tok-k">"linkDarfPdf"</span>: <span class="tok-s">"https://sistema.rfb.gov.br/darf/df_8f3a1c2b.pdf"</span>,
-    <span class="tok-k">"valorDarfPrincipal"</span>: <span class="tok-s">57.60</span>,
-    <span class="tok-k">"valorDarfMulta"</span>: <span class="tok-s">0.00</span>,
-    <span class="tok-k">"valorDarfJuros"</span>: <span class="tok-s">0.00</span>,
-    <span class="tok-k">"valorDarfTotal"</span>: <span class="tok-s">57.60</span>
+    <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
+    <span class="tok-k">"darf_type"</span>: <span class="tok-s">"cbs"</span>,
+    <span class="tok-k">"return_code"</span>: <span class="tok-s">"DARF_GERADO"</span>,
+    <span class="tok-k">"pix_key"</span>: <span class="tok-s">"34028316000103"</span>,
+    <span class="tok-k">"barcode"</span>: <span class="tok-s">"858100000012345678901234567890123456789012"</span>,
+    <span class="tok-k">"darf_pdf_link"</span>: <span class="tok-s">"https://sistema.rfb.gov.br/darf/df_8f3a1c2b.pdf"</span>,
+    <span class="tok-k">"darf_principal_value"</span>: <span class="tok-s">57.60</span>,
+    <span class="tok-k">"darf_penalty_value"</span>: <span class="tok-s">0.00</span>,
+    <span class="tok-k">"darf_interest_value"</span>: <span class="tok-s">0.00</span>,
+    <span class="tok-k">"darf_total_value"</span>: <span class="tok-s">57.60</span>
   }
 }</pre>
     </div>
@@ -165,14 +165,14 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "darfId": "darf_9f21ab",
+    "darf_id": "darf_9f21ab",
     "pix": {
-      "endToEndId": "E14200166202607291200a1b2c3d4",
+      "end_to_end_id": "E14200166202607291200a1b2c3d4",
       "txid": "cbs_df_8f3a1c2b",
-      "chave": "14200166000187",
-      "valor": "57.60",
-      "horario": "2026-07-29T12:00:00.000Z",
-      "infoPagador": "Pagamento DARF CBS - chave DFe 35260714200166000187550010000012341234567890"
+      "key": "14200166000187",
+      "amount": "57.60",
+      "timestamp": "2026-07-29T12:00:00.000Z",
+      "payer_info": "Pagamento DARF CBS - chave DFe 35260714200166000187550010000012341234567890"
     }
   }'</span></pre>
     </div>
@@ -181,7 +181,7 @@
       <div class="code-head"><span>Resposta 201 Created</span></div>
       <pre>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"comp_5e21fa"</span>,
-  <span class="tok-k">"darfId"</span>: <span class="tok-s">"darf_9f21ab"</span>,
+  <span class="tok-k">"darf_id"</span>: <span class="tok-s">"darf_9f21ab"</span>,
   <span class="tok-k">"status"</span>: <span class="tok-s">"confirmado"</span>
 }</pre>
     </div>

@@ -101,33 +101,33 @@
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "cnpj": "14200166000187",
-    "razaoSocial": "Empresa Fornecedora Ltda",
-    "nomeFantasia": "Fornecedora",
-    "dataAbertura": "2010-05-15",
-    "situacaoCadastral": "ativa",
-    "naturezaJuridica": "206",
-    "regimeTributario": "lucro_presumido",
-    "atividadeEconomica": "4711302",
+    "legal_name": "Empresa Fornecedora Ltda",
+    "trade_name": "Fornecedora",
+    "founding_date": "2010-05-15",
+    "registration_status": "ativa",
+    "legal_nature": "206",
+    "tax_regime": "lucro_presumido",
+    "economic_activity": "4711302",
     "endereco": {
-      "logradouro": "Avenida Principal",
+      "street": "Avenida Principal",
       "numero": "1000",
-      "complemento": "Sala 200",
-      "bairro": "Centro",
+      "complement": "Sala 200",
+      "neighborhood": "Centro",
       "cidade": "São Paulo",
-      "estado": "SP",
-      "cep": "01234567"
+      "state": "SP",
+      "zipcode": "01234567"
     },
     "contato": {
       "email": "contato@fornecedora.com.br",
-      "telefone": "1133334444"
+      "phone": "1133334444"
     },
-    "representanteFiscal": {
+    "fiscal_representative": {
       "cpf": "12345678910",
       "nome": "João Silva",
       "email": "joao@fornecedora.com.br",
-      "telefone": "11987654321",
+      "phone": "11987654321",
       "rg": "123456789",
-      "orgaoExpedidor": "SSP"
+      "issuing_body": "SSP"
     }
   }'</span></pre>
     </div>
@@ -137,9 +137,9 @@
       <pre>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"forn_abc123"</span>,
   <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
-  <span class="tok-k">"razaoSocial"</span>: <span class="tok-s">"Empresa Fornecedora Ltda"</span>,
+  <span class="tok-k">"legal_name"</span>: <span class="tok-s">"Empresa Fornecedora Ltda"</span>,
   <span class="tok-k">"status"</span>: <span class="tok-s">"ativo"</span>,
-  <span class="tok-k">"criadoEm"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
 }</pre>
     </div>
 
@@ -168,10 +168,10 @@
     {
       <span class="tok-k">"id"</span>: <span class="tok-s">"forn_abc123"</span>,
       <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
-      <span class="tok-k">"razaoSocial"</span>: <span class="tok-s">"Empresa Fornecedora Ltda"</span>,
-      <span class="tok-k">"nomeFantasia"</span>: <span class="tok-s">"Fornecedora"</span>,
+      <span class="tok-k">"legal_name"</span>: <span class="tok-s">"Empresa Fornecedora Ltda"</span>,
+      <span class="tok-k">"trade_name"</span>: <span class="tok-s">"Fornecedora"</span>,
       <span class="tok-k">"status"</span>: <span class="tok-s">"ativo"</span>,
-      <span class="tok-k">"criadoEm"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
+      <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
     }
   ],
   <span class="tok-k">"total"</span>: <span class="tok-s">1</span>,
@@ -203,36 +203,36 @@
       <pre>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"forn_abc123"</span>,
   <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
-  <span class="tok-k">"razaoSocial"</span>: <span class="tok-s">"Empresa Fornecedora Ltda"</span>,
-  <span class="tok-k">"nomeFantasia"</span>: <span class="tok-s">"Fornecedora"</span>,
-  <span class="tok-k">"dataAbertura"</span>: <span class="tok-s">"2010-05-15"</span>,
-  <span class="tok-k">"situacaoCadastral"</span>: <span class="tok-s">"ativa"</span>,
-  <span class="tok-k">"naturezaJuridica"</span>: <span class="tok-s">"206"</span>,
-  <span class="tok-k">"regimeTributario"</span>: <span class="tok-s">"lucro_presumido"</span>,
-  <span class="tok-k">"atividadeEconomica"</span>: <span class="tok-s">"4711302"</span>,
+  <span class="tok-k">"legal_name"</span>: <span class="tok-s">"Empresa Fornecedora Ltda"</span>,
+  <span class="tok-k">"trade_name"</span>: <span class="tok-s">"Fornecedora"</span>,
+  <span class="tok-k">"founding_date"</span>: <span class="tok-s">"2010-05-15"</span>,
+  <span class="tok-k">"registration_status"</span>: <span class="tok-s">"ativa"</span>,
+  <span class="tok-k">"legal_nature"</span>: <span class="tok-s">"206"</span>,
+  <span class="tok-k">"tax_regime"</span>: <span class="tok-s">"lucro_presumido"</span>,
+  <span class="tok-k">"economic_activity"</span>: <span class="tok-s">"4711302"</span>,
   <span class="tok-k">"endereco"</span>: {
-    <span class="tok-k">"logradouro"</span>: <span class="tok-s">"Avenida Principal"</span>,
+    <span class="tok-k">"street"</span>: <span class="tok-s">"Avenida Principal"</span>,
     <span class="tok-k">"numero"</span>: <span class="tok-s">"1000"</span>,
-    <span class="tok-k">"complemento"</span>: <span class="tok-s">"Sala 200"</span>,
-    <span class="tok-k">"bairro"</span>: <span class="tok-s">"Centro"</span>,
+    <span class="tok-k">"complement"</span>: <span class="tok-s">"Sala 200"</span>,
+    <span class="tok-k">"neighborhood"</span>: <span class="tok-s">"Centro"</span>,
     <span class="tok-k">"cidade"</span>: <span class="tok-s">"São Paulo"</span>,
-    <span class="tok-k">"estado"</span>: <span class="tok-s">"SP"</span>,
-    <span class="tok-k">"cep"</span>: <span class="tok-s">"01234567"</span>
+    <span class="tok-k">"state"</span>: <span class="tok-s">"SP"</span>,
+    <span class="tok-k">"zipcode"</span>: <span class="tok-s">"01234567"</span>
   },
   <span class="tok-k">"contato"</span>: {
     <span class="tok-k">"email"</span>: <span class="tok-s">"contato@fornecedora.com.br"</span>,
-    <span class="tok-k">"telefone"</span>: <span class="tok-s">"1133334444"</span>
+    <span class="tok-k">"phone"</span>: <span class="tok-s">"1133334444"</span>
   },
-  <span class="tok-k">"representanteFiscal"</span>: {
+  <span class="tok-k">"fiscal_representative"</span>: {
     <span class="tok-k">"cpf"</span>: <span class="tok-s">"12345678910"</span>,
     <span class="tok-k">"nome"</span>: <span class="tok-s">"João Silva"</span>,
     <span class="tok-k">"email"</span>: <span class="tok-s">"joao@fornecedora.com.br"</span>,
-    <span class="tok-k">"telefone"</span>: <span class="tok-s">"11987654321"</span>,
+    <span class="tok-k">"phone"</span>: <span class="tok-s">"11987654321"</span>,
     <span class="tok-k">"rg"</span>: <span class="tok-s">"123456789"</span>,
-    <span class="tok-k">"orgaoExpedidor"</span>: <span class="tok-s">"SSP"</span>
+    <span class="tok-k">"issuing_body"</span>: <span class="tok-s">"SSP"</span>
   },
   <span class="tok-k">"status"</span>: <span class="tok-s">"ativo"</span>,
-  <span class="tok-k">"criadoEm"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>,
   <span class="tok-k">"atualizadoEm"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
 }</pre>
     </div>
@@ -255,10 +255,10 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "nomeFantasia": "Fornecedora Premium",
+    "trade_name": "Fornecedora Premium",
     "contato": {
       "email": "novo@fornecedora.com.br",
-      "telefone": "1144445555"
+      "phone": "1144445555"
     }
   }'</span></pre>
     </div>
@@ -268,7 +268,7 @@
       <pre>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"forn_abc123"</span>,
   <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
-  <span class="tok-k">"nomeFantasia"</span>: <span class="tok-s">"Fornecedora Premium"</span>,
+  <span class="tok-k">"trade_name"</span>: <span class="tok-s">"Fornecedora Premium"</span>,
   <span class="tok-k">"status"</span>: <span class="tok-s">"ativo"</span>,
   <span class="tok-k">"atualizadoEm"</span>: <span class="tok-s">"2026-07-29T16:45:00.000Z"</span>
 }</pre>

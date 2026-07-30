@@ -124,14 +124,14 @@
       </div>
       <pre>{
   <span class="tok-k">"event"</span>: <span class="tok-s">"credito.status_alterado"</span>,
-  <span class="tok-k">"createdAt"</span>: <span class="tok-s">"2026-07-29T15:00:00.000Z"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:00:00.000Z"</span>,
   <span class="tok-k">"data"</span>: {
-    <span class="tok-k">"chaveDfe"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
+    <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
     <span class="tok-k">"tipoTributo"</span>: <span class="tok-s">"cbs"</span>,
     <span class="tok-k">"valorCredito"</span>: <span class="tok-s">9.00</span>,
     <span class="tok-k">"statusAnterior"</span>: <span class="tok-s">"apropriado"</span>,
     <span class="tok-k">"statusAtual"</span>: <span class="tok-s">"utilizado"</span>,
-    <span class="tok-k">"motivoAlteracao"</span>: <span class="tok-s">"compensacao_debito_saida"</span>,
+    <span class="tok-k">"change_reason"</span>: <span class="tok-s">"compensacao_debito_saida"</span>,
     <span class="tok-k">"chaveDfeDebitoCompensado"</span>: <span class="tok-s">"35260714200166000187550010000098769876543210"</span>
   }
 }</pre>
@@ -170,16 +170,16 @@
       </div>
       <pre>{
   <span class="tok-k">"event"</span>: <span class="tok-s">"debito.status_alterado"</span>,
-  <span class="tok-k">"createdAt"</span>: <span class="tok-s">"2026-07-29T15:00:00.000Z"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:00:00.000Z"</span>,
   <span class="tok-k">"data"</span>: {
-    <span class="tok-k">"chaveDfe"</span>: <span class="tok-s">"35260714200166000187550010000098769876543210"</span>,
+    <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000098769876543210"</span>,
     <span class="tok-k">"tipoTributo"</span>: <span class="tok-s">"ibs"</span>,
     <span class="tok-k">"valorDebito"</span>: <span class="tok-s">1.00</span>,
     <span class="tok-k">"statusAnterior"</span>: <span class="tok-s">"nao_extinto"</span>,
     <span class="tok-k">"statusAtual"</span>: <span class="tok-s">"extinto"</span>,
-    <span class="tok-k">"modalidadeExtincao"</span>: <span class="tok-s">"compensacao_credito_entrada"</span>,
-    <span class="tok-k">"creditosUtilizados"</span>: [
-      { <span class="tok-k">"chaveDfe"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>, <span class="tok-k">"valorUtilizado"</span>: <span class="tok-s">1.00</span> }
+    <span class="tok-k">"extinction_type"</span>: <span class="tok-s">"compensacao_credito_entrada"</span>,
+    <span class="tok-k">"utilized_credits"</span>: [
+      { <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>, <span class="tok-k">"valorUtilizado"</span>: <span class="tok-s">1.00</span> }
     ]
   }
 }</pre>
