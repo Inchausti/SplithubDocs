@@ -99,9 +99,9 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "gatilho": "documento_fiscal.concluido",
-    "condicoes": { "valorTotalMinimo": 1000 },
-    "acao": { "tipo": "webhook", "url": "https://empresa.com/webhooks/splithub" }
+    "trigger": "documento_fiscal.concluido",
+    "conditions": { "valorTotalMinimo": 1000 },
+    "action": { "type": "webhook", "url": "https://empresa.com/webhooks/splithub" }
   }'</span></pre>
     </div>
 
@@ -109,7 +109,7 @@
       <div class="code-head"><span>Resposta 201 Created</span></div>
       <pre>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"auto_31fd"</span>,
-  <span class="tok-k">"gatilho"</span>: <span class="tok-s">"documento_fiscal.concluido"</span>,
+  <span class="tok-k">"trigger"</span>: <span class="tok-s">"documento_fiscal.concluido"</span>,
   <span class="tok-k">"status"</span>: <span class="tok-s">"ativa"</span>
 }</pre>
     </div>
@@ -137,7 +137,7 @@
   <span class="tok-k">"data"</span>: [
     {
       <span class="tok-k">"id"</span>: <span class="tok-s">"auto_31fd"</span>,
-      <span class="tok-k">"gatilho"</span>: <span class="tok-s">"documento_fiscal.concluido"</span>,
+      <span class="tok-k">"trigger"</span>: <span class="tok-s">"documento_fiscal.concluido"</span>,
       <span class="tok-k">"status"</span>: <span class="tok-s">"ativa"</span>,
       <span class="tok-k">"ultimaExecucao"</span>: <span class="tok-s">"2026-07-28T14:32:00Z"</span>
     }

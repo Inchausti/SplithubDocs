@@ -126,35 +126,35 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "tipo": "nfe",
-    "modelo": "55",
-    "chaveAcesso": "35260714200166000187550010000012341234567890",
-    "ide": {
-      "numero": "123456",
-      "serie": "1",
-      "dataEmissao": "2026-07-29T10:00:00-03:00"
+    "type": "nfe",
+    "model": "55",
+    "access_key": "35260714200166000187550010000012341234567890",
+    "identification": {
+      "number": "123456",
+      "series": "1",
+      "emission_date": "2026-07-29T10:00:00-03:00"
     },
-    "emit": {
+    "emission": {
       "cnpj": "14200166000187",
       "legal_name": "Fornecedor Exemplo LTDA",
-      "uf": "SP"
+      "state": "SP"
     },
-    "dest": {
-      "cnpjCpf": "98765432000188",
-      "nome": "Cliente Exemplo LTDA",
-      "uf": "RJ"
+    "destination": {
+      "cnpj_cpf": "98765432000188",
+      "name": "Cliente Exemplo LTDA",
+      "state": "RJ"
     },
-    "itens": [
+    "items": [
       {
-        "codigo": "SKU-1029",
-        "descricao": "Notebook 15pol 16GB",
+        "code": "SKU-1029",
+        "description": "Notebook 15pol 16GB",
         "ncm": "84713012",
         "cfop": "5102",
-        "quantidade": 2,
-        "valorUnitario": 3200.00,
+        "quantity": 2,
+        "unit_price": 3200.00,
         "total_value": 6400.00,
-        "imposto": {
-          "ibsCbs": {
+        "tax": {
+          "ibs_cbs": {
             "CST": "000",
             "cClassTrib": "000001",
             "vBC": 6400.00,
@@ -166,9 +166,9 @@
       }
     ],
     "total": {
-      "valorProdutos": 6400.00,
-      "valorTotalNota": 6400.00,
-      "ibsCbsTotal": {
+      "products_value": 6400.00,
+      "total_note_value": 6400.00,
+      "ibs_cbs_total": {
         "vBC": 6400.00,
         "vTotIBS": 6.40,
         "vTotCBS": 57.60
@@ -188,10 +188,10 @@
       <div class="code-head"><span>Resposta 202 Accepted</span></div>
       <pre>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>,
-  <span class="tok-k">"status"</span>: <span class="tok-s">"processando"</span>,
-  <span class="tok-k">"tipo"</span>: <span class="tok-s">"nfe"</span>,
-  <span class="tok-k">"modelo"</span>: <span class="tok-s">"55"</span>,
-  <span class="tok-k">"chaveAcesso"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>
+  <span class="tok-k">"status"</span>: <span class="tok-s">"processing"</span>,
+  <span class="tok-k">"type"</span>: <span class="tok-s">"nfe"</span>,
+  <span class="tok-k">"model"</span>: <span class="tok-s">"55"</span>,
+  <span class="tok-k">"access_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>
 }</pre>
     </div>
 
@@ -217,12 +217,12 @@
       <div class="code-head"><span>Resposta 200 OK</span></div>
       <pre>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>,
-  <span class="tok-k">"status"</span>: <span class="tok-s">"concluido"</span>,
-  <span class="tok-k">"tipo"</span>: <span class="tok-s">"nfe"</span>,
-  <span class="tok-k">"emit"</span>: { <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>, <span class="tok-k">"legal_name"</span>: <span class="tok-s">"Fornecedor Exemplo LTDA"</span> },
-  <span class="tok-k">"dest"</span>: { <span class="tok-k">"cnpjCpf"</span>: <span class="tok-s">"98765432000188"</span>, <span class="tok-k">"nome"</span>: <span class="tok-s">"Cliente Exemplo LTDA"</span> },
+  <span class="tok-k">"status"</span>: <span class="tok-s">"completed"</span>,
+  <span class="tok-k">"type"</span>: <span class="tok-s">"nfe"</span>,
+  <span class="tok-k">"emission"</span>: { <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>, <span class="tok-k">"legal_name"</span>: <span class="tok-s">"Fornecedor Exemplo LTDA"</span> },
+  <span class="tok-k">"destination"</span>: { <span class="tok-k">"cnpj_cpf"</span>: <span class="tok-s">"98765432000188"</span>, <span class="tok-k">"name"</span>: <span class="tok-s">"Cliente Exemplo LTDA"</span> },
   <span class="tok-k">"total_value"</span>: <span class="tok-s">6400.00</span>,
-  <span class="tok-k">"ibsCbsTotal"</span>: {
+  <span class="tok-k">"ibs_cbs_total"</span>: {
     <span class="tok-k">"vBC"</span>: <span class="tok-s">6400.00</span>,
     <span class="tok-k">"vTotIBS"</span>: <span class="tok-s">6.40</span>,
     <span class="tok-k">"vTotCBS"</span>: <span class="tok-s">57.60</span>
@@ -252,7 +252,7 @@
       <div class="code-head"><span>Resposta 200 OK</span></div>
       <pre>{
   <span class="tok-k">"data"</span>: [
-    { <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>, <span class="tok-k">"tipo"</span>: <span class="tok-s">"nfe"</span>, <span class="tok-k">"status"</span>: <span class="tok-s">"concluido"</span>, <span class="tok-k">"total_value"</span>: <span class="tok-s">6553.60</span> }
+    { <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>, <span class="tok-k">"type"</span>: <span class="tok-s">"nfe"</span>, <span class="tok-k">"status"</span>: <span class="tok-s">"completed"</span>, <span class="tok-k">"total_value"</span>: <span class="tok-s">6553.60</span> }
   ],
   <span class="tok-k">"page"</span>: <span class="tok-s">1</span>,
   <span class="tok-k">"perPage"</span>: <span class="tok-s">20</span>,
@@ -283,9 +283,9 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "dest": {
-      "cnpjCpf": "98765432000188",
-      "nome": "Cliente Exemplo LTDA - Matriz"
+    "destination": {
+      "cnpj_cpf": "98765432000188",
+      "name": "Cliente Exemplo LTDA - Matriz"
     }
   }'</span></pre>
     </div>
@@ -294,8 +294,8 @@
       <div class="code-head"><span>Resposta 200 OK</span></div>
       <pre>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>,
-  <span class="tok-k">"status"</span>: <span class="tok-s">"pendente"</span>,
-  <span class="tok-k">"dest"</span>: { <span class="tok-k">"cnpjCpf"</span>: <span class="tok-s">"98765432000188"</span>, <span class="tok-k">"nome"</span>: <span class="tok-s">"Cliente Exemplo LTDA - Matriz"</span> }
+  <span class="tok-k">"status"</span>: <span class="tok-s">"pending"</span>,
+  <span class="tok-k">"destination"</span>: { <span class="tok-k">"cnpj_cpf"</span>: <span class="tok-s">"98765432000188"</span>, <span class="tok-k">"name"</span>: <span class="tok-s">"Cliente Exemplo LTDA - Matriz"</span> }
 }</pre>
     </div>
 

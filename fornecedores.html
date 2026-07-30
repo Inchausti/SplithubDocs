@@ -108,22 +108,22 @@
     "legal_nature": "206",
     "tax_regime": "lucro_presumido",
     "economic_activity": "4711302",
-    "endereco": {
+    "address": {
       "street": "Avenida Principal",
-      "numero": "1000",
+      "number": "1000",
       "complement": "Sala 200",
       "neighborhood": "Centro",
-      "cidade": "São Paulo",
+      "city": "São Paulo",
       "state": "SP",
       "zipcode": "01234567"
     },
-    "contato": {
+    "contact": {
       "email": "contato@fornecedora.com.br",
       "phone": "1133334444"
     },
     "fiscal_representative": {
       "cpf": "12345678910",
-      "nome": "João Silva",
+      "name": "João Silva",
       "email": "joao@fornecedora.com.br",
       "phone": "11987654321",
       "rg": "123456789",
@@ -138,7 +138,7 @@
   <span class="tok-k">"id"</span>: <span class="tok-s">"forn_abc123"</span>,
   <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
   <span class="tok-k">"legal_name"</span>: <span class="tok-s">"Empresa Fornecedora Ltda"</span>,
-  <span class="tok-k">"status"</span>: <span class="tok-s">"ativo"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
   <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
 }</pre>
     </div>
@@ -170,7 +170,7 @@
       <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
       <span class="tok-k">"legal_name"</span>: <span class="tok-s">"Empresa Fornecedora Ltda"</span>,
       <span class="tok-k">"trade_name"</span>: <span class="tok-s">"Fornecedora"</span>,
-      <span class="tok-k">"status"</span>: <span class="tok-s">"ativo"</span>,
+      <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
       <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
     }
   ],
@@ -210,28 +210,28 @@
   <span class="tok-k">"legal_nature"</span>: <span class="tok-s">"206"</span>,
   <span class="tok-k">"tax_regime"</span>: <span class="tok-s">"lucro_presumido"</span>,
   <span class="tok-k">"economic_activity"</span>: <span class="tok-s">"4711302"</span>,
-  <span class="tok-k">"endereco"</span>: {
+  <span class="tok-k">"address"</span>: {
     <span class="tok-k">"street"</span>: <span class="tok-s">"Avenida Principal"</span>,
-    <span class="tok-k">"numero"</span>: <span class="tok-s">"1000"</span>,
+    <span class="tok-k">"number"</span>: <span class="tok-s">"1000"</span>,
     <span class="tok-k">"complement"</span>: <span class="tok-s">"Sala 200"</span>,
     <span class="tok-k">"neighborhood"</span>: <span class="tok-s">"Centro"</span>,
-    <span class="tok-k">"cidade"</span>: <span class="tok-s">"São Paulo"</span>,
+    <span class="tok-k">"city"</span>: <span class="tok-s">"São Paulo"</span>,
     <span class="tok-k">"state"</span>: <span class="tok-s">"SP"</span>,
     <span class="tok-k">"zipcode"</span>: <span class="tok-s">"01234567"</span>
   },
-  <span class="tok-k">"contato"</span>: {
+  <span class="tok-k">"contact"</span>: {
     <span class="tok-k">"email"</span>: <span class="tok-s">"contato@fornecedora.com.br"</span>,
     <span class="tok-k">"phone"</span>: <span class="tok-s">"1133334444"</span>
   },
   <span class="tok-k">"fiscal_representative"</span>: {
     <span class="tok-k">"cpf"</span>: <span class="tok-s">"12345678910"</span>,
-    <span class="tok-k">"nome"</span>: <span class="tok-s">"João Silva"</span>,
+    <span class="tok-k">"name"</span>: <span class="tok-s">"João Silva"</span>,
     <span class="tok-k">"email"</span>: <span class="tok-s">"joao@fornecedora.com.br"</span>,
     <span class="tok-k">"phone"</span>: <span class="tok-s">"11987654321"</span>,
     <span class="tok-k">"rg"</span>: <span class="tok-s">"123456789"</span>,
     <span class="tok-k">"issuing_body"</span>: <span class="tok-s">"SSP"</span>
   },
-  <span class="tok-k">"status"</span>: <span class="tok-s">"ativo"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
   <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>,
   <span class="tok-k">"atualizadoEm"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
 }</pre>
@@ -256,7 +256,7 @@
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "trade_name": "Fornecedora Premium",
-    "contato": {
+    "contact": {
       "email": "novo@fornecedora.com.br",
       "phone": "1144445555"
     }
@@ -269,7 +269,7 @@
   <span class="tok-k">"id"</span>: <span class="tok-s">"forn_abc123"</span>,
   <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
   <span class="tok-k">"trade_name"</span>: <span class="tok-s">"Fornecedora Premium"</span>,
-  <span class="tok-k">"status"</span>: <span class="tok-s">"ativo"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
   <span class="tok-k">"atualizadoEm"</span>: <span class="tok-s">"2026-07-29T16:45:00.000Z"</span>
 }</pre>
     </div>
