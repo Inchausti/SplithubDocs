@@ -75,7 +75,7 @@
       Um Documento Fiscal (DF) de entrada gera crédito tributário de IBS/CBS para o comprador; um
       DF de saída gera débito para quem vende. Pela Lei Complementar 214/2025, a apuração do
       IBS/CBS é não cumulativa e opera por compensação "tributo contra tributo": o débito de uma
-      saída é extinto abatendo-se os créditos já apropriados. O Splithub acompanha esse ciclo de
+      saída é settled abatendo-se os créditos já appropriateds. O Splithub acompanha esse ciclo de
       vida por valor de cada DF e avisa seu sistema a cada mudança de status através de dois
       webhooks.
     </p>
@@ -90,28 +90,28 @@
       Fluxo completo, por valor de cada DF:
     </p>
     <p>
-      1. O fornecedor emite uma NF de entrada para o comprador → nasce um crédito <code class="inline">nao_apropriado</code>.<br>
-      2. O tributo dessa NF de entrada é pago → o crédito passa a <code class="inline">apropriado</code>.<br>
-      3. O adquirente (o mesmo comprador, agora na ponta de venda) emite uma NF de saída → nasce um débito <code class="inline">nao_extinto</code>.<br>
-      4. Essa NF de saída é abatida pelos créditos apropriados disponíveis (compensação tributo contra tributo) → o crédito utilizado nessa compensação passa a <code class="inline">utilizado</code> e o débito correspondente passa a <code class="inline">extinto</code>, simultaneamente.
+      1. O fornecedor emite uma NF de entrada para o comprador → nasce um crédito <code class="inline">not_appropriated</code>.<br>
+      2. O tributo dessa NF de entrada é pago → o crédito passa a <code class="inline">appropriated</code>.<br>
+      3. O adquirente (o mesmo comprador, agora na ponta de venda) emite uma NF de saída → nasce um débito <code class="inline">not_settled</code>.<br>
+      4. Essa NF de saída é abatida pelos créditos appropriateds disponíveis (compensação tributo contra tributo) → o crédito utilized nessa compensação passa a <code class="inline">utilized</code> e o débito correspondente passa a <code class="inline">settled</code>, simultaneamente.
     </p>
 
     <table class="response-table">
       <tr><th>Tributo</th><th>Status</th><th>Quando ocorre</th></tr>
-      <tr><td>Crédito</td><td>nao_apropriado</td><td>NF de entrada emitida pelo fornecedor; o tributo dessa NF ainda não foi pago</td></tr>
-      <tr><td>Crédito</td><td>apropriado</td><td>O tributo da NF de entrada foi pago</td></tr>
-      <tr><td>Crédito</td><td>utilizado</td><td>O crédito apropriado foi usado para abater (compensar) o débito de uma NF de saída</td></tr>
-      <tr><td>Débito</td><td>nao_extinto</td><td>NF de saída emitida pelo adquirente; ainda não foi abatida por créditos</td></tr>
-      <tr><td>Débito</td><td>extinto</td><td>A NF de saída foi abatida pelos créditos apropriados disponíveis (compensação tributo contra tributo)</td></tr>
+      <tr><td>Crédito</td><td>not_appropriated</td><td>NF de entrada emitida pelo fornecedor; o tributo dessa NF ainda não foi pago</td></tr>
+      <tr><td>Crédito</td><td>appropriated</td><td>O tributo da NF de entrada foi pago</td></tr>
+      <tr><td>Crédito</td><td>utilized</td><td>O crédito appropriated foi usado para abater (compensar) o débito de uma NF de saída</td></tr>
+      <tr><td>Débito</td><td>not_settled</td><td>NF de saída emitida pelo adquirente; ainda não foi abatida por créditos</td></tr>
+      <tr><td>Débito</td><td>settled</td><td>A NF de saída foi abatida pelos créditos appropriateds disponíveis (compensação tributo contra tributo)</td></tr>
     </table>
 
     <h2 id="webhook-credito">Webhook event: mudança de status do crédito</h2>
     <p>
       Disparado sempre que o crédito tributário referente a um DF de entrada muda de status
-      (<code class="inline">nao_apropriado</code> → <code class="inline">apropriado</code> →
-      <code class="inline">utilizado</code>). No exemplo abaixo, o crédito acabou de ser
-      utilizado para compensar o débito de uma NF de saída — por isso o evento traz também a
-      <code class="inline">chaveDfeDebitoCompensado</code>.
+      (<code class="inline">not_appropriated</code> → <code class="inline">appropriated</code> →
+      <code class="inline">utilized</code>). No exemplo abaixo, o crédito acabou de ser
+      utilized para compensar o débito de uma NF de saída — por isso o evento traz também a
+      <code class="inline">compensated_debt_dfe_key</code>.
     </p>
 
     <div class="code-block">
@@ -127,12 +127,12 @@
   <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:00:00.000Z"</span>,
   <span class="tok-k">"data"</span>: {
     <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
-    <span class="tok-k">"tipoTributo"</span>: <span class="tok-s">"cbs"</span>,
-    <span class="tok-k">"valorCredito"</span>: <span class="tok-s">9.00</span>,
-    <span class="tok-k">"statusAnterior"</span>: <span class="tok-s">"apropriado"</span>,
-    <span class="tok-k">"statusAtual"</span>: <span class="tok-s">"utilizado"</span>,
-    <span class="tok-k">"change_reason"</span>: <span class="tok-s">"compensacao_debito_saida"</span>,
-    <span class="tok-k">"chaveDfeDebitoCompensado"</span>: <span class="tok-s">"35260714200166000187550010000098769876543210"</span>
+    <span class="tok-k">"tax_type"</span>: <span class="tok-s">"cbs"</span>,
+    <span class="tok-k">"credit_amount"</span>: <span class="tok-s">9.00</span>,
+    <span class="tok-k">"previous_status"</span>: <span class="tok-s">"appropriated"</span>,
+    <span class="tok-k">"current_status"</span>: <span class="tok-s">"utilized"</span>,
+    <span class="tok-k">"change_reason"</span>: <span class="tok-s">"outbound_debt_offset"</span>,
+    <span class="tok-k">"compensated_debt_dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000098769876543210"</span>
   }
 }</pre>
     </div>
@@ -144,19 +144,19 @@
       <tr><td>event</td><td>string</td><td>Nome do evento: credito.status_alterado</td></tr>
       <tr><td>createdAt</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
       <tr><td>data.chaveDfe</td><td>string</td><td>Chave de acesso do DF de entrada que originou o crédito</td></tr>
-      <tr><td>data.tipoTributo</td><td>string</td><td>Tributo do crédito: ibs ou cbs</td></tr>
-      <tr><td>data.valorCredito</td><td>number</td><td>Valor do crédito referente a este DF</td></tr>
-      <tr><td>data.statusAnterior / statusAtual</td><td>string</td><td>nao_apropriado, apropriado ou utilizado</td></tr>
-      <tr><td>data.motivoAlteracao</td><td>string</td><td>pagamento_tributo_nf_entrada (nao_apropriado → apropriado) ou compensacao_debito_saida (apropriado → utilizado)</td></tr>
-      <tr><td>data.chaveDfeDebitoCompensado</td><td>string</td><td>Presente quando statusAtual é utilizado: chave da NF de saída cujo débito foi compensado por este crédito</td></tr>
+      <tr><td>data.tax_type</td><td>string</td><td>Tributo do crédito: ibs ou cbs</td></tr>
+      <tr><td>data.credit_amount</td><td>number</td><td>Valor do crédito referente a este DF</td></tr>
+      <tr><td>data.previous_status / current_status</td><td>string</td><td>not_appropriated, appropriated ou utilized</td></tr>
+      <tr><td>data.change_reason</td><td>string</td><td>pagamento_tributo_nf_entrada (not_appropriated → appropriated) ou outbound_debt_offset (appropriated → utilized)</td></tr>
+      <tr><td>data.compensated_debt_dfe_key</td><td>string</td><td>Presente quando current_status é utilized: chave da NF de saída cujo débito foi compensado por este crédito</td></tr>
     </table>
 
     <h2 id="webhook-debito">Webhook event: mudança de status do débito</h2>
     <p>
       Disparado sempre que o débito tributário referente a um DF de saída muda de status
-      (<code class="inline">nao_extinto</code> → <code class="inline">extinto</code>). A
-      extinção ocorre quando a NF de saída é abatida pelos créditos apropriados disponíveis —
-      por isso o evento traz também <code class="inline">creditosUtilizados</code>, com a
+      (<code class="inline">not_settled</code> → <code class="inline">settled</code>). A
+      extinção ocorre quando a NF de saída é abatida pelos créditos appropriateds disponíveis —
+      por isso o evento traz também <code class="inline">utilized_credits</code>, com a
       chave e o valor de cada crédito usado na compensação.
     </p>
 
@@ -173,13 +173,13 @@
   <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:00:00.000Z"</span>,
   <span class="tok-k">"data"</span>: {
     <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000098769876543210"</span>,
-    <span class="tok-k">"tipoTributo"</span>: <span class="tok-s">"ibs"</span>,
-    <span class="tok-k">"valorDebito"</span>: <span class="tok-s">1.00</span>,
-    <span class="tok-k">"statusAnterior"</span>: <span class="tok-s">"nao_extinto"</span>,
-    <span class="tok-k">"statusAtual"</span>: <span class="tok-s">"extinto"</span>,
-    <span class="tok-k">"extinction_type"</span>: <span class="tok-s">"compensacao_credito_entrada"</span>,
+    <span class="tok-k">"tax_type"</span>: <span class="tok-s">"ibs"</span>,
+    <span class="tok-k">"debt_amount"</span>: <span class="tok-s">1.00</span>,
+    <span class="tok-k">"previous_status"</span>: <span class="tok-s">"not_settled"</span>,
+    <span class="tok-k">"current_status"</span>: <span class="tok-s">"settled"</span>,
+    <span class="tok-k">"extinction_type"</span>: <span class="tok-s">"inbound_credit_offset"</span>,
     <span class="tok-k">"utilized_credits"</span>: [
-      { <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>, <span class="tok-k">"valorUtilizado"</span>: <span class="tok-s">1.00</span> }
+      { <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>, <span class="tok-k">"utilized_amount"</span>: <span class="tok-s">1.00</span> }
     ]
   }
 }</pre>
@@ -192,11 +192,11 @@
       <tr><td>event</td><td>string</td><td>Nome do evento: debito.status_alterado</td></tr>
       <tr><td>createdAt</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
       <tr><td>data.chaveDfe</td><td>string</td><td>Chave de acesso do DF de saída que originou o débito</td></tr>
-      <tr><td>data.tipoTributo</td><td>string</td><td>Tributo do débito: ibs ou cbs</td></tr>
-      <tr><td>data.valorDebito</td><td>number</td><td>Valor do débito referente a este DF</td></tr>
-      <tr><td>data.statusAnterior / statusAtual</td><td>string</td><td>nao_extinto ou extinto</td></tr>
-      <tr><td>data.modalidadeExtincao</td><td>string</td><td>compensacao_credito_entrada</td></tr>
-      <tr><td>data.creditosUtilizados</td><td>array</td><td>Créditos (chaveDfe + valorUtilizado) usados para compensar este débito</td></tr>
+      <tr><td>data.tax_type</td><td>string</td><td>Tributo do débito: ibs ou cbs</td></tr>
+      <tr><td>data.debt_amount</td><td>number</td><td>Valor do débito referente a este DF</td></tr>
+      <tr><td>data.previous_status / current_status</td><td>string</td><td>not_settled ou settled</td></tr>
+      <tr><td>data.extinction_type</td><td>string</td><td>inbound_credit_offset</td></tr>
+      <tr><td>data.utilized_credits</td><td>array</td><td>Créditos (chaveDfe + utilized_amount) usados para compensar este débito</td></tr>
     </table>
 
     <div class="page-footer-nav">

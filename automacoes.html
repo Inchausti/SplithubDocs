@@ -41,7 +41,7 @@
       </div>
       <div class="nav-items">
         <a href="visao-geral.html" class="nav-item">Visão geral</a>
-        <a href="autenticacao.html" class="nav-item">Autenticação</a>
+        <a href="autenticaction.html" class="nav-item">Autenticação</a>
       </div>
     </div>
 
@@ -81,9 +81,9 @@
       Cada automação é avaliada de forma assíncrona após o evento que a dispara; consulte o histórico de execuções para confirmar se ela rodou como esperado.
     </div>
 
-    <h2 id="criar-automacao">Criar uma automação</h2>
+    <h2 id="criar-automaction">Criar uma automação</h2>
     <p>
-      Informe o evento que dispara a automação (<code class="inline">gatilho</code>), condições
+      Informe o evento que dispara a automação (<code class="inline">trigger</code>), condições
       opcionais e a ação a ser executada.
     </p>
 
@@ -99,8 +99,8 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "trigger": "documento_fiscal.concluido",
-    "conditions": { "valorTotalMinimo": 1000 },
+    "trigger": "tax_document.completed",
+    "conditions": { "min_total_value": 1000 },
     "action": { "type": "webhook", "url": "https://empresa.com/webhooks/splithub" }
   }'</span></pre>
     </div>
@@ -109,8 +109,8 @@
       <div class="code-head"><span>Resposta 201 Created</span></div>
       <pre>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"auto_31fd"</span>,
-  <span class="tok-k">"trigger"</span>: <span class="tok-s">"documento_fiscal.concluido"</span>,
-  <span class="tok-k">"status"</span>: <span class="tok-s">"ativa"</span>
+  <span class="tok-k">"trigger"</span>: <span class="tok-s">"tax_document.completed"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>
 }</pre>
     </div>
 
@@ -137,9 +137,9 @@
   <span class="tok-k">"data"</span>: [
     {
       <span class="tok-k">"id"</span>: <span class="tok-s">"auto_31fd"</span>,
-      <span class="tok-k">"trigger"</span>: <span class="tok-s">"documento_fiscal.concluido"</span>,
-      <span class="tok-k">"status"</span>: <span class="tok-s">"ativa"</span>,
-      <span class="tok-k">"ultimaExecucao"</span>: <span class="tok-s">"2026-07-28T14:32:00Z"</span>
+      <span class="tok-k">"trigger"</span>: <span class="tok-s">"tax_document.completed"</span>,
+      <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
+      <span class="tok-k">"last_run_at"</span>: <span class="tok-s">"2026-07-28T14:32:00Z"</span>
     }
   ]
 }</pre>
@@ -148,9 +148,9 @@
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
       <tr><td>id</td><td>string</td><td>Identificador único da automação</td></tr>
-      <tr><td>gatilho</td><td>string</td><td>Evento que dispara a automação (ex.: documento_fiscal.concluido)</td></tr>
-      <tr><td>condicoes</td><td>object</td><td>Condições adicionais avaliadas antes de executar a ação</td></tr>
-      <tr><td>acao</td><td>object</td><td>Ação executada quando a automação dispara</td></tr>
+      <tr><td>trigger</td><td>string</td><td>Evento que dispara a automação (ex.: documento_fiscal.concluido)</td></tr>
+      <tr><td>conditions</td><td>object</td><td>Condições adicionais avaliadas antes de executar a ação</td></tr>
+      <tr><td>action</td><td>object</td><td>Ação executada quando a automação dispara</td></tr>
       <tr><td>status</td><td>string</td><td>ativa ou inativa</td></tr>
     </table>
 
@@ -168,7 +168,7 @@
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#criar-automacao" class="toc-link active"><span class="toc-method toc-method-post">POST</span>Criar uma automação</a>
+    <a href="#criar-automaction" class="toc-link active"><span class="toc-method toc-method-post">POST</span>Criar uma automação</a>
     <a href="#listar-automacoes" class="toc-link"><span class="toc-method toc-method-get">GET</span>Listar automações</a>
 
     <div class="help-box">
