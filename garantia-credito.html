@@ -142,12 +142,12 @@
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
       <tr><td>event</td><td>string</td><td>Nome do evento: credito.status_alterado</td></tr>
-      <tr><td>createdAt</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
-      <tr><td>data.chaveDfe</td><td>string</td><td>Chave de acesso do DF de entrada que originou o crédito</td></tr>
+      <tr><td>created_at</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
+      <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF de entrada que originou o crédito</td></tr>
       <tr><td>data.tax_type</td><td>string</td><td>Tributo do crédito: ibs ou cbs</td></tr>
       <tr><td>data.credit_amount</td><td>number</td><td>Valor do crédito referente a este DF</td></tr>
       <tr><td>data.previous_status / current_status</td><td>string</td><td>not_appropriated, appropriated ou utilized</td></tr>
-      <tr><td>data.change_reason</td><td>string</td><td>pagamento_tributo_nf_entrada (not_appropriated → appropriated) ou outbound_debt_offset (appropriated → utilized)</td></tr>
+      <tr><td>data.change_reason</td><td>string</td><td>inbound_tax_payment (not_appropriated → appropriated) ou outbound_debt_offset (appropriated → utilized)</td></tr>
       <tr><td>data.compensated_debt_dfe_key</td><td>string</td><td>Presente quando current_status é utilized: chave da NF de saída cujo débito foi compensado por este crédito</td></tr>
     </table>
 
@@ -190,13 +190,13 @@
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
       <tr><td>event</td><td>string</td><td>Nome do evento: debito.status_alterado</td></tr>
-      <tr><td>createdAt</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
-      <tr><td>data.chaveDfe</td><td>string</td><td>Chave de acesso do DF de saída que originou o débito</td></tr>
+      <tr><td>created_at</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
+      <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF de saída que originou o débito</td></tr>
       <tr><td>data.tax_type</td><td>string</td><td>Tributo do débito: ibs ou cbs</td></tr>
       <tr><td>data.debt_amount</td><td>number</td><td>Valor do débito referente a este DF</td></tr>
       <tr><td>data.previous_status / current_status</td><td>string</td><td>not_settled ou settled</td></tr>
       <tr><td>data.extinction_type</td><td>string</td><td>inbound_credit_offset</td></tr>
-      <tr><td>data.utilized_credits</td><td>array</td><td>Créditos (chaveDfe + utilized_amount) usados para compensar este débito</td></tr>
+      <tr><td>data.utilized_credits</td><td>array</td><td>Créditos (dfe_key + utilized_amount) usados para compensar este débito</td></tr>
     </table>
 
     <div class="page-footer-nav">

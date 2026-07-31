@@ -92,7 +92,7 @@
 
     <div class="callout">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      Nesta versão só é suportada a <code class="inline">modalidadePagamento</code> RAD (Recolhimento pelo Adquirente); PRESP (Pagamento pelo Responsável) fica reservado para uma versão futura. Como cada evento se refere a um único tributo, incluímos o campo <code class="inline">tipoDarf</code> (<code class="inline">ibs</code> ou <code class="inline">cbs</code>) para identificar qual guia foi recebida.
+      Nesta versão só é suportada a <code class="inline">payment_method</code> RAD (Recolhimento pelo Adquirente); PRESP (Pagamento pelo Responsável) fica reservado para uma versão futura. Como cada evento se refere a um único tributo, incluímos o campo <code class="inline">darf_type</code> (<code class="inline">ibs</code> ou <code class="inline">cbs</code>) para identificar qual guia foi recebida.
     </div>
 
     <div class="code-block">
@@ -131,26 +131,26 @@
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
       <tr><td>event</td><td>string</td><td>Nome do evento: rad.darf_recebida</td></tr>
-      <tr><td>createdAt</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
-      <tr><td>data.chaveDfe</td><td>string</td><td>Chave de acesso do DF-e ao qual a guia se refere</td></tr>
-      <tr><td>data.tipoDarf</td><td>string</td><td>Tributo da guia: ibs ou cbs</td></tr>
-      <tr><td>data.cdRetorno</td><td>string</td><td>DARF_GERADO, DFE_NAO_ENCONTRADO ou VALOR_PARCIAL_SUPERIOR_DFE</td></tr>
-      <tr><td>data.chavePix</td><td>string</td><td>Chave PIX disponível para pagamento do DARF</td></tr>
-      <tr><td>data.codBarras</td><td>string</td><td>Código de barras para pagamento do DARF</td></tr>
-      <tr><td>data.linkDarfPdf</td><td>string</td><td>Link para download do PDF do DARF</td></tr>
-      <tr><td>data.valorDarfPrincipal</td><td>number</td><td>Valor principal considerado na emissão do DARF</td></tr>
-      <tr><td>data.valorDarfMulta</td><td>number</td><td>Valor de multa considerado na emissão do DARF</td></tr>
-      <tr><td>data.valorDarfJuros</td><td>number</td><td>Valor de juros considerado na emissão do DARF</td></tr>
-      <tr><td>data.valorDarfTotal</td><td>number</td><td>Valor total considerado na emissão do DARF</td></tr>
+      <tr><td>created_at</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
+      <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF-e ao qual a guia se refere</td></tr>
+      <tr><td>data.darf_type</td><td>string</td><td>Tributo da guia: ibs ou cbs</td></tr>
+      <tr><td>data.return_code</td><td>string</td><td>DARF_GERADO, DFE_NAO_ENCONTRADO ou VALOR_PARCIAL_SUPERIOR_DFE</td></tr>
+      <tr><td>data.pix_key</td><td>string</td><td>Chave PIX disponível para pagamento do DARF</td></tr>
+      <tr><td>data.barcode</td><td>string</td><td>Código de barras para pagamento do DARF</td></tr>
+      <tr><td>data.darf_pdf_link</td><td>string</td><td>Link para download do PDF do DARF</td></tr>
+      <tr><td>data.darf_principal_value</td><td>number</td><td>Valor principal considerado na emissão do DARF</td></tr>
+      <tr><td>data.darf_penalty_value</td><td>number</td><td>Valor de multa considerado na emissão do DARF</td></tr>
+      <tr><td>data.darf_interest_value</td><td>number</td><td>Valor de juros considerado na emissão do DARF</td></tr>
+      <tr><td>data.darf_total_value</td><td>number</td><td>Valor total considerado na emissão do DARF</td></tr>
     </table>
 
     <h2 id="comprovante-pagamento">Enviar comprovante de pagamento</h2>
     <p>
       Depois de pagar o DARF via PIX, envie o comprovante ao Splithub para conciliar a
       retenção com o pagamento efetivamente realizado. O formato do objeto <code class="inline">pix</code>
-      segue o padrão de webhook Pix recebido do Banco Central (campos <code class="inline">endToEndId</code>,
-      <code class="inline">txid</code>, <code class="inline">chave</code>, <code class="inline">valor</code>,
-      <code class="inline">horario</code> e <code class="inline">infoPagador</code>).
+      segue o padrão de webhook Pix recebido do Banco Central (campos <code class="inline">end_to_end_id</code>,
+      <code class="inline">txid</code>, <code class="inline">key</code>, <code class="inline">amount</code>,
+      <code class="inline">timestamp</code> e <code class="inline">payer_info</code>).
     </p>
 
     <div class="code-block">
@@ -188,14 +188,14 @@
 
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>darfId</td><td>string</td><td>Identificador do DARF recebido via webhook, ao qual este comprovante se refere</td></tr>
-      <tr><td>pix.endToEndId</td><td>string</td><td>Identificador único da transação Pix</td></tr>
+      <tr><td>darf_id</td><td>string</td><td>Identificador do DARF recebido via webhook, ao qual este comprovante se refere</td></tr>
+      <tr><td>pix.end_to_end_id</td><td>string</td><td>Identificador único da transação Pix</td></tr>
       <tr><td>pix.txid</td><td>string</td><td>Identificador da cobrança Pix associada ao pagamento</td></tr>
-      <tr><td>pix.chave</td><td>string</td><td>Chave Pix usada no pagamento</td></tr>
-      <tr><td>pix.valor</td><td>string</td><td>Valor pago, no mesmo formato do webhook Pix do Banco Central</td></tr>
-      <tr><td>pix.horario</td><td>timestamp</td><td>Data e hora da liquidação do Pix</td></tr>
-      <tr><td>pix.infoPagador</td><td>string</td><td>Informação livre enviada pelo pagador no Pix</td></tr>
-      <tr><td>status</td><td>string</td><td>confirmado, pendente ou divergente (quando o valor do Pix não bate com o DARF)</td></tr>
+      <tr><td>pix.key</td><td>string</td><td>Chave Pix usada no pagamento</td></tr>
+      <tr><td>pix.amount</td><td>string</td><td>Valor pago, no mesmo formato do webhook Pix do Banco Central</td></tr>
+      <tr><td>pix.timestamp</td><td>timestamp</td><td>Data e hora da liquidação do Pix</td></tr>
+      <tr><td>pix.payer_info</td><td>string</td><td>Informação livre enviada pelo pagador no Pix</td></tr>
+      <tr><td>status</td><td>string</td><td>confirmed, pending or divergent (quando o valor do Pix não bate com o DARF)</td></tr>
     </table>
 
     <div class="page-footer-nav">

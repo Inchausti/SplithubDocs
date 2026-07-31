@@ -301,30 +301,30 @@
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
       <tr><td>id</td><td>string</td><td>Identificador único do fornecedor no Splithub</td></tr>
       <tr><td>cnpj</td><td>string</td><td>CNPJ do fornecedor (alfanumérico: letras e números)</td></tr>
-      <tr><td>razaoSocial</td><td>string</td><td>Razão social conforme Receita Federal</td></tr>
-      <tr><td>nomeFantasia</td><td>string</td><td>Nome fantasia do fornecedor</td></tr>
-      <tr><td>dataAbertura</td><td>date</td><td>Data de abertura da empresa (YYYY-MM-DD)</td></tr>
-      <tr><td>situacaoCadastral</td><td>string</td><td>ativa, inativa, suspensa ou cancelada</td></tr>
-      <tr><td>naturezaJuridica</td><td>string</td><td>Código de natureza jurídica (3 dígitos)</td></tr>
-      <tr><td>regimeTributario</td><td>string</td><td>lucro_real, lucro_presumido ou simples_nacional</td></tr>
-      <tr><td>atividadeEconomica</td><td>string</td><td>Código CNAE principal (7 dígitos)</td></tr>
-      <tr><td>endereco.logradouro</td><td>string</td><td>Nome da rua/avenida/praça</td></tr>
-      <tr><td>endereco.numero</td><td>string</td><td>Número do endereço</td></tr>
-      <tr><td>endereco.complemento</td><td>string</td><td>Complemento (apto, sala, etc.)</td></tr>
-      <tr><td>endereco.bairro</td><td>string</td><td>Bairro</td></tr>
-      <tr><td>endereco.cidade</td><td>string</td><td>Município</td></tr>
-      <tr><td>endereco.estado</td><td>string</td><td>UF (2 letras, ex: SP, RJ)</td></tr>
-      <tr><td>endereco.cep</td><td>string</td><td>CEP (8 dígitos, sem formatação)</td></tr>
-      <tr><td>contato.email</td><td>string</td><td>Email de contato da empresa</td></tr>
-      <tr><td>contato.telefone</td><td>string</td><td>Telefone de contato (com DDD)</td></tr>
-      <tr><td>representanteFiscal.cpf</td><td>string</td><td>CPF do representante fiscal (11 dígitos)</td></tr>
-      <tr><td>representanteFiscal.nome</td><td>string</td><td>Nome completo do representante fiscal</td></tr>
-      <tr><td>representanteFiscal.email</td><td>string</td><td>Email do representante fiscal</td></tr>
-      <tr><td>representanteFiscal.telefone</td><td>string</td><td>Telefone do representante fiscal</td></tr>
-      <tr><td>representanteFiscal.rg</td><td>string</td><td>RG do representante fiscal</td></tr>
-      <tr><td>representanteFiscal.orgaoExpedidor</td><td>string</td><td>Órgão que expediu o RG (ex: SSP, PC)</td></tr>
-      <tr><td>status</td><td>string</td><td>ativo ou inativo</td></tr>
-      <tr><td>criadoEm</td><td>timestamp</td><td>Data e hora da criação</td></tr>
+      <tr><td>legal_name</td><td>string</td><td>Razão social conforme Receita Federal</td></tr>
+      <tr><td>trade_name</td><td>string</td><td>Nome fantasia do fornecedor</td></tr>
+      <tr><td>founding_date</td><td>date</td><td>Data de abertura da empresa (YYYY-MM-DD)</td></tr>
+      <tr><td>registration_status</td><td>string</td><td>active, inactive, suspended or cancelled</td></tr>
+      <tr><td>legal_nature</td><td>string</td><td>Código de natureza jurídica (3 dígitos)</td></tr>
+      <tr><td>tax_regime</td><td>string</td><td>lucro_real, lucro_presumido ou simples_nacional</td></tr>
+      <tr><td>economic_activity</td><td>string</td><td>Código CNAE principal (7 dígitos)</td></tr>
+      <tr><td>address.street</td><td>string</td><td>Nome da rua/avenida/praça</td></tr>
+      <tr><td>address.number</td><td>string</td><td>Número do endereço</td></tr>
+      <tr><td>address.complement</td><td>string</td><td>Complemento (apto, sala, etc.)</td></tr>
+      <tr><td>address.neighborhood</td><td>string</td><td>Bairro</td></tr>
+      <tr><td>address.city</td><td>string</td><td>Município</td></tr>
+      <tr><td>address.state</td><td>string</td><td>UF (2 letras, ex: SP, RJ)</td></tr>
+      <tr><td>address.zipcode</td><td>string</td><td>CEP (8 dígitos, sem formatação)</td></tr>
+      <tr><td>contact.email</td><td>string</td><td>Email de contato da empresa</td></tr>
+      <tr><td>contact.phone</td><td>string</td><td>Telefone de contato (com DDD)</td></tr>
+      <tr><td>fiscal_representative.cpf</td><td>string</td><td>CPF do representante fiscal (11 dígitos)</td></tr>
+      <tr><td>fiscal_representative.name</td><td>string</td><td>Nome completo do representante fiscal</td></tr>
+      <tr><td>fiscal_representative.email</td><td>string</td><td>Email do representante fiscal</td></tr>
+      <tr><td>fiscal_representative.phone</td><td>string</td><td>Telefone do representante fiscal</td></tr>
+      <tr><td>fiscal_representative.rg</td><td>string</td><td>RG do representante fiscal</td></tr>
+      <tr><td>fiscal_representative.issuing_body</td><td>string</td><td>Órgão que expediu o RG (ex: SSP, PC)</td></tr>
+      <tr><td>status</td><td>string</td><td>active or inactive</td></tr>
+      <tr><td>created_at</td><td>timestamp</td><td>Data e hora da criação</td></tr>
       <tr><td>updated_at</td><td>timestamp</td><td>Data e hora da última atualização</td></tr>
     </table>
 
