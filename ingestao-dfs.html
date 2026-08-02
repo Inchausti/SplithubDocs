@@ -105,25 +105,14 @@
 
     <h2 id="apuracao-assistida">Documentos Fiscais para Apuração Assistida</h2>
     <p>
-      A partir de <strong>1º de janeiro de 2026</strong>, todos os documentos fiscais eletrônicos incluem obrigatoriamente os campos de <strong>IBS</strong> (Imposto sobre Bens e Serviços) e <strong>CBS</strong> (Contribuição sobre Bens e Serviços). Estes campos alimentam o mecanismo de <strong>apuração assistida</strong> da Receita Federal e CGIBS, onde o Fisco consolida automaticamente débitos e créditos do contribuinte baseado nas informações estruturadas dos documentos.
+      A partir de <strong>1º de janeiro de 2026</strong>, todos os documentos fiscais incluem obrigatoriamente campos de <strong>IBS</strong> (Imposto sobre Bens e Serviços) e <strong>CBS</strong> (Contribuição sobre Bens e Serviços) que alimentam a apuração assistida da Receita Federal e CGIBS. O Fisco consolida automaticamente débitos/créditos e apresenta uma declaração pré-preenchida. Se o contribuinte não se manifestar, ocorre <strong>confissão tácita</strong>.
     </p>
 
     <p>
-      Todos os 14 tipos de DF-e listados acima participam da apuração assistida. A Receita Federal e o CGIBS (Comitê Gestor do IBS) geram uma declaração pré-preenchida com base nesses dados que o contribuinte pode validar ou ajustar conforme regulamento. Se o contribuinte não se manifestar no prazo regulamentado, ocorre <strong>confissão tácita</strong> — a apuração é presumida correta e serve como base para cobrança de IBS/CBS.
+      <strong>Todos os 14 tipos suportam apuração assistida, mas apenas estes 10 foram explicitamente mencionados nas normas oficiais:</strong> NF-e, NFC-e, NFCom, NF3-e, NFS-e, CT-e, NFAg, NFGás, MDF-e e BP-e.
     </p>
 
-    <p><strong>Campos obrigatórios para apuração assistida (Grupo UB):</strong></p>
-    <ul style="margin-left:20px;">
-      <li><code class="inline">cst_ibs</code> - Código de Situação Tributária para IBS</li>
-      <li><code class="inline">cst_cbs</code> - Código de Situação Tributária para CBS</li>
-      <li><code class="inline">cclasstr</code> - Código de Classificação Tributária</li>
-      <li>Valores de base tributária e alíquotas</li>
-    </ul>
-
-    <p>
-      Legislação: <strong>Lei Complementar nº 214/2025</strong> (Art. 47 - Apuração Assistida; Art. 62 - Grupo UB)
-      e <strong>Nota Técnica 2025.002 v.1.35</strong>
-    </p>
+    <p><strong>Campos obrigatórios (Grupo UB):</strong> <code class="inline">cst_ibs</code>, <code class="inline">cst_cbs</code>, <code class="inline">cclasstr</code> (conforme Lei Complementar 214/2025 + Nota Técnica 2025.002 v.1.35)</p>
 
     <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
