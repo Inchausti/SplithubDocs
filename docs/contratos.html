@@ -115,18 +115,18 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "external_contract_id": "CTR-2026-001",
-    "description": "Contrato de fornecimento de insumos",
-    "buyer_cnpj": "14200166000187",
-    "supplier_cnpj": "98765432000188",
-    "start_date": "2026-08-01",
-    "end_date": "2027-07-31",
-    "total_value": 120000.00,
-    "payment_conditions": "30-60-90",
-    "autorenew": true,
-    "rad_eligible": true,
-    "status": "active",
-    "notes": "Supply contract subject to Tax Reform - IBS/CBS"
+    "external_contract_id": "CTR-2026-001",     <span class="tok-c">// REQUIRED</span>
+    "description": "Contrato de fornecimento",  <span class="tok-c">// REQUIRED</span>
+    "buyer_cnpj": "14200166000187",             <span class="tok-c">// REQUIRED</span>
+    "supplier_cnpj": "98765432000188",          <span class="tok-c">// REQUIRED</span>
+    "start_date": "2026-08-01",                 <span class="tok-c">// REQUIRED</span>
+    "end_date": "2027-07-31",                   <span class="tok-c">// REQUIRED</span>
+    "total_value": 120000.00,                   <span class="tok-c">// REQUIRED</span>
+    "payment_conditions": "30-60-90",           <span class="tok-c">// REQUIRED</span>
+    "autorenew": true,                          <span class="tok-c">// REQUIRED</span>
+    "rad_eligible": true,                       <span class="tok-c">// REQUIRED</span>
+    "status": "active",                         <span class="tok-c">// REQUIRED</span>
+    "notes": "Supply contract subject to..."    <span class="tok-c">// OPTIONAL</span>
   }'</span></pre>
     </div>
 
@@ -139,6 +139,23 @@
   <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
 }</pre>
     </div>
+
+    <p><strong>Campos Obrigatórios (POST /v1/contratos):</strong></p>
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Status</th></tr>
+      <tr><td>external_contract_id</td><td>string</td><td>OBRIGATÓRIO</td></tr>
+      <tr><td>description</td><td>string</td><td>OBRIGATÓRIO</td></tr>
+      <tr><td>buyer_cnpj</td><td>string</td><td>OBRIGATÓRIO</td></tr>
+      <tr><td>supplier_cnpj</td><td>string</td><td>OBRIGATÓRIO</td></tr>
+      <tr><td>start_date</td><td>date</td><td>OBRIGATÓRIO</td></tr>
+      <tr><td>end_date</td><td>date</td><td>OBRIGATÓRIO</td></tr>
+      <tr><td>total_value</td><td>number</td><td>OBRIGATÓRIO</td></tr>
+      <tr><td>payment_conditions</td><td>string</td><td>OBRIGATÓRIO</td></tr>
+      <tr><td>autorenew</td><td>boolean</td><td>OBRIGATÓRIO</td></tr>
+      <tr><td>rad_eligible</td><td>boolean</td><td>OBRIGATÓRIO</td></tr>
+      <tr><td>status</td><td>string</td><td>OBRIGATÓRIO</td></tr>
+      <tr><td>notes</td><td>string</td><td>OPCIONAL</td></tr>
+    </table>
 
     <h2 id="listar-contratos">Listar contratos</h2>
     <p>

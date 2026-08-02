@@ -171,15 +171,15 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "darf_id": "darf_9f21ab",
-    "tipo_pagamento": "pix",
-    "pix": {
-      "end_to_end_id": "E14200166202607291200a1b2c3d4",
-      "txid": "cbs_df_8f3a1c2b",
-      "chave_pix": "14200166000187",
-      "valor": "57.60",
-      "timestamp": "2026-07-29T12:00:00.000Z",
-      "descricao": "Pagamento DARF CBS - chave DFe 35260714200166000187550010000012341234567890"
+    "darf_id": "darf_9f21ab",                    <span class="tok-c">// REQUIRED</span>
+    "tipo_pagamento": "pix",                    <span class="tok-c">// REQUIRED</span>
+    "pix": {                                    <span class="tok-c">// REQUIRED (when tipo_pagamento=pix)</span>
+      "end_to_end_id": "E14200166...",         <span class="tok-c">// REQUIRED</span>
+      "txid": "cbs_df_8f3a1c2b",               <span class="tok-c">// REQUIRED</span>
+      "chave_pix": "14200166000187",           <span class="tok-c">// REQUIRED</span>
+      "valor": "57.60",                        <span class="tok-c">// REQUIRED</span>
+      "timestamp": "2026-07-29T12:00:00.000Z", <span class="tok-c">// REQUIRED - ISO 8601</span>
+      "descricao": "Pagamento DARF CBS..."      <span class="tok-c">// OPTIONAL</span>
     }
   }'</span></pre>
     </div>
@@ -196,18 +196,18 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "darf_id": "darf_8e32kc",
-    "tipo_pagamento": "boleto",
-    "boleto": {
-      "nosso_numero": "12345678",
-      "codigo_barras": "00190123456000012345678001234567890112345",
-      "linha_digitavel": "00190.12345 00012345678 00123456789 1 12345678901234",
-      "banco": "001",
-      "agencia": "1234",
-      "conta": "123456",
-      "valor_pago": "125.40",
-      "data_pagamento": "2026-07-31T14:30:00.000Z",
-      "descricao": "Pagamento DARF IBS - chave DFe 35260714200166000187550010000054321098765432"
+    "darf_id": "darf_8e32kc",                   <span class="tok-c">// REQUIRED</span>
+    "tipo_pagamento": "boleto",                 <span class="tok-c">// REQUIRED</span>
+    "boleto": {                                 <span class="tok-c">// REQUIRED (when tipo_pagamento=boleto)</span>
+      "nosso_numero": "12345678",              <span class="tok-c">// REQUIRED</span>
+      "codigo_barras": "00190123456...",       <span class="tok-c">// REQUIRED - 44 dígitos</span>
+      "linha_digitavel": "00190.12345...",     <span class="tok-c">// REQUIRED - 48 dígitos</span>
+      "banco": "001",                          <span class="tok-c">// REQUIRED - código banco</span>
+      "agencia": "1234",                       <span class="tok-c">// REQUIRED</span>
+      "conta": "123456",                       <span class="tok-c">// REQUIRED</span>
+      "valor_pago": "125.40",                  <span class="tok-c">// REQUIRED</span>
+      "data_pagamento": "2026-07-31T14:30...", <span class="tok-c">// REQUIRED - ISO 8601</span>
+      "descricao": "Pagamento DARF IBS..."      <span class="tok-c">// OPTIONAL</span>
     }
   }'</span></pre>
     </div>
@@ -223,6 +223,30 @@
   <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T12:00:30.000Z"</span>
 }</pre>
     </div>
+
+    <p><strong>Campos Obrigatórios e Opcionais (POST /v1/rad/proofs):</strong></p>
+    <table class="response-table">
+      <tr><th>Campo</th><th>Status</th><th>Observação</th></tr>
+      <tr><td>darf_id</td><td>OBRIGATÓRIO</td><td>Identificador do DARF a ser pago</td></tr>
+      <tr><td>tipo_pagamento</td><td>OBRIGATÓRIO</td><td>pix ou boleto</td></tr>
+      <tr><td colspan="3"><strong>Campos PIX (quando tipo_pagamento = pix)</strong></td></tr>
+      <tr><td>pix.end_to_end_id</td><td>OBRIGATÓRIO</td><td>Identificador único da transação PIX</td></tr>
+      <tr><td>pix.txid</td><td>OBRIGATÓRIO</td><td>ID da transação PIX</td></tr>
+      <tr><td>pix.chave_pix</td><td>OBRIGATÓRIO</td><td>Chave PIX utilizada</td></tr>
+      <tr><td>pix.valor</td><td>OBRIGATÓRIO</td><td>Valor da transação</td></tr>
+      <tr><td>pix.timestamp</td><td>OBRIGATÓRIO</td><td>ISO 8601</td></tr>
+      <tr><td>pix.descricao</td><td>OPCIONAL</td><td>Informação livre</td></tr>
+      <tr><td colspan="3"><strong>Campos Boleto (quando tipo_pagamento = boleto)</strong></td></tr>
+      <tr><td>boleto.nosso_numero</td><td>OBRIGATÓRIO</td><td>Identificação única do banco</td></tr>
+      <tr><td>boleto.codigo_barras</td><td>OBRIGATÓRIO</td><td>44 dígitos</td></tr>
+      <tr><td>boleto.linha_digitavel</td><td>OBRIGATÓRIO</td><td>48 dígitos</td></tr>
+      <tr><td>boleto.banco</td><td>OBRIGATÓRIO</td><td>Código do banco (3 dígitos)</td></tr>
+      <tr><td>boleto.agencia</td><td>OBRIGATÓRIO</td><td>Número da agência</td></tr>
+      <tr><td>boleto.conta</td><td>OBRIGATÓRIO</td><td>Número da conta</td></tr>
+      <tr><td>boleto.valor_pago</td><td>OBRIGATÓRIO</td><td>Valor efetivamente pago</td></tr>
+      <tr><td>boleto.data_pagamento</td><td>OBRIGATÓRIO</td><td>ISO 8601</td></tr>
+      <tr><td>boleto.descricao</td><td>OPCIONAL</td><td>Informação livre</td></tr>
+    </table>
 
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
