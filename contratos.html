@@ -90,6 +90,13 @@
       </div>
     </div>
 
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">O campo <code class="inline">autorenew</code> define se o contrato será automaticamente renovado na data de término de vigência. Quando <code class="inline">true</code>, o contrato é renovável; quando <code class="inline">false</code>, o contrato expira sem renovação automática.</p>
+      </div>
+    </div>
+
     <h2 id="criar-contrato">Criar um contrato</h2>
     <p>
       Registre um novo contrato entre duas empresas, definindo partes, valor, vigência e
@@ -116,6 +123,7 @@
     "end_date": "2027-07-31",
     "total_value": 120000.00,
     "payment_conditions": "30-60-90",
+    "autorenew": true,
     "rad_eligible": true,
     "status": "active",
     "notes": "Supply contract subject to Tax Reform - IBS/CBS"
@@ -163,6 +171,7 @@
       <span class="tok-k">"start_date"</span>: <span class="tok-s">"2026-08-01"</span>,
       <span class="tok-k">"end_date"</span>: <span class="tok-s">"2027-07-31"</span>,
       <span class="tok-k">"total_value"</span>: <span class="tok-s">120000.00</span>,
+      <span class="tok-k">"autorenew"</span>: <span class="tok-s">true</span>,
       <span class="tok-k">"rad_eligible"</span>: <span class="tok-s">true</span>,
       <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
       <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
@@ -203,6 +212,7 @@
   <span class="tok-k">"end_date"</span>: <span class="tok-s">"2027-07-31"</span>,
   <span class="tok-k">"total_value"</span>: <span class="tok-s">120000.00</span>,
   <span class="tok-k">"payment_conditions"</span>: <span class="tok-s">"30-60-90"</span>,
+  <span class="tok-k">"autorenew"</span>: <span class="tok-s">true</span>,
   <span class="tok-k">"rad_eligible"</span>: <span class="tok-s">true</span>,
   <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
   <span class="tok-k">"notes"</span>: <span class="tok-s">"Supply contract subject to Tax Reform - IBS/CBS"</span>,
@@ -278,6 +288,7 @@
       <tr><td>end_date</td><td>date</td><td>Data de término/vigência (YYYY-MM-DD)</td></tr>
       <tr><td>total_value</td><td>number</td><td>Valor total do contrato</td></tr>
       <tr><td>payment_conditions</td><td>string</td><td>Condições de pagamento (ex: 30-60-90)</td></tr>
+      <tr><td>autorenew</td><td>boolean</td><td>true ou false — define se o contrato é autorenovável ao término da vigência</td></tr>
       <tr><td>rad_eligible</td><td>boolean</td><td>true ou false — define se o contrato é sujeito a RAD (Recolhimento pelo Adquirente)</td></tr>
       <tr><td>status</td><td>string</td><td>active, closed, suspended or cancelled</td></tr>
       <tr><td>notes</td><td>string</td><td>Observações e anotações sobre o contrato</td></tr>
