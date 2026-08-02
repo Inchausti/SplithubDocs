@@ -146,3 +146,60 @@ if (searchBox) {
     if (modal) modal.style.display = 'none';
   }
 }
+
+// Dark mode toggle
+document.addEventListener('DOMContentLoaded', function() {
+  var html = document.documentElement;
+  var topbarRight = document.querySelector('.topbar-right');
+
+  // Criar botão de toggle se não existir
+  var themeToggle = document.querySelector('.theme-toggle');
+  if (!themeToggle && topbarRight) {
+    themeToggle = document.createElement('button');
+    themeToggle.className = 'theme-toggle';
+    themeToggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+    topbarRight.insertBefore(themeToggle, topbarRight.firstChild);
+  }
+
+  // Detectar preferência salva ou do sistema
+  var savedTheme = localStorage.getItem('theme');
+  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var currentTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+
+  // Aplicar tema
+  if (currentTheme === 'dark') {
+    html.setAttribute('data-theme', 'dark');
+    if (themeToggle) themeToggle.setAttribute('aria-label', 'Ativar modo claro');
+  } else {
+    html.removeAttribute('data-theme');
+    if (themeToggle) themeToggle.setAttribute('aria-label', 'Ativar modo escuro');
+  }
+
+  // Event listener para toggle
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function() {
+      var isDark = html.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        html.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+        themeToggle.setAttribute('aria-label', 'Ativar modo escuro');
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        themeToggle.setAttribute('aria-label', 'Ativar modo claro');
+      }
+    });
+  }
+
+  // Detectar mudanças de preferência do sistema
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+    if (!localStorage.getItem('theme')) {
+      var isDark = e.matches;
+      if (isDark) {
+        html.setAttribute('data-theme', 'dark');
+      } else {
+        html.removeAttribute('data-theme');
+      }
+    }
+  });
+});

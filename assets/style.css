@@ -1,4 +1,6 @@
-:root{
+/* Light Mode (padrão) */
+:root,
+:root[data-theme="light"]{
   /* Paleta primária - Splithub (Manual de Marca) */
   --primary:#2C2A29;
   --primary-light:#4A4845;
@@ -30,6 +32,75 @@
   --code-string:#7FE3C4;
   --code-keyword:#7FC9E3;
   --radius:8px;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    /* Paleta primária */
+    --primary:#E8E7E5;
+    --primary-light:#D0CFCD;
+    --primary-lighter:#B8B7B5;
+    --primary-faint:#7A7977;
+
+    /* Paleta neutra */
+    --ink:#E8E7E5;
+    --ink-soft:#A9A8A5;
+    --ink-faint:#6B6A68;
+    --line:#3A3935;
+    --bg:#1A1918;
+    --bg-sunken:#2A2926;
+
+    /* Paleta de status */
+    --success:#4FCC9F;
+    --success-soft:#0E3D2F;
+    --error:#F08080;
+    --error-soft:#3D1F1A;
+    --warning:#FFD699;
+    --warning-soft:#4D3A0F;
+    --info:#7FA3FF;
+    --info-soft:#1F2E5F;
+
+    /* Componentes */
+    --charcoal:#0F0E0D;
+    --code-bg:#0F0E0D;
+    --code-ink:#B8B7B5;
+    --code-string:#4FCC9F;
+    --code-keyword:#7FA3FF;
+  }
+}
+
+:root[data-theme="dark"]{
+  /* Paleta primária */
+  --primary:#E8E7E5;
+  --primary-light:#D0CFCD;
+  --primary-lighter:#B8B7B5;
+  --primary-faint:#7A7977;
+
+  /* Paleta neutra */
+  --ink:#E8E7E5;
+  --ink-soft:#A9A8A5;
+  --ink-faint:#6B6A68;
+  --line:#3A3935;
+  --bg:#1A1918;
+  --bg-sunken:#2A2926;
+
+  /* Paleta de status */
+  --success:#4FCC9F;
+  --success-soft:#0E3D2F;
+  --error:#F08080;
+  --error-soft:#3D1F1A;
+  --warning:#FFD699;
+  --warning-soft:#4D3A0F;
+  --info:#7FA3FF;
+  --info-soft:#1F2E5F;
+
+  /* Componentes */
+  --charcoal:#0F0E0D;
+  --code-bg:#0F0E0D;
+  --code-ink:#B8B7B5;
+  --code-string:#4FCC9F;
+  --code-keyword:#7FA3FF;
 }
 *{box-sizing:border-box;}
 body{
@@ -82,6 +153,13 @@ a{color:inherit;text-decoration:none;}
   color:rgba(255,255,255,0.75);
 }
 .menu-toggle{display:none;background:none;border:none;color:#fff;cursor:pointer;}
+.theme-toggle{
+  background:none;border:none;color:#fff;cursor:pointer;padding:6px;
+  border-radius:var(--radius);display:flex;align-items:center;gap:6px;
+  font-size:12px;transition:background 0.3s ease;
+}
+.theme-toggle:hover{background:rgba(255,255,255,0.1);}
+.theme-toggle svg{width:16px;height:16px;}
 
 /* layout */
 .layout{
