@@ -103,9 +103,11 @@
       <tr><td>nfs-e-via</td><td>Nota Fiscal de Serviço Eletrônica - Via Exploração (NFS-e Via)</td><td>-</td><td>Exploração de vias (pedágios e concessões)</td></tr>
     </table>
 
-    <div class="callout">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      Aceitamos o XML assinado do documento fiscal ou um JSON estruturado equivalente aos grupos da NF-e 4.0 e outros leiautes DF-e (NFCom, CT-e, BP-e, etc.) atualizados pela Nota Técnica 2025.002. A API adapta automaticamente conforme o <code class="inline">type</code> informado. Obrigatório: Grupo de IBS/CBS (CST e cClassTrib), valores de base e tributação. Sem esses dados, a partir de 03/08/2026 a nota é rejeitada pela SEFAZ. O processamento é assíncrono; use o endpoint de consulta para acompanhar o status.
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">Aceitamos o XML assinado do documento fiscal ou um JSON estruturado equivalente aos grupos da NF-e 4.0 e outros leiautes DF-e (NFCom, CT-e, BP-e, etc.) atualizados pela Nota Técnica 2025.002. A API adapta automaticamente conforme o <code class="inline">type</code> informado. Obrigatório: Grupo de IBS/CBS (CST e cClassTrib), valores de base e tributação. Sem esses dados, a partir de 03/08/2026 a nota é rejeitada pela SEFAZ. O processamento é assíncrono; use o endpoint de consulta para acompanhar o status.</p>
+      </div>
     </div>
 
     <h2 id="criar-documento">Criar um documento fiscal</h2>
@@ -245,9 +247,11 @@
   }'</span></pre>
     </div>
 
-    <div class="callout">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      Durante 2026, <code class="inline">v_tot_ibs</code> e <code class="inline">v_tot_cbs</code> não compõem o <code class="inline">total_note_value</code> — eles são informados à parte no Grupo W03, refletindo a fase de testes com cobrança simbólica (0,9% CBS + 0,1% IBS, dividido entre <code class="inline">g_ibs_uf</code> e <code class="inline">g_ibs_mun</code>). Os campos são flexíveis: use <code class="inline">ncm</code> para NF-e ou <code class="inline">service_type</code> para NFCom conforme necessário.
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">Durante 2026, <code class="inline">v_tot_ibs</code> e <code class="inline">v_tot_cbs</code> não compõem o <code class="inline">total_note_value</code> — eles são informados à parte no Grupo W03, refletindo a fase de testes com cobrança simbólica (0,9% CBS + 0,1% IBS, dividido entre <code class="inline">g_ibs_uf</code> e <code class="inline">g_ibs_mun</code>). Os campos são flexíveis: use <code class="inline">ncm</code> para NF-e ou <code class="inline">service_type</code> para NFCom conforme necessário.</p>
+      </div>
     </div>
 
     <p>A resposta confirma o recebimento e o status inicial do processamento:</p>
@@ -339,9 +343,11 @@
       destinatário ou itens registrados com erro.
     </p>
 
-    <div class="callout">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      Só é possível atualizar um documento com status <code class="inline">pending</code> ou <code class="inline">error</code>. Documentos com status <code class="inline">completed</code> são imutáveis, refletindo a legislação fiscal.
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">Só é possível atualizar um documento com status <code class="inline">pending</code> ou <code class="inline">error</code>. Documentos com status <code class="inline">completed</code> são imutáveis, refletindo a legislação fiscal.</p>
+      </div>
     </div>
 
     <div class="code-block">
