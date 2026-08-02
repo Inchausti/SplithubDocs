@@ -102,34 +102,34 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "cnpj": "14200166000187",
-    "legal_name": "Empresa Fornecedora Ltda",
-    "trade_name": "Fornecedora",
-    "founding_date": "2010-05-15",
-    "registration_status": "active",
-    "legal_nature": "206",
-    "tax_regime": "lucro_presumido",
-    "economic_activity": "4711302",
-    "address": {
-      "street": "Avenida Principal",
-      "number": "1000",
-      "complement": "Sala 200",
-      "neighborhood": "Centro",
-      "city": "São Paulo",
-      "state": "SP",
-      "zipcode": "01234567"
+    "cnpj": "14200166000187",                 <span class="tok-c">// REQUIRED</span>
+    "legal_name": "Empresa Fornecedora...",   <span class="tok-c">// REQUIRED</span>
+    "trade_name": "Fornecedora",             <span class="tok-c">// OPTIONAL</span>
+    "founding_date": "2010-05-15",           <span class="tok-c">// OPTIONAL</span>
+    "registration_status": "active",         <span class="tok-c">// OPTIONAL</span>
+    "legal_nature": "206",                   <span class="tok-c">// OPTIONAL</span>
+    "tax_regime": "lucro_presumido",         <span class="tok-c">// OPTIONAL</span>
+    "economic_activity": "4711302",          <span class="tok-c">// OPTIONAL</span>
+    "address": {                             <span class="tok-c">// OPTIONAL</span>
+      "street": "Avenida Principal",         <span class="tok-c">// REQUIRED if address sent</span>
+      "number": "1000",                      <span class="tok-c">// REQUIRED if address sent</span>
+      "complement": "Sala 200",              <span class="tok-c">// OPTIONAL</span>
+      "neighborhood": "Centro",             <span class="tok-c">// REQUIRED if address sent</span>
+      "city": "São Paulo",                  <span class="tok-c">// REQUIRED if address sent</span>
+      "state": "SP",                        <span class="tok-c">// REQUIRED if address sent</span>
+      "zipcode": "01234567"                 <span class="tok-c">// REQUIRED if address sent</span>
     },
-    "contact": {
-      "email": "contato@fornecedora.com.br",
-      "phone": "1133334444"
+    "contact": {                             <span class="tok-c">// OPTIONAL</span>
+      "email": "contato@fornecedora.com",   <span class="tok-c">// REQUIRED if contact sent</span>
+      "phone": "1133334444"                 <span class="tok-c">// REQUIRED if contact sent</span>
     },
-    "fiscal_representative": {
-      "cpf": "12345678910",
-      "name": "John Smith",
-      "email": "john@fornecedora.com.br",
-      "phone": "11987654321",
-      "rg": "123456789",
-      "issuing_body": "SSP"
+    "fiscal_representative": {               <span class="tok-c">// OPTIONAL</span>
+      "cpf": "12345678910",                 <span class="tok-c">// REQUIRED if fiscal_rep sent</span>
+      "name": "John Smith",                 <span class="tok-c">// REQUIRED if fiscal_rep sent</span>
+      "email": "john@fornecedora.com",      <span class="tok-c">// REQUIRED if fiscal_rep sent</span>
+      "phone": "11987654321",               <span class="tok-c">// REQUIRED if fiscal_rep sent</span>
+      "rg": "123456789",                    <span class="tok-c">// OPTIONAL</span>
+      "issuing_body": "SSP"                 <span class="tok-c">// OPTIONAL</span>
     }
   }'</span></pre>
     </div>
@@ -144,6 +144,37 @@
   <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
 }</pre>
     </div>
+
+    <p><strong>Campos Obrigatórios e Opcionais (POST /v1/fornecedores):</strong></p>
+    <table class="response-table">
+      <tr><th>Campo</th><th>Status</th><th>Observação</th></tr>
+      <tr><td>cnpj</td><td>OBRIGATÓRIO</td><td>Formato alfanumérico (Receita Federal)</td></tr>
+      <tr><td>legal_name</td><td>OBRIGATÓRIO</td><td>Razão social</td></tr>
+      <tr><td>trade_name</td><td>OPCIONAL</td><td>Nome fantasia</td></tr>
+      <tr><td>founding_date</td><td>OPCIONAL</td><td>YYYY-MM-DD</td></tr>
+      <tr><td>registration_status</td><td>OPCIONAL</td><td>active, inactive, suspended, cancelled</td></tr>
+      <tr><td>legal_nature</td><td>OPCIONAL</td><td>Código de 3 dígitos</td></tr>
+      <tr><td>tax_regime</td><td>OPCIONAL</td><td>lucro_real, lucro_presumido, simples_nacional</td></tr>
+      <tr><td>economic_activity</td><td>OPCIONAL</td><td>CNAE (7 dígitos)</td></tr>
+      <tr><td colspan="3"><strong>Endereço (object) - OPCIONAL</strong></td></tr>
+      <tr><td>address.street</td><td>OBRIGATÓRIO*</td><td>Obrigatório se address é enviado</td></tr>
+      <tr><td>address.number</td><td>OBRIGATÓRIO*</td><td>Obrigatório se address é enviado</td></tr>
+      <tr><td>address.complement</td><td>OPCIONAL</td><td>-</td></tr>
+      <tr><td>address.neighborhood</td><td>OBRIGATÓRIO*</td><td>Obrigatório se address é enviado</td></tr>
+      <tr><td>address.city</td><td>OBRIGATÓRIO*</td><td>Obrigatório se address é enviado</td></tr>
+      <tr><td>address.state</td><td>OBRIGATÓRIO*</td><td>UF (2 letras)</td></tr>
+      <tr><td>address.zipcode</td><td>OBRIGATÓRIO*</td><td>8 dígitos</td></tr>
+      <tr><td colspan="3"><strong>Contato (object) - OPCIONAL</strong></td></tr>
+      <tr><td>contact.email</td><td>OBRIGATÓRIO*</td><td>Obrigatório se contact é enviado</td></tr>
+      <tr><td>contact.phone</td><td>OBRIGATÓRIO*</td><td>Com DDD, obrigatório se contact é enviado</td></tr>
+      <tr><td colspan="3"><strong>Representante Fiscal (object) - OPCIONAL</strong></td></tr>
+      <tr><td>fiscal_representative.cpf</td><td>OBRIGATÓRIO*</td><td>11 dígitos, obrigatório se fiscal_rep é enviado</td></tr>
+      <tr><td>fiscal_representative.name</td><td>OBRIGATÓRIO*</td><td>Obrigatório se fiscal_rep é enviado</td></tr>
+      <tr><td>fiscal_representative.email</td><td>OBRIGATÓRIO*</td><td>Obrigatório se fiscal_rep é enviado</td></tr>
+      <tr><td>fiscal_representative.phone</td><td>OBRIGATÓRIO*</td><td>Obrigatório se fiscal_rep é enviado</td></tr>
+      <tr><td>fiscal_representative.rg</td><td>OPCIONAL</td><td>-</td></tr>
+      <tr><td>fiscal_representative.issuing_body</td><td>OPCIONAL</td><td>SSP, PC, etc</td></tr>
+    </table>
 
     <h2 id="listar-fornecedores">Listar fornecedores</h2>
     <p>
