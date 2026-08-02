@@ -282,8 +282,8 @@
       <tr><td>access_key</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Chave de acesso única de 44 dígitos do documento fiscal</td></tr>
       <tr><td>contract_id</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Identificador do contrato entre cliente e fornecedor relacionado a este documento fiscal</td></tr>
       <tr><td>identification</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Identificação: number (número do DF), series (série), emission_date (data e hora de emissão)</td></tr>
-      <tr><td>emission</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Emitente: cnpj, legal_name, state (obrigatório)</td></tr>
-      <tr><td>destination</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Destinatário: cnpj_cpf, name, state (opcional para alguns DF-e)</td></tr>
+      <tr><td>emission</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Emitente: cnpj, legal_name, state</td></tr>
+      <tr><td>destination</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Destinatário: cnpj_cpf, name, state (state é condicional para alguns DF-e)</td></tr>
       <tr><td>competence_date</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Data de competência (específico para NFCom, NFS-e e similares; formato: YYYY-MM-DD)</td></tr>
       <tr><td>items</td><td>array</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Itens/serviços: code, description, quantity, unit_price, total_value. Campos adicionais conforme tipo (ncm para NF-e, service_type para NFCom, etc.)</td></tr>
       <tr><td>items[].tax.ibs_cbs</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Grupo de tributação: cst, c_class_trib, v_bc, g_ibs_uf, g_ibs_mun, g_cbs (Nota Técnica 2025.002)</td></tr>
@@ -436,21 +436,6 @@
       <div class="code-head"><span>Resposta 204 No Content</span></div>
       <pre></pre>
     </div>
-
-    <table class="response-table">
-      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>type</td><td>string</td><td>Um dos 14 tipos de DF: nfe, nfce, cte, cte-os, bpe, mdfe, gtv-e, nfcom, nf3e, nfag, nfgas, nfe-abi, nfs-e, nfs-e-via</td></tr>
-      <tr><td>model</td><td>string</td><td>Número do modelo oficial (55=NF-e, 65=NFC-e, 62=NFCom, 63=BP-e, 57=CT-e, 58=MDF-e, 64=GTV-e, 66=NF3-e, 75=NFAg, 76=NFGás, 77=NF-e ABI)</td></tr>
-      <tr><td>access_key</td><td>string</td><td>Chave de acesso única de 44 dígitos do documento fiscal</td></tr>
-      <tr><td>contract_id</td><td>string</td><td>Identificador do contrato entre cliente e fornecedor relacionado a este documento fiscal (opcional)</td></tr>
-      <tr><td>identification</td><td>object</td><td>Identificação: number (número do DF), series (série), emission_date (data e hora de emissão)</td></tr>
-      <tr><td>emission</td><td>object</td><td>Emitente: cnpj, legal_name, state (obrigatório)</td></tr>
-      <tr><td>destination</td><td>object</td><td>Destinatário: cnpj_cpf, name, state (opcional para alguns DF-e)</td></tr>
-      <tr><td>competence_date</td><td>string</td><td>Data de competência (específico para NFCom, NFS-e e similares; formato: YYYY-MM-DD)</td></tr>
-      <tr><td>items</td><td>array</td><td>Itens/serviços: code, description, quantity, unit_price, total_value. Campos adicionais conforme tipo (ncm para NF-e, service_type para NFCom, etc.)</td></tr>
-      <tr><td>items[].tax.ibs_cbs</td><td>object</td><td>Grupo de tributação: cst, c_class_trib, v_bc, g_ibs_uf, g_ibs_mun, g_cbs (Nota Técnica 2025.002)</td></tr>
-      <tr><td>total</td><td>object</td><td>Totalizadores: products_value/services_value, total_note_value, ibs_cbs_total (v_bc, v_tot_ibs, v_tot_cbs)</td></tr>
-    </table>
 
     <div class="page-footer-nav">
       <a href="webhooks.html">
