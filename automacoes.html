@@ -101,9 +101,9 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "trigger": "tax_document.completed",    <span class="tok-c">// REQUIRED</span>
-    "conditions": { "min_total_value": 1000 }, <span class="tok-c">// OPTIONAL</span>
-    "action": { "type": "webhook", "url": "https://empresa.com/webhooks/splithub" } <span class="tok-c">// REQUIRED</span>
+    "trigger": "tax_document.completed",   
+    "conditions": { "min_total_value": 1000 },
+    "action": { "type": "webhook", "url": "https://empresa.com/webhooks/splithub" }
   }'</span></pre>
     </div>
 

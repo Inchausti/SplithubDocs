@@ -171,15 +171,15 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "darf_id": "darf_9f21ab",                    <span class="tok-c">// REQUIRED</span>
-    "tipo_pagamento": "pix",                    <span class="tok-c">// REQUIRED</span>
+    "darf_id": "darf_9f21ab",                   
+    "tipo_pagamento": "pix",                   
     "pix": {                                    <span class="tok-c">// REQUIRED (when tipo_pagamento=pix)</span>
-      "end_to_end_id": "E14200166...",         <span class="tok-c">// REQUIRED</span>
-      "txid": "cbs_df_8f3a1c2b",               <span class="tok-c">// REQUIRED</span>
-      "chave_pix": "14200166000187",           <span class="tok-c">// REQUIRED</span>
-      "valor": "57.60",                        <span class="tok-c">// REQUIRED</span>
+      "end_to_end_id": "E14200166...",        
+      "txid": "cbs_df_8f3a1c2b",              
+      "chave_pix": "14200166000187",          
+      "valor": "57.60",                       
       "timestamp": "2026-07-29T12:00:00.000Z", <span class="tok-c">// REQUIRED - ISO 8601</span>
-      "descricao": "Pagamento DARF CBS..."      <span class="tok-c">// OPTIONAL</span>
+      "descricao": "Pagamento DARF CBS..."     
     }
   }'</span></pre>
     </div>
@@ -196,18 +196,18 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "darf_id": "darf_8e32kc",                   <span class="tok-c">// REQUIRED</span>
-    "tipo_pagamento": "boleto",                 <span class="tok-c">// REQUIRED</span>
+    "darf_id": "darf_8e32kc",                  
+    "tipo_pagamento": "boleto",                
     "boleto": {                                 <span class="tok-c">// REQUIRED (when tipo_pagamento=boleto)</span>
-      "nosso_numero": "12345678",              <span class="tok-c">// REQUIRED</span>
+      "nosso_numero": "12345678",             
       "codigo_barras": "00190123456...",       <span class="tok-c">// REQUIRED - 44 dígitos</span>
       "linha_digitavel": "00190.12345...",     <span class="tok-c">// REQUIRED - 48 dígitos</span>
       "banco": "001",                          <span class="tok-c">// REQUIRED - código banco</span>
-      "agencia": "1234",                       <span class="tok-c">// REQUIRED</span>
-      "conta": "123456",                       <span class="tok-c">// REQUIRED</span>
-      "valor_pago": "125.40",                  <span class="tok-c">// REQUIRED</span>
+      "agencia": "1234",                      
+      "conta": "123456",                      
+      "valor_pago": "125.40",                 
       "data_pagamento": "2026-07-31T14:30...", <span class="tok-c">// REQUIRED - ISO 8601</span>
-      "descricao": "Pagamento DARF IBS..."      <span class="tok-c">// OPTIONAL</span>
+      "descricao": "Pagamento DARF IBS..."     
     }
   }'</span></pre>
     </div>

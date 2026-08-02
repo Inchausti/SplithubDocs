@@ -145,53 +145,53 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "type": "nfe",                    <span class="tok-c">// REQUIRED</span>
-    "model": "55",                    <span class="tok-c">// REQUIRED</span>
+    "type": "nfe",                   
+    "model": "55",                   
     "access_key": "3526071420016...", <span class="tok-c">// REQUIRED - 44 dígitos</span>
-    "contract_id": "ctr_5f8a2d",      <span class="tok-c">// OPTIONAL</span>
-    "identification": {               <span class="tok-c">// REQUIRED</span>
-      "number": "123456",             <span class="tok-c">// REQUIRED</span>
-      "series": "1",                  <span class="tok-c">// REQUIRED</span>
+    "contract_id": "ctr_5f8a2d",     
+    "identification": {              
+      "number": "123456",            
+      "series": "1",                 
       "emission_date": "2026-07-29T10:00:00-03:00" <span class="tok-c">// REQUIRED - ISO 8601</span>
     },
-    "emission": {                     <span class="tok-c">// REQUIRED</span>
-      "cnpj": "14200166000187",       <span class="tok-c">// REQUIRED</span>
-      "legal_name": "Fornecedor...",  <span class="tok-c">// REQUIRED</span>
-      "state": "SP"                   <span class="tok-c">// REQUIRED</span>
+    "emission": {                    
+      "cnpj": "14200166000187",      
+      "legal_name": "Fornecedor...", 
+      "state": "SP"                  
     },
-    "destination": {                  <span class="tok-c">// REQUIRED</span>
-      "cnpj_cpf": "98765432000188",   <span class="tok-c">// REQUIRED</span>
-      "name": "Cliente...",           <span class="tok-c">// REQUIRED</span>
-      "state": "RJ"                   <span class="tok-c">// REQUIRED</span>
+    "destination": {                 
+      "cnpj_cpf": "98765432000188",  
+      "name": "Cliente...",          
+      "state": "RJ"                  
     },
     "items": [                        <span class="tok-c">// REQUIRED - array</span>
       {
-        "code": "SKU-1029",           <span class="tok-c">// REQUIRED</span>
-        "description": "Notebook...", <span class="tok-c">// REQUIRED</span>
+        "code": "SKU-1029",          
+        "description": "Notebook...",
         "ncm": "84713012",            <span class="tok-c">// OPTIONAL - para NF-e</span>
-        "cfop": "5102",               <span class="tok-c">// REQUIRED</span>
-        "quantity": 2,                <span class="tok-c">// REQUIRED</span>
-        "unit_price": 3200.00,        <span class="tok-c">// REQUIRED</span>
-        "total_value": 6400.00,       <span class="tok-c">// REQUIRED</span>
-        "tax": {                      <span class="tok-c">// REQUIRED</span>
+        "cfop": "5102",              
+        "quantity": 2,               
+        "unit_price": 3200.00,       
+        "total_value": 6400.00,      
+        "tax": {                     
           "ibs_cbs": {                <span class="tok-c">// REQUIRED - Lei Complementar 214/2025</span>
-            "cst": "000",             <span class="tok-c">// REQUIRED</span>
-            "c_class_trib": "000001", <span class="tok-c">// REQUIRED</span>
-            "v_bc": 6400.00,          <span class="tok-c">// REQUIRED</span>
-            "g_ibs_uf": { "p_ibs_uf": 0.05, "v_ibs_uf": 3.20 }, <span class="tok-c">// REQUIRED</span>
-            "g_ibs_mun": { "p_ibs_mun": 0.05, "v_ibs_mun": 3.20 }, <span class="tok-c">// REQUIRED</span>
-            "g_cbs": { "p_cbs": 0.9, "v_cbs": 57.60 } <span class="tok-c">// REQUIRED</span>
+            "cst": "000",            
+            "c_class_trib": "000001",
+            "v_bc": 6400.00,         
+            "g_ibs_uf": { "p_ibs_uf": 0.05, "v_ibs_uf": 3.20 },
+            "g_ibs_mun": { "p_ibs_mun": 0.05, "v_ibs_mun": 3.20 },
+            "g_cbs": { "p_cbs": 0.9, "v_cbs": 57.60 }
           }
         }
       }
     ],
-    "total": {                        <span class="tok-c">// REQUIRED</span>
-      "products_value": 6400.00,      <span class="tok-c">// REQUIRED</span>
-      "total_note_value": 6400.00,    <span class="tok-c">// REQUIRED</span>
-      "ibs_cbs_total": {              <span class="tok-c">// REQUIRED</span>
-        "v_bc": 6400.00,              <span class="tok-c">// REQUIRED</span>
-        "v_tot_ibs": 6.40,            <span class="tok-c">// REQUIRED</span>
-        "v_tot_cbs": 57.60            <span class="tok-c">// REQUIRED</span>
+    "total": {                       
+      "products_value": 6400.00,     
+      "total_note_value": 6400.00,   
+      "ibs_cbs_total": {             
+        "v_bc": 6400.00,             
+        "v_tot_ibs": 6.40,           
+        "v_tot_cbs": 57.60           
       }
     }
   }'</span></pre>
@@ -274,20 +274,20 @@
       </div>
     </div>
 
-    <p><strong>Campos Obrigatórios e Opcionais (POST /v1/documentos-fiscais):</strong></p>
+    <p><strong>Mapa de Campos (POST /v1/documentos-fiscais):</strong></p>
     <table class="response-table">
-      <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Observação</th></tr>
-      <tr><td>type</td><td>string</td><td>OBRIGATÓRIO</td><td>Um dos 14 tipos de DF</td></tr>
-      <tr><td>model</td><td>string</td><td>OBRIGATÓRIO</td><td>Número do modelo oficial</td></tr>
-      <tr><td>access_key</td><td>string</td><td>OBRIGATÓRIO</td><td>44 dígitos, chave única</td></tr>
-      <tr><td>contract_id</td><td>string</td><td>OPCIONAL</td><td>Referência do contrato</td></tr>
-      <tr><td>identification</td><td>object</td><td>OBRIGATÓRIO</td><td>number, series, emission_date</td></tr>
-      <tr><td>emission</td><td>object</td><td>OBRIGATÓRIO</td><td>cnpj, legal_name, state</td></tr>
-      <tr><td>destination</td><td>object</td><td>OBRIGATÓRIO</td><td>cnpj_cpf, name, state</td></tr>
-      <tr><td>competence_date</td><td>date</td><td>OBRIGATÓRIO*</td><td>Obrigatório para NFCom, NFS-e</td></tr>
-      <tr><td>items[]</td><td>array</td><td>OBRIGATÓRIO</td><td>Mínimo 1 item</td></tr>
-      <tr><td>items[].tax.ibs_cbs</td><td>object</td><td>OBRIGATÓRIO</td><td>Lei Complementar 214/2025</td></tr>
-      <tr><td>total</td><td>object</td><td>OBRIGATÓRIO</td><td>Totalizadores com IBS/CBS</td></tr>
+      <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
+      <tr><td>type</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Um dos 14 tipos de DF: nfe, nfce, cte, cte-os, bpe, mdfe, gtv-e, nfcom, nf3e, nfag, nfgas, nfe-abi, nfs-e, nfs-e-via</td></tr>
+      <tr><td>model</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Número do modelo oficial (55=NF-e, 65=NFC-e, 62=NFCom, 63=BP-e, 57=CT-e, 58=MDF-e, 64=GTV-e, 66=NF3-e, 75=NFAg, 76=NFGás, 77=NF-e ABI)</td></tr>
+      <tr><td>access_key</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Chave de acesso única de 44 dígitos do documento fiscal</td></tr>
+      <tr><td>contract_id</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Identificador do contrato entre cliente e fornecedor relacionado a este documento fiscal</td></tr>
+      <tr><td>identification</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Identificação: number (número do DF), series (série), emission_date (data e hora de emissão)</td></tr>
+      <tr><td>emission</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Emitente: cnpj, legal_name, state (obrigatório)</td></tr>
+      <tr><td>destination</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Destinatário: cnpj_cpf, name, state (opcional para alguns DF-e)</td></tr>
+      <tr><td>competence_date</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Data de competência (específico para NFCom, NFS-e e similares; formato: YYYY-MM-DD)</td></tr>
+      <tr><td>items</td><td>array</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Itens/serviços: code, description, quantity, unit_price, total_value. Campos adicionais conforme tipo (ncm para NF-e, service_type para NFCom, etc.)</td></tr>
+      <tr><td>items[].tax.ibs_cbs</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Grupo de tributação: cst, c_class_trib, v_bc, g_ibs_uf, g_ibs_mun, g_cbs (Nota Técnica 2025.002)</td></tr>
+      <tr><td>total</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Totalizadores: products_value/services_value, total_note_value, ibs_cbs_total (v_bc, v_tot_ibs, v_tot_cbs)</td></tr>
     </table>
 
     <p>A resposta confirma o recebimento e o status inicial do processamento:</p>
