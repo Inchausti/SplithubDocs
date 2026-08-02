@@ -224,28 +224,28 @@
 }</pre>
     </div>
 
-    <p><strong>Campos Obrigatórios e Opcionais (POST /v1/rad/proofs):</strong></p>
+    <p><strong>Mapa de Campos (POST /v1/rad/proofs):</strong></p>
     <table class="response-table">
-      <tr><th>Campo</th><th>Status</th><th>Observação</th></tr>
-      <tr><td>darf_id</td><td>OBRIGATÓRIO</td><td>Identificador do DARF a ser pago</td></tr>
-      <tr><td>tipo_pagamento</td><td>OBRIGATÓRIO</td><td>pix ou boleto</td></tr>
-      <tr><td colspan="3"><strong>Campos PIX (quando tipo_pagamento = pix)</strong></td></tr>
-      <tr><td>pix.end_to_end_id</td><td>OBRIGATÓRIO</td><td>Identificador único da transação PIX</td></tr>
-      <tr><td>pix.txid</td><td>OBRIGATÓRIO</td><td>ID da transação PIX</td></tr>
-      <tr><td>pix.chave_pix</td><td>OBRIGATÓRIO</td><td>Chave PIX utilizada</td></tr>
-      <tr><td>pix.valor</td><td>OBRIGATÓRIO</td><td>Valor da transação</td></tr>
-      <tr><td>pix.timestamp</td><td>OBRIGATÓRIO</td><td>ISO 8601</td></tr>
-      <tr><td>pix.descricao</td><td>OPCIONAL</td><td>Informação livre</td></tr>
-      <tr><td colspan="3"><strong>Campos Boleto (quando tipo_pagamento = boleto)</strong></td></tr>
-      <tr><td>boleto.nosso_numero</td><td>OBRIGATÓRIO</td><td>Identificação única do banco</td></tr>
-      <tr><td>boleto.codigo_barras</td><td>OBRIGATÓRIO</td><td>44 dígitos</td></tr>
-      <tr><td>boleto.linha_digitavel</td><td>OBRIGATÓRIO</td><td>48 dígitos</td></tr>
-      <tr><td>boleto.banco</td><td>OBRIGATÓRIO</td><td>Código do banco (3 dígitos)</td></tr>
-      <tr><td>boleto.agencia</td><td>OBRIGATÓRIO</td><td>Número da agência</td></tr>
-      <tr><td>boleto.conta</td><td>OBRIGATÓRIO</td><td>Número da conta</td></tr>
-      <tr><td>boleto.valor_pago</td><td>OBRIGATÓRIO</td><td>Valor efetivamente pago</td></tr>
-      <tr><td>boleto.data_pagamento</td><td>OBRIGATÓRIO</td><td>ISO 8601</td></tr>
-      <tr><td>boleto.descricao</td><td>OPCIONAL</td><td>Informação livre</td></tr>
+      <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
+      <tr><td>darf_id</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Identificador do DARF ao qual este comprovante se refere</td></tr>
+      <tr><td>tipo_pagamento</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>pix ou boleto</td></tr>
+      <tr><td colspan="4"><strong>Campos PIX (quando tipo_pagamento = pix)</strong></td></tr>
+      <tr><td>pix.end_to_end_id</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Identificador único end-to-end da transação PIX</td></tr>
+      <tr><td>pix.txid</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>ID da transação PIX (ID único por agência/conta)</td></tr>
+      <tr><td>pix.chave_pix</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Chave PIX utilizada (CPF/CNPJ, email, telefone ou aleatória)</td></tr>
+      <tr><td>pix.valor</td><td>decimal</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Valor da transação PIX</td></tr>
+      <tr><td>pix.timestamp</td><td>timestamp</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Data e hora de liquidação do PIX (ISO 8601)</td></tr>
+      <tr><td>pix.descricao</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Informação livre ou memo da transação</td></tr>
+      <tr><td colspan="4"><strong>Campos Boleto (quando tipo_pagamento = boleto)</strong></td></tr>
+      <tr><td>boleto.nosso_numero</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Identificação única no sistema do banco emissor</td></tr>
+      <tr><td>boleto.codigo_barras</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Código de barras do boleto (44 dígitos)</td></tr>
+      <tr><td>boleto.linha_digitavel</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Linha digitável do boleto (48 dígitos)</td></tr>
+      <tr><td>boleto.banco</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Código do banco (3 dígitos, ex: 001 para Banco do Brasil)</td></tr>
+      <tr><td>boleto.agencia</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Número da agência</td></tr>
+      <tr><td>boleto.conta</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Número da conta corrente</td></tr>
+      <tr><td>boleto.valor_pago</td><td>decimal</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Valor efetivamente pago</td></tr>
+      <tr><td>boleto.data_pagamento</td><td>timestamp</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Data e hora do pagamento (ISO 8601)</td></tr>
+      <tr><td>boleto.descricao</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Informação livre ou memo da transação</td></tr>
     </table>
 
     <table class="response-table">

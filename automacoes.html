@@ -116,14 +116,14 @@
 }</pre>
     </div>
 
-    <p><strong>Campos Obrigatórios e Opcionais (POST /v1/automacoes):</strong></p>
+    <p><strong>Mapa de Campos (POST /v1/automacoes):</strong></p>
     <table class="response-table">
-      <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Observação</th></tr>
-      <tr><td>trigger</td><td>string</td><td>OBRIGATÓRIO</td><td>Evento que dispara a automação (ex: tax_document.completed, darf.generated)</td></tr>
-      <tr><td>conditions</td><td>object</td><td>OPCIONAL</td><td>Condições adicionais (ex: min_total_value, status)</td></tr>
-      <tr><td>action</td><td>object</td><td>OBRIGATÓRIO</td><td>Ação a executar</td></tr>
-      <tr><td>action.type</td><td>string</td><td>OBRIGATÓRIO</td><td>webhook, notification, etc</td></tr>
-      <tr><td>action.url</td><td>string</td><td>OBRIGATÓRIO*</td><td>Obrigatório quando type = webhook</td></tr>
+      <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
+      <tr><td>trigger</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Evento que dispara a automação (ex.: tax_document.completed, darf.generated)</td></tr>
+      <tr><td>conditions</td><td>object</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Condições adicionais avaliadas antes de executar a ação (ex: min_total_value, status)</td></tr>
+      <tr><td>action</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Ação executada quando a automação dispara</td></tr>
+      <tr><td>action.type</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Tipo de ação (webhook, notification, etc.)</td></tr>
+      <tr><td>action.url</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>URL de destino (obrigatório quando type = webhook)</td></tr>
     </table>
 
     <h2 id="listar-automacoes">Listar automações</h2>
