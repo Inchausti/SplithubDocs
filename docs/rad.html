@@ -148,7 +148,7 @@
       <tr><td>data.darf_total_value</td><td>number</td><td>Valor total considerado na emissão do DARF</td></tr>
     </table>
 
-    <h2 id="comprovante-pagamento">Enviar comprovante de pagamento</h2>
+    <h2 id="submit-proof">Submit payment proof</h2>
     <p>
       Após pagar um DARF via PIX ou Boleto, envie o comprovante ao Splithub para conciliar a
       retenção com o pagamento efetivamente realizado. Utilize <code class="inline">tipo_pagamento</code>
@@ -161,13 +161,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>POST /v1/rad/comprovantes — Exemplo PIX</span>
+        <span>POST /v1/rad/proofs — Exemplo PIX</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/rad/comprovantes</span> \
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/rad/proofs</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
@@ -186,13 +186,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>POST /v1/rad/comprovantes — Exemplo Boleto</span>
+        <span>POST /v1/rad/proofs — Exemplo Boleto</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/rad/comprovantes</span> \
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/rad/proofs</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
@@ -252,7 +252,7 @@
       <tr><td>created_at</td><td>timestamp</td><td>Data e hora do registro do comprovante</td></tr>
     </table>
 
-    <h2 id="webhook-comprovante">Webhook event: comprovante de pagamento enviado</h2>
+    <h2 id="webhook-proof">Webhook event: recepção comprovante</h2>
     <p>
       Quando o Splithub realiza o pagamento de uma guia de DARF via PIX, o sistema dispara este webhook
       para sua URL configurada, informando que o pagamento foi realizado e enviando o comprovante da transação.
@@ -275,7 +275,7 @@
         </button>
       </div>
       <pre>{
-  <span class="tok-k">"event"</span>: <span class="tok-s">"rad.comprovante_enviado"</span>,
+  <span class="tok-k">"event"</span>: <span class="tok-s">"rad.proof_received"</span>,
   <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T12:00:00.000Z"</span>,
   <span class="tok-k">"data"</span>: {
     <span class="tok-k">"comprovante_id"</span>: <span class="tok-s">"comp_5e21fa"</span>,
@@ -320,7 +320,7 @@
         </button>
       </div>
       <pre>{
-  <span class="tok-k">"event"</span>: <span class="tok-s">"rad.comprovante_enviado"</span>,
+  <span class="tok-k">"event"</span>: <span class="tok-s">"rad.proof_received"</span>,
   <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-31T14:30:00.000Z"</span>,
   <span class="tok-k">"data"</span>: {
     <span class="tok-k">"comprovante_id"</span>: <span class="tok-s">"comp_7g32hb"</span>,
@@ -369,7 +369,7 @@
 
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>event</td><td>string</td><td>Nome do evento: rad.comprovante_enviado</td></tr>
+      <tr><td>event</td><td>string</td><td>Nome do evento: rad.proof_received</td></tr>
       <tr><td>created_at</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
       <tr><td>data.comprovante_id</td><td>string</td><td>Identificador único do comprovante enviado</td></tr>
       <tr><td>data.darf_id</td><td>string</td><td>Identificador do DARF que foi pago</td></tr>
