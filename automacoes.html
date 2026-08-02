@@ -73,98 +73,107 @@
     <div class="breadcrumb">Recursos / Automações</div>
     <h1>Automações</h1>
     <p class="lede">
-      Regras de automação disparam ações — como notificações, webhooks adicionais ou novas regras
-      de separação — automaticamente quando eventos específicos acontecem no sistema.
+      As automações executam ações em tempo real quando eventos específicos acontecem no Splithub.
+      Inscreva-se via webhook para receber feedback sobre a execução de automações configuradas no portal.
     </p>
 
     <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       <div>
-        <p style="margin:0;line-height:1.6;">Cada automação é avaliada de forma assíncrona após o evento que a dispara; consulte o histórico de execuções para confirmar se ela rodou como esperado.</p>
+        <p style="margin:0;line-height:1.6;">Configure as automações diretamente no portal do Splithub e inscreva-se neste webhook para receber notificações sobre a execução de cada automação. As automações são executadas de forma assíncrona; você receberá feedback imediato sobre o resultado.</p>
       </div>
     </div>
 
-    <h2 id="criar-automaction">Criar uma automação</h2>
+    <h2 id="webhook-automacoes">Inscrever-se para receber feedback de automações</h2>
     <p>
-      Informe o evento que dispara a automação (<code class="inline">trigger</code>), condições
-      opcionais e a ação a ser executada.
+      Registre uma URL de webhook para receber notificações em tempo real sobre a execução de automações.
+      O portal do Splithub fornece a interface para configurar quais eventos disparam automações.
     </p>
 
     <div class="code-block">
       <div class="code-head">
-        <span>POST /v1/automacoes</span>
+        <span>POST /v1/webhooks/automacoes</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/automacoes</span> \
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/webhooks/automacoes</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "trigger": "tax_document.completed",   
-    "conditions": { "min_total_value": 1000 },
-    "action": { "type": "webhook", "url": "https://empresa.com/webhooks/splithub" }
+    "url": "https://empresa.com/webhooks/automacoes",
+    "events": ["automation.executed", "automation.failed"]
   }'</span></pre>
     </div>
 
     <div class="code-block">
       <div class="code-head"><span>Resposta 201 Created</span></div>
       <pre>{
-  <span class="tok-k">"id"</span>: <span class="tok-s">"auto_31fd"</span>,
-  <span class="tok-k">"trigger"</span>: <span class="tok-s">"tax_document.completed"</span>,
-  <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>
+  <span class="tok-k">"id"</span>: <span class="tok-s">"webhook_abc123"</span>,
+  <span class="tok-k">"url"</span>: <span class="tok-s">"https://empresa.com/webhooks/automacoes"</span>,
+  <span class="tok-k">"events"</span>: [<span class="tok-s">"automation.executed"</span>, <span class="tok-s">"automation.failed"</span>],
+  <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-08-02T15:30:00.000Z"</span>
 }</pre>
     </div>
 
-    <p><strong>Mapa de Campos (POST /v1/automacoes):</strong></p>
+    <p><strong>Mapa de Campos (POST /v1/webhooks/automacoes):</strong></p>
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
-      <tr><td>trigger</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Evento que dispara a automação (ex.: tax_document.completed, darf.generated)</td></tr>
-      <tr><td>conditions</td><td>object</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Condições adicionais avaliadas antes de executar a ação (ex: min_total_value, status)</td></tr>
-      <tr><td>action</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Ação executada quando a automação dispara</td></tr>
-      <tr><td>action.type</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Tipo de ação (webhook, notification, etc.)</td></tr>
-      <tr><td>action.url</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>URL de destino (obrigatório quando type = webhook)</td></tr>
+      <tr><td>url</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>URL do webhook para receber notificações</td></tr>
+      <tr><td>events</td><td>array</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Tipos de eventos a inscrever (automation.executed, automation.failed). Se vazio, recebe todos</td></tr>
     </table>
 
-    <h2 id="listar-automacoes">Listar automações</h2>
+    <h2 id="payload-webhook">Payload do webhook de automações</h2>
     <p>
-      Liste as automações configuradas e a data da última execução de cada uma.
+      Quando uma automação é executada, você receberá uma notificação via POST com as seguintes informações:
     </p>
 
     <div class="code-block">
-      <div class="code-head">
-        <span>GET /v1/automacoes</span>
-        <button>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copiar
-        </button>
-      </div>
-      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/automacoes</span> \
-  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+      <div class="code-head"><span>Webhook Payload - Automação Executada com Sucesso</span></div>
+      <pre>{
+  <span class="tok-k">"event"</span>: <span class="tok-s">"automation.executed"</span>,
+  <span class="tok-k">"automation_id"</span>: <span class="tok-s">"auto_xyz789"</span>,
+  <span class="tok-k">"trigger"</span>: <span class="tok-s">"tax_document.completed"</span>,
+  <span class="tok-k">"action_type"</span>: <span class="tok-s">"webhook"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"success"</span>,
+  <span class="tok-k">"execution_time_ms"</span>: <span class="tok-s">245</span>,
+  <span class="tok-k">"triggered_at"</span>: <span class="tok-s">"2026-08-02T15:45:30.000Z"</span>,
+  <span class="tok-k">"metadata"</span>: {
+    <span class="tok-k">"document_id"</span>: <span class="tok-s">"doc_12345"</span>,
+    <span class="tok-k">"total_value"</span>: <span class="tok-s">5000.00</span>
+  }
+}</pre>
     </div>
 
     <div class="code-block">
-      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <div class="code-head"><span>Webhook Payload - Automação com Falha</span></div>
       <pre>{
-  <span class="tok-k">"data"</span>: [
-    {
-      <span class="tok-k">"id"</span>: <span class="tok-s">"auto_31fd"</span>,
-      <span class="tok-k">"trigger"</span>: <span class="tok-s">"tax_document.completed"</span>,
-      <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
-      <span class="tok-k">"last_run_at"</span>: <span class="tok-s">"2026-07-28T14:32:00Z"</span>
-    }
-  ]
+  <span class="tok-k">"event"</span>: <span class="tok-s">"automation.failed"</span>,
+  <span class="tok-k">"automation_id"</span>: <span class="tok-s">"auto_xyz789"</span>,
+  <span class="tok-k">"trigger"</span>: <span class="tok-s">"tax_document.completed"</span>,
+  <span class="tok-k">"action_type"</span>: <span class="tok-s">"webhook"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"failed"</span>,
+  <span class="tok-k">"error_message"</span>: <span class="tok-s">"Webhook URL timeout"</span>,
+  <span class="tok-k">"triggered_at"</span>: <span class="tok-s">"2026-08-02T15:50:15.000Z"</span>,
+  <span class="tok-k">"metadata"</span>: {
+    <span class="tok-k">"document_id"</span>: <span class="tok-s">"doc_12345"</span>
+  }
 }</pre>
     </div>
 
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>id</td><td>string</td><td>Identificador único da automação</td></tr>
-      <tr><td>trigger</td><td>string</td><td>Evento que dispara a automação (ex.: tax_document.completed)</td></tr>
-      <tr><td>conditions</td><td>object</td><td>Condições adicionais avaliadas antes de executar a ação</td></tr>
-      <tr><td>action</td><td>object</td><td>Ação executada quando a automação dispara</td></tr>
-      <tr><td>status</td><td>string</td><td>active or inactive</td></tr>
+      <tr><td>event</td><td>string</td><td>automation.executed ou automation.failed</td></tr>
+      <tr><td>automation_id</td><td>string</td><td>Identificador único da automação</td></tr>
+      <tr><td>trigger</td><td>string</td><td>Evento que disparou a automação</td></tr>
+      <tr><td>action_type</td><td>string</td><td>Tipo de ação executada</td></tr>
+      <tr><td>status</td><td>string</td><td>success ou failed</td></tr>
+      <tr><td>execution_time_ms</td><td>number</td><td>Tempo de execução em milissegundos (presente apenas em execuções bem-sucedidas)</td></tr>
+      <tr><td>error_message</td><td>string</td><td>Descrição do erro (presente apenas em falhas)</td></tr>
+      <tr><td>triggered_at</td><td>timestamp</td><td>Data e hora da execução da automação</td></tr>
+      <tr><td>metadata</td><td>object</td><td>Dados contextuais relacionados ao evento que disparou a automação</td></tr>
     </table>
 
     <div class="page-footer-nav">
@@ -181,8 +190,8 @@
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#criar-automaction" class="toc-link active"><span class="toc-method toc-method-post">POST</span>Criar uma automação</a>
-    <a href="#listar-automacoes" class="toc-link"><span class="toc-method toc-method-get">GET</span>Listar automações</a>
+    <a href="#webhook-automacoes" class="toc-link active"><span class="toc-method toc-method-post">POST</span>Webhook de automações</a>
+    <a href="#payload-webhook" class="toc-link"><span class="toc-method toc-method-post">Payload</span>Webhook payload</a>
 
     <div class="help-box">
       <p>Precisa de ajuda?</p>
