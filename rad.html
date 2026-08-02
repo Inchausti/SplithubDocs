@@ -202,6 +202,75 @@
       <tr><td>status</td><td>string</td><td>confirmed, pending or divergent (quando o valor do Pix não bate com o DARF)</td></tr>
     </table>
 
+    <h2 id="webhook-comprovante">Webhook event: comprovante de pagamento recebido</h2>
+    <p>
+      Sempre que um comprovante de pagamento é enviado ao Splithub (via <code class="inline">POST /v1/rad/comprovantes</code>),
+      o sistema dispara este webhook para sua URL configurada, confirmando o recebimento e o status da validação
+      do comprovante contra a guia de DARF.
+    </p>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">O webhook de comprovante permite que você rastreie em tempo real quando um pagamento é registrado no Splithub. Três status possíveis: <code class="inline">confirmed</code> (valor confere com o DARF), <code class="inline">pending</code> (validação em andamento) ou <code class="inline">divergent</code> (valor diverge do DARF, requer investigação).</p>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST {sua_url_de_webhook}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>{
+  <span class="tok-k">"event"</span>: <span class="tok-s">"rad.comprovante_recebido"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T14:30:00.000Z"</span>,
+  <span class="tok-k">"data"</span>: {
+    <span class="tok-k">"comprovante_id"</span>: <span class="tok-s">"comp_5e21fa"</span>,
+    <span class="tok-k">"darf_id"</span>: <span class="tok-s">"darf_9f21ab"</span>,
+    <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
+    <span class="tok-k">"darf_type"</span>: <span class="tok-s">"cbs"</span>,
+    <span class="tok-k">"status"</span>: <span class="tok-s">"confirmed"</span>,
+    <span class="tok-k">"pix"</span>: {
+      <span class="tok-k">"end_to_end_id"</span>: <span class="tok-s">"E14200166202607291200a1b2c3d4"</span>,
+      <span class="tok-k">"key"</span>: <span class="tok-s">"14200166000187"</span>,
+      <span class="tok-k">"amount"</span>: <span class="tok-s">"57.60"</span>,
+      <span class="tok-k">"timestamp"</span>: <span class="tok-s">"2026-07-29T12:00:00.000Z"</span>,
+      <span class="tok-k">"payer_info"</span>: <span class="tok-s">"Pagamento DARF CBS - chave DFe 35260714200166000187550010000012341234567890"</span>
+    },
+    <span class="tok-k">"darf_value"</span>: <span class="tok-s">57.60</span>,
+    <span class="tok-k">"divergence_amount"</span>: <span class="tok-s">0.00</span>
+  }
+}</pre>
+    </div>
+
+    <p>Seu endpoint deve responder <code class="inline">200 OK</code> para confirmar o recebimento. Sem essa confirmação, o Splithub reenvia o evento.</p>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta esperada do seu endpoint</span></div>
+      <pre>200 OK</pre>
+    </div>
+
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+      <tr><td>event</td><td>string</td><td>Nome do evento: rad.comprovante_recebido</td></tr>
+      <tr><td>created_at</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
+      <tr><td>data.comprovante_id</td><td>string</td><td>Identificador único do comprovante registrado</td></tr>
+      <tr><td>data.darf_id</td><td>string</td><td>Identificador do DARF ao qual este comprovante se refere</td></tr>
+      <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF-e original relacionado ao DARF</td></tr>
+      <tr><td>data.darf_type</td><td>string</td><td>Tributo do DARF: ibs ou cbs</td></tr>
+      <tr><td>data.status</td><td>string</td><td>confirmed (valor confere), pending (validação em andamento) ou divergent (valor não confere)</td></tr>
+      <tr><td>data.pix.end_to_end_id</td><td>string</td><td>Identificador único da transação Pix</td></tr>
+      <tr><td>data.pix.key</td><td>string</td><td>Chave Pix usada no pagamento</td></tr>
+      <tr><td>data.pix.amount</td><td>string</td><td>Valor do Pix recebido</td></tr>
+      <tr><td>data.pix.timestamp</td><td>timestamp</td><td>Data e hora da liquidação do Pix</td></tr>
+      <tr><td>data.pix.payer_info</td><td>string</td><td>Informação livre fornecida pelo pagador</td></tr>
+      <tr><td>data.darf_value</td><td>number</td><td>Valor total do DARF esperado</td></tr>
+      <tr><td>data.divergence_amount</td><td>number</td><td>Diferença entre o valor pago e o DARF (0 se status = confirmed)</td></tr>
+    </table>
+
     <div class="page-footer-nav">
       <a href="ingestao-dfs.html">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
@@ -218,6 +287,7 @@
     <div class="toc-label">Nesta página</div>
     <a href="#webhook-darf" class="toc-link active"><span class="toc-method toc-method-webhook">WEBHOOK</span>Guia de DARF recebida</a>
     <a href="#comprovante-pagamento" class="toc-link"><span class="toc-method toc-method-post">POST</span>Enviar comprovante de pagamento</a>
+    <a href="#webhook-comprovante" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Comprovante recebido</a>
 
     <div class="help-box">
       <p>Precisa de ajuda?</p>
