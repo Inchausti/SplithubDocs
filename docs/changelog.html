@@ -107,50 +107,6 @@
       <li><strong>Home page expandida</strong> — Oito cards principais cobrindo todas as seções: Visão geral, Autenticação, Fornecedores, Ingestão DFs, RAD, Garantia de crédito, Automações e Contratos.</li>
     </ul>
 
-    <h3>📝 Detalhes dos commits</h3>
-    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
-      <p><code>45c1cdd</code> — Cria seção de Fornecedores com CRUD completo (POST/GET/GET{id}/PATCH/DELETE), campos de CNPJ, razão social, fantasia, data de abertura, situação cadastral, natureza jurídica, regime tributário, atividade econômica, endereço e contato com representante fiscal.</p>
-    </div>
-
-    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
-      <p><code>aec4e30</code> — Refatora seção de Contratos, expandindo de apenas endpoints de sincronização para CRUD completo (POST/GET/GET{id}/PATCH/DELETE) com campos de contrato externo, descrição, CNPJs de contratante/contratado, datas de vigência, valor total, condição de pagamento, status e observações.</p>
-    </div>
-
-    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
-      <p><code>d12ddce</code> — Adiciona campo <code>optanteRAD</code> (booleano) à documentação de Contratos para indicar elegibilidade à modalidade de Recolhimento pelo Adquirente.</p>
-    </div>
-
-    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
-      <p><code>47f4230</code> — Implementa conformidade com Reforma Tributária 2026 em Ingestão DFs incluindo estrutura NF-e 4.0 (Grupo UB com CST/cClassTrib/vBC/gIBSUF/gIBSMun e Grupo W03), transforma RAD de endpoints de configuração para webhook event <code>rad.darf_recebida</code> com detalhes de guias DARF, e adiciona HTTP method badges coloridas em todas as tabelas de conteúdo.</p>
-    </div>
-
-    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
-      <p><code>f4dd5c3</code> — Refatora seção de Garantia de crédito com dois webhook events independentes: <code>credito.status_alterado</code> (nao_apropriado → apropriado → utilizado com motivo de alteração) e <code>debito.status_alterado</code> (nao_extinto → extinto com modalidade de extinção e créditos utilizados), removendo endpoints de CRUD anteriores.</p>
-    </div>
-
-    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
-      <p><code>9148b60</code> — Reposiciona seção de Fornecedores como última seção de Recursos na sidebar, imediatamente antes da seção de Webhooks, melhorando a hierarquia visual da navegação.</p>
-    </div>
-
-    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
-      <p><code>c73058d</code> — Implementa suporte a CNPJ alfanumérico em todas as seções de documentação (Fornecedores, Contratos, Ingestão DFs), atualizando descrições de campos de "14 dígitos" para "alfanumérico (letras e números)".</p>
-    </div>
-
-    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
-      <p><code>248c301</code> — Adiciona link de referência oficial da Receita Federal com especificação de CNPJ alfanumérico e data de implementação (27/07/2026) em Fornecedores e Contratos.</p>
-    </div>
-
-    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
-      <p><code>1f18aa1</code> — Resolve conflito de callouts em Contratos dividindo informação única em dois callouts distintos: um para estabilidade de <code>contratoExternoId</code> e outro especificamente para CNPJ alfanumérico com link da Receita Federal.</p>
-    </div>
-
-    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
-      <p><code>4f030b9</code> — Expande página home (index.html) de 4 para 8 cards principais, adicionando novas seções de Fornecedores, Garantia de crédito, Automações e Contratos, com atualizações na descrição hero para enfatizar governança, gerenciamento de fornecedores e automação fiscal.</p>
-    </div>
-
-    <div style="background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0;">
-      <p><code>126a071</code> — Implementa busca funcional completa na documentação com modal acessível via Ctrl+K/Cmd+K, indexação de 8 recursos (Visão Geral, Autenticação, Fornecedores, Ingestão DFs, RAD, Garantia de Crédito, Automações, Contratos), filtragem em tempo real e navegação por clique em resultados.</p>
-    </div>
 
     <h3>🔧 Mudanças estruturais</h3>
     <ul>
