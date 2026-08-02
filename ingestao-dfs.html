@@ -105,17 +105,12 @@
 
     <div class="callout">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      Aceitamos o XML assinado do documento fiscal ou um JSON estruturado equivalente aos grupos da NF-e 4.0 atualizados pela Nota Técnica 2025.002 — o Grupo UB (IBS/CBS por item, dentro de <code class="inline">items[].tax</code>) e o Grupo W03 (totais de IBS/CBS da nota). Sem esses grupos preenchidos, a partir de 03/08/2026 a nota é rejeitada pela SEFAZ. O processamento na Splithub é assíncrono; use o endpoint de consulta para acompanhar o status.
+      Aceitamos o XML assinado do documento fiscal ou um JSON estruturado equivalente aos grupos da NF-e 4.0 e outros leiautes DF-e (NFCom, CT-e, BP-e, etc.) atualizados pela Nota Técnica 2025.002. A API adapta automaticamente conforme o <code class="inline">type</code> informado. Obrigatório: Grupo de IBS/CBS (CST e cClassTrib), valores de base e tributação. Sem esses dados, a partir de 03/08/2026 a nota é rejeitada pela SEFAZ. O processamento é assíncrono; use o endpoint de consulta para acompanhar o status.
     </div>
 
     <h2 id="criar-documento">Criar um documento fiscal</h2>
     <p>
-      Envie o XML do documento em base64 ou os campos já estruturados, seguindo os grupos do
-      layout da NF-e 4.0: <code class="inline">identification</code> (identificação), <code class="inline">emission</code>
-      (emitente), <code class="inline">destination</code> (destinatário), <code class="inline">items</code>
-      (equivalente ao grupo <code class="inline">det</code>, já com o Grupo UB de IBS/CBS por item)
-      e <code class="inline">total</code> (com o Grupo W03 de totais de IBS/CBS).
-      A API retorna um identificador para acompanhar o processamento.
+      Envie o XML do documento assinado em base64 ou um JSON estruturado. A API adapta-se automaticamente conforme o <code class="inline">type</code> informado (NF-e, NFCom, CT-e, BP-e, etc.). Independentemente do tipo, inclua: <code class="inline">identification</code> (identificação), <code class="inline">emission</code> (emitente), <code class="inline">destination</code> (destinatário), <code class="inline">items</code> (itens ou serviços), e <code class="inline">total</code> (totalizadores). O Grupo de IBS/CBS (<code class="inline">items[].tax.ibs_cbs</code>) é obrigatório em todos os tipos; para NFCom, CT-e OS e outros, inclua também campos específicos (como <code class="inline">competence_date</code> em NFCom). A API retorna um identificador para acompanhar o processamento.
     </p>
 
     <div class="code-block">
@@ -159,12 +154,12 @@
         "total_value": 6400.00,
         "tax": {
           "ibs_cbs": {
-            "CST": "000",
-            "cClassTrib": "000001",
-            "vBC": 6400.00,
-            "gIBSUF": { "pIBSUF": 0.05, "vIBSUF": 3.20 },
-            "gIBSMun": { "pIBSMun": 0.05, "vIBSMun": 3.20 },
-            "gCBS": { "pCBS": 0.9, "vCBS": 57.60 }
+            "cst": "000",
+            "c_class_trib": "000001",
+            "v_bc": 6400.00,
+            "g_ibs_uf": { "p_ibs_uf": 0.05, "v_ibs_uf": 3.20 },
+            "g_ibs_mun": { "p_ibs_mun": 0.05, "v_ibs_mun": 3.20 },
+            "g_cbs": { "p_cbs": 0.9, "v_cbs": 57.60 }
           }
         }
       }
@@ -173,9 +168,78 @@
       "products_value": 6400.00,
       "total_note_value": 6400.00,
       "ibs_cbs_total": {
-        "vBC": 6400.00,
-        "vTotIBS": 6.40,
-        "vTotCBS": 57.60
+        "v_bc": 6400.00,
+        "v_tot_ibs": 6.40,
+        "v_tot_cbs": 57.60
+      }
+    }
+  }'</span></pre>
+    </div>
+
+    <p>
+      A API adapta-se automaticamente ao tipo de DF enviado. Para <strong>NFCom (modelo 62)</strong>, envie assim:
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST /v1/documentos-fiscais (NFCom - exemplo)</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "type": "nfcom",
+    "model": "62",
+    "access_key": "35260714200166000187550010000087654321098765",
+    "identification": {
+      "number": "654321",
+      "series": "1",
+      "emission_date": "2026-08-02T14:30:00-03:00"
+    },
+    "emission": {
+      "cnpj": "14200166000187",
+      "legal_name": "Operadora Telecom LTDA",
+      "state": "SP"
+    },
+    "destination": {
+      "cnpj_cpf": "98765432000188",
+      "name": "Cliente Corporativo LTDA",
+      "state": "RJ"
+    },
+    "competence_date": "2026-08-02",
+    "items": [
+      {
+        "code": "SERV-0101",
+        "description": "Serviço de telefonia móvel corporativo",
+        "service_type": "mobile_telephony",
+        "cfop": "5302",
+        "quantity": 1,
+        "unit": "month",
+        "unit_price": 850.00,
+        "total_value": 850.00,
+        "tax": {
+          "ibs_cbs": {
+            "cst": "10",
+            "c_class_trib": "0101",
+            "v_bc": 850.00,
+            "g_ibs_uf": { "p_ibs_uf": 0.05, "v_ibs_uf": 4.25 },
+            "g_ibs_mun": { "p_ibs_mun": 0.05, "v_ibs_mun": 4.25 },
+            "g_cbs": { "p_cbs": 0.9, "v_cbs": 76.50 }
+          }
+        }
+      }
+    ],
+    "total": {
+      "services_value": 850.00,
+      "total_note_value": 850.00,
+      "ibs_cbs_total": {
+        "v_bc": 850.00,
+        "v_tot_ibs": 8.50,
+        "v_tot_cbs": 76.50
       }
     }
   }'</span></pre>
@@ -183,7 +247,7 @@
 
     <div class="callout">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      Durante 2026, <code class="inline">vTotIBS</code> e <code class="inline">vTotCBS</code> não compõem o <code class="inline">valorTotalNota</code> — eles são informados à parte no Grupo W03, refletindo a fase de testes com cobrança simbólica (0,9% CBS + 0,1% IBS, dividido entre <code class="inline">gIBSUF</code> e <code class="inline">gIBSMun</code>).
+      Durante 2026, <code class="inline">v_tot_ibs</code> e <code class="inline">v_tot_cbs</code> não compõem o <code class="inline">total_note_value</code> — eles são informados à parte no Grupo W03, refletindo a fase de testes com cobrança simbólica (0,9% CBS + 0,1% IBS, dividido entre <code class="inline">g_ibs_uf</code> e <code class="inline">g_ibs_mun</code>). Os campos são flexíveis: use <code class="inline">ncm</code> para NF-e ou <code class="inline">service_type</code> para NFCom conforme necessário.
     </div>
 
     <p>A resposta confirma o recebimento e o status inicial do processamento:</p>
@@ -195,7 +259,8 @@
   <span class="tok-k">"status"</span>: <span class="tok-s">"processing"</span>,
   <span class="tok-k">"type"</span>: <span class="tok-s">"nfe"</span>,
   <span class="tok-k">"model"</span>: <span class="tok-s">"55"</span>,
-  <span class="tok-k">"access_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>
+  <span class="tok-k">"access_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T10:00:00.000Z"</span>
 }</pre>
     </div>
 
@@ -223,14 +288,18 @@
   <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>,
   <span class="tok-k">"status"</span>: <span class="tok-s">"completed"</span>,
   <span class="tok-k">"type"</span>: <span class="tok-s">"nfe"</span>,
+  <span class="tok-k">"model"</span>: <span class="tok-s">"55"</span>,
+  <span class="tok-k">"access_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
   <span class="tok-k">"emission"</span>: { <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>, <span class="tok-k">"legal_name"</span>: <span class="tok-s">"Fornecedor Exemplo LTDA"</span> },
   <span class="tok-k">"destination"</span>: { <span class="tok-k">"cnpj_cpf"</span>: <span class="tok-s">"98765432000188"</span>, <span class="tok-k">"name"</span>: <span class="tok-s">"Cliente Exemplo LTDA"</span> },
   <span class="tok-k">"total_value"</span>: <span class="tok-s">6400.00</span>,
   <span class="tok-k">"ibs_cbs_total"</span>: {
-    <span class="tok-k">"vBC"</span>: <span class="tok-s">6400.00</span>,
-    <span class="tok-k">"vTotIBS"</span>: <span class="tok-s">6.40</span>,
-    <span class="tok-k">"vTotCBS"</span>: <span class="tok-s">57.60</span>
-  }
+    <span class="tok-k">"v_bc"</span>: <span class="tok-s">6400.00</span>,
+    <span class="tok-k">"v_tot_ibs"</span>: <span class="tok-s">6.40</span>,
+    <span class="tok-k">"v_tot_cbs"</span>: <span class="tok-s">57.60</span>
+  },
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T10:00:00.000Z"</span>,
+  <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-07-29T10:15:30.000Z"</span>
 }</pre>
     </div>
 
@@ -256,10 +325,10 @@
       <div class="code-head"><span>Resposta 200 OK</span></div>
       <pre>{
   <span class="tok-k">"data"</span>: [
-    { <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>, <span class="tok-k">"type"</span>: <span class="tok-s">"nfe"</span>, <span class="tok-k">"status"</span>: <span class="tok-s">"completed"</span>, <span class="tok-k">"total_value"</span>: <span class="tok-s">6553.60</span> }
+    { <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>, <span class="tok-k">"type"</span>: <span class="tok-s">"nfe"</span>, <span class="tok-k">"model"</span>: <span class="tok-s">"55"</span>, <span class="tok-k">"status"</span>: <span class="tok-s">"completed"</span>, <span class="tok-k">"total_value"</span>: <span class="tok-s">6553.60</span>, <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T10:00:00.000Z"</span> }
   ],
   <span class="tok-k">"page"</span>: <span class="tok-s">1</span>,
-  <span class="tok-k">"perPage"</span>: <span class="tok-s">20</span>,
+  <span class="tok-k">"per_page"</span>: <span class="tok-s">20</span>,
   <span class="tok-k">"total"</span>: <span class="tok-s">1</span>
 }</pre>
     </div>
@@ -328,15 +397,16 @@
 
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>id</td><td>string</td><td>Identificador único do documento fiscal ingerido</td></tr>
-      <tr><td>type</td><td>string</td><td>Um dos 14 tipos de DF (nfe, nfce, cte, cte-os, bpe, mdfe, gtv-e, nfcom, nf3e, nfag, nfgas, nfe-abi, nfs-e, nfs-e-via)</td></tr>
-      <tr><td>model</td><td>string</td><td>Número do modelo oficial do documento (ex.: 55 para NF-e)</td></tr>
-      <tr><td>status</td><td>string</td><td>pending, processing, completed or error</td></tr>
-      <tr><td>identification / emission / destination</td><td>object</td><td>Grupos de identificação, emitente e destinatário, no padrão da NF-e 4.0</td></tr>
-      <tr><td>items</td><td>array</td><td>Itens do documento, equivalentes ao grupo det da NF-e 4.0</td></tr>
-      <tr><td>items[].tax.ibs_cbs</td><td>object</td><td>Grupo UB por item: CST, cClassTrib, vBC e os subgrupos gIBSUF, gIBSMun e gCBS (Nota Técnica 2025.002)</td></tr>
-      <tr><td>total_value</td><td>number</td><td>Valor total do documento fiscal (sem somar IBS/CBS, conforme regra de 2026)</td></tr>
-      <tr><td>total.ibs_cbs_total</td><td>object</td><td>Grupo W03: vBC, vTotIBS e vTotCBS — totais de IBS e CBS da nota</td></tr>
+      <tr><td>type</td><td>string</td><td>Um dos 14 tipos de DF: nfe, nfce, cte, cte-os, bpe, mdfe, gtv-e, nfcom, nf3e, nfag, nfgas, nfe-abi, nfs-e, nfs-e-via</td></tr>
+      <tr><td>model</td><td>string</td><td>Número do modelo oficial (55=NF-e, 65=NFC-e, 62=NFCom, 63=BP-e, 57=CT-e, 58=MDF-e, 64=GTV-e, 66=NF3-e, 75=NFAg, 76=NFGás, 77=NF-e ABI)</td></tr>
+      <tr><td>access_key</td><td>string</td><td>Chave de acesso única de 44 dígitos do documento fiscal</td></tr>
+      <tr><td>identification</td><td>object</td><td>Identificação: number (número do DF), series (série), emission_date (data e hora de emissão)</td></tr>
+      <tr><td>emission</td><td>object</td><td>Emitente: cnpj, legal_name, state (obrigatório)</td></tr>
+      <tr><td>destination</td><td>object</td><td>Destinatário: cnpj_cpf, name, state (opcional para alguns DF-e)</td></tr>
+      <tr><td>competence_date</td><td>string</td><td>Data de competência (específico para NFCom, NFS-e e similares; formato: YYYY-MM-DD)</td></tr>
+      <tr><td>items</td><td>array</td><td>Itens/serviços: code, description, quantity, unit_price, total_value. Campos adicionais conforme tipo (ncm para NF-e, service_type para NFCom, etc.)</td></tr>
+      <tr><td>items[].tax.ibs_cbs</td><td>object</td><td>Grupo de tributação: cst, c_class_trib, v_bc, g_ibs_uf, g_ibs_mun, g_cbs (Nota Técnica 2025.002)</td></tr>
+      <tr><td>total</td><td>object</td><td>Totalizadores: products_value/services_value, total_note_value, ibs_cbs_total (v_bc, v_tot_ibs, v_tot_cbs)</td></tr>
     </table>
 
     <div class="page-footer-nav">
