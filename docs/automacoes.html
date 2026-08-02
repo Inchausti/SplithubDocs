@@ -101,9 +101,9 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "trigger": "tax_document.completed",
-    "conditions": { "min_total_value": 1000 },
-    "action": { "type": "webhook", "url": "https://empresa.com/webhooks/splithub" }
+    "trigger": "tax_document.completed",    <span class="tok-c">// REQUIRED</span>
+    "conditions": { "min_total_value": 1000 }, <span class="tok-c">// OPTIONAL</span>
+    "action": { "type": "webhook", "url": "https://empresa.com/webhooks/splithub" } <span class="tok-c">// REQUIRED</span>
   }'</span></pre>
     </div>
 
@@ -115,6 +115,16 @@
   <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>
 }</pre>
     </div>
+
+    <p><strong>Campos Obrigatórios e Opcionais (POST /v1/automacoes):</strong></p>
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Observação</th></tr>
+      <tr><td>trigger</td><td>string</td><td>OBRIGATÓRIO</td><td>Evento que dispara a automação (ex: tax_document.completed, darf.generated)</td></tr>
+      <tr><td>conditions</td><td>object</td><td>OPCIONAL</td><td>Condições adicionais (ex: min_total_value, status)</td></tr>
+      <tr><td>action</td><td>object</td><td>OBRIGATÓRIO</td><td>Ação a executar</td></tr>
+      <tr><td>action.type</td><td>string</td><td>OBRIGATÓRIO</td><td>webhook, notification, etc</td></tr>
+      <tr><td>action.url</td><td>string</td><td>OBRIGATÓRIO*</td><td>Obrigatório quando type = webhook</td></tr>
+    </table>
 
     <h2 id="listar-automacoes">Listar automações</h2>
     <p>
