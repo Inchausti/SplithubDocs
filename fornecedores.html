@@ -145,35 +145,35 @@
 }</pre>
     </div>
 
-    <p><strong>Campos Obrigatórios e Opcionais (POST /v1/fornecedores):</strong></p>
+    <p><strong>Mapa de Campos (POST /v1/fornecedores):</strong></p>
     <table class="response-table">
-      <tr><th>Campo</th><th>Status</th><th>Observação</th></tr>
-      <tr><td>cnpj</td><td>OBRIGATÓRIO</td><td>Formato alfanumérico (Receita Federal)</td></tr>
-      <tr><td>legal_name</td><td>OBRIGATÓRIO</td><td>Razão social</td></tr>
-      <tr><td>trade_name</td><td>OPCIONAL</td><td>Nome fantasia</td></tr>
-      <tr><td>founding_date</td><td>OPCIONAL</td><td>YYYY-MM-DD</td></tr>
-      <tr><td>registration_status</td><td>OPCIONAL</td><td>active, inactive, suspended, cancelled</td></tr>
-      <tr><td>legal_nature</td><td>OPCIONAL</td><td>Código de 3 dígitos</td></tr>
-      <tr><td>tax_regime</td><td>OPCIONAL</td><td>lucro_real, lucro_presumido, simples_nacional</td></tr>
-      <tr><td>economic_activity</td><td>OPCIONAL</td><td>CNAE (7 dígitos)</td></tr>
-      <tr><td colspan="3"><strong>Endereço (object) - OPCIONAL</strong></td></tr>
-      <tr><td>address.street</td><td>OBRIGATÓRIO*</td><td>Obrigatório se address é enviado</td></tr>
-      <tr><td>address.number</td><td>OBRIGATÓRIO*</td><td>Obrigatório se address é enviado</td></tr>
-      <tr><td>address.complement</td><td>OPCIONAL</td><td>-</td></tr>
-      <tr><td>address.neighborhood</td><td>OBRIGATÓRIO*</td><td>Obrigatório se address é enviado</td></tr>
-      <tr><td>address.city</td><td>OBRIGATÓRIO*</td><td>Obrigatório se address é enviado</td></tr>
-      <tr><td>address.state</td><td>OBRIGATÓRIO*</td><td>UF (2 letras)</td></tr>
-      <tr><td>address.zipcode</td><td>OBRIGATÓRIO*</td><td>8 dígitos</td></tr>
-      <tr><td colspan="3"><strong>Contato (object) - OPCIONAL</strong></td></tr>
-      <tr><td>contact.email</td><td>OBRIGATÓRIO*</td><td>Obrigatório se contact é enviado</td></tr>
-      <tr><td>contact.phone</td><td>OBRIGATÓRIO*</td><td>Com DDD, obrigatório se contact é enviado</td></tr>
-      <tr><td colspan="3"><strong>Representante Fiscal (object) - OPCIONAL</strong></td></tr>
-      <tr><td>fiscal_representative.cpf</td><td>OBRIGATÓRIO*</td><td>11 dígitos, obrigatório se fiscal_rep é enviado</td></tr>
-      <tr><td>fiscal_representative.name</td><td>OBRIGATÓRIO*</td><td>Obrigatório se fiscal_rep é enviado</td></tr>
-      <tr><td>fiscal_representative.email</td><td>OBRIGATÓRIO*</td><td>Obrigatório se fiscal_rep é enviado</td></tr>
-      <tr><td>fiscal_representative.phone</td><td>OBRIGATÓRIO*</td><td>Obrigatório se fiscal_rep é enviado</td></tr>
-      <tr><td>fiscal_representative.rg</td><td>OPCIONAL</td><td>-</td></tr>
-      <tr><td>fiscal_representative.issuing_body</td><td>OPCIONAL</td><td>SSP, PC, etc</td></tr>
+      <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
+      <tr><td>cnpj</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>CNPJ da empresa (formato alfanumérico conforme Receita Federal)</td></tr>
+      <tr><td>legal_name</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Razão social da empresa</td></tr>
+      <tr><td>trade_name</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Nome fantasia</td></tr>
+      <tr><td>founding_date</td><td>date</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Data de fundação (YYYY-MM-DD)</td></tr>
+      <tr><td>registration_status</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>active, inactive, suspended, cancelled</td></tr>
+      <tr><td>legal_nature</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Código de natureza legal (3 dígitos)</td></tr>
+      <tr><td>tax_regime</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>lucro_real, lucro_presumido, simples_nacional</td></tr>
+      <tr><td>economic_activity</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Código CNAE (7 dígitos)</td></tr>
+      <tr><td colspan="4"><strong>Endereço (object) - OPCIONAL</strong></td></tr>
+      <tr><td>address.street</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Nome da rua (obrigatório se address é enviado)</td></tr>
+      <tr><td>address.number</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Número da propriedade (obrigatório se address é enviado)</td></tr>
+      <tr><td>address.complement</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Complemento do endereço (apto, sala, etc)</td></tr>
+      <tr><td>address.neighborhood</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Bairro (obrigatório se address é enviado)</td></tr>
+      <tr><td>address.city</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Cidade (obrigatório se address é enviado)</td></tr>
+      <tr><td>address.state</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Unidade da Federação (2 letras, obrigatório se address é enviado)</td></tr>
+      <tr><td>address.zipcode</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>CEP (8 dígitos sem formatação, obrigatório se address é enviado)</td></tr>
+      <tr><td colspan="4"><strong>Contato (object) - OPCIONAL</strong></td></tr>
+      <tr><td>contact.email</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Email de contato (obrigatório se contact é enviado)</td></tr>
+      <tr><td>contact.phone</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Telefone com DDD (obrigatório se contact é enviado)</td></tr>
+      <tr><td colspan="4"><strong>Representante Fiscal (object) - OPCIONAL</strong></td></tr>
+      <tr><td>fiscal_representative.cpf</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>CPF (11 dígitos, obrigatório se fiscal_representative é enviado)</td></tr>
+      <tr><td>fiscal_representative.name</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Nome completo do representante (obrigatório se fiscal_representative é enviado)</td></tr>
+      <tr><td>fiscal_representative.email</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Email do representante (obrigatório se fiscal_representative é enviado)</td></tr>
+      <tr><td>fiscal_representative.phone</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Telefone do representante (obrigatório se fiscal_representative é enviado)</td></tr>
+      <tr><td>fiscal_representative.rg</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Número do RG do representante</td></tr>
+      <tr><td>fiscal_representative.issuing_body</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Órgão expedidor do RG (SSP, PC, etc)</td></tr>
     </table>
 
     <h2 id="listar-fornecedores">Listar fornecedores</h2>
