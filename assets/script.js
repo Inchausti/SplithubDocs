@@ -147,18 +147,78 @@ if (searchBox) {
   }
 }
 
-// Dark mode toggle
+// Theme selector with dropdown menu
 document.addEventListener('DOMContentLoaded', function() {
   var html = document.documentElement;
   var topbarRight = document.querySelector('.topbar-right');
 
-  // Criar botão de toggle se não existir
-  var themeToggle = document.querySelector('.theme-toggle');
-  if (!themeToggle && topbarRight) {
-    themeToggle = document.createElement('button');
-    themeToggle.className = 'theme-toggle';
-    themeToggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
-    topbarRight.insertBefore(themeToggle, topbarRight.firstChild);
+  if (topbarRight) {
+    // Criar container do seletor de tema
+    var selector = document.createElement('div');
+    selector.className = 'theme-selector';
+
+    var toggle = document.createElement('button');
+    toggle.className = 'theme-toggle';
+    toggle.setAttribute('aria-label', 'Seletor de tema');
+    toggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg> Tema';
+
+    var menu = document.createElement('div');
+    menu.className = 'theme-menu';
+
+    var themes = [
+      { id: 'light', label: 'Claro' },
+      { id: 'dark', label: 'Escuro' },
+      { id: 'green', label: 'Verde' }
+    ];
+
+    themes.forEach(function(theme) {
+      var btn = document.createElement('button');
+      btn.setAttribute('data-theme', theme.id);
+      btn.textContent = theme.label;
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        setTheme(theme.id);
+        updateMenuState();
+        menu.classList.remove('open');
+      });
+      menu.appendChild(btn);
+    });
+
+    toggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      menu.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!selector.contains(e.target)) {
+        menu.classList.remove('open');
+      }
+    });
+
+    selector.appendChild(toggle);
+    selector.appendChild(menu);
+    topbarRight.insertBefore(selector, topbarRight.firstChild);
+  }
+
+  function setTheme(theme) {
+    if (theme === 'light') {
+      html.removeAttribute('data-theme');
+    } else {
+      html.setAttribute('data-theme', theme);
+    }
+    localStorage.setItem('theme', theme);
+  }
+
+  function updateMenuState() {
+    var currentTheme = html.getAttribute('data-theme') || 'light';
+    var buttons = document.querySelectorAll('.theme-menu button');
+    buttons.forEach(function(btn) {
+      if (btn.getAttribute('data-theme') === currentTheme) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
   }
 
   // Detectar preferência salva ou do sistema
@@ -166,60 +226,14 @@ document.addEventListener('DOMContentLoaded', function() {
   var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   var currentTheme = savedTheme || (prefersDark ? 'dark' : 'light');
 
-  // Aplicar tema
-  if (currentTheme === 'dark') {
-    html.setAttribute('data-theme', 'dark');
-    if (themeToggle) themeToggle.setAttribute('aria-label', 'Ativar modo claro');
-  } else {
-    html.removeAttribute('data-theme');
-    if (themeToggle) themeToggle.setAttribute('aria-label', 'Ativar modo escuro');
-  }
-
-  // Event listener para toggle (ciclo: light -> dark -> green -> light)
-  if (themeToggle) {
-    themeToggle.addEventListener('click', function() {
-      var currentTheme = html.getAttribute('data-theme') || 'light';
-      var nextTheme;
-      var nextLabel;
-
-      switch(currentTheme) {
-        case 'light':
-          nextTheme = 'dark';
-          nextLabel = 'Ativar modo verde';
-          break;
-        case 'dark':
-          nextTheme = 'green';
-          nextLabel = 'Ativar modo claro';
-          break;
-        case 'green':
-          nextTheme = null;
-          nextLabel = 'Ativar modo escuro';
-          break;
-        default:
-          nextTheme = 'dark';
-          nextLabel = 'Ativar modo verde';
-      }
-
-      if (nextTheme) {
-        html.setAttribute('data-theme', nextTheme);
-        localStorage.setItem('theme', nextTheme);
-      } else {
-        html.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'light');
-      }
-      themeToggle.setAttribute('aria-label', nextLabel);
-    });
-  }
+  setTheme(currentTheme);
+  setTimeout(updateMenuState, 100);
 
   // Detectar mudanças de preferência do sistema
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
     if (!localStorage.getItem('theme')) {
-      var isDark = e.matches;
-      if (isDark) {
-        html.setAttribute('data-theme', 'dark');
-      } else {
-        html.removeAttribute('data-theme');
-      }
+      setTheme(e.matches ? 'dark' : 'light');
+      updateMenuState();
     }
   });
 });
