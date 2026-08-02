@@ -74,13 +74,13 @@
     <p class="lede">
       O Splithub permite enviar (ingerir) Documentos Fiscais para que os tributos de cada
       documento sejam identificados e processados automaticamente pelas regras de separação.
-      Com a Reforma Tributária, o Fisco passa a trabalhar com 11 tipos de DFs (Documentos
+      Com a Reforma Tributária, o Fisco passa a trabalhar com 14 tipos de DFs (Documentos
       Fiscais Eletrônicos), cada um cobrindo uma categoria diferente de operação.
     </p>
 
     <h2 id="tipos-de-dfs">Tipos de documentos fiscais (DFs)</h2>
     <p>
-      Estes são os 11 tipos de DF-e previstos, com o modelo oficial e o tipo de operação que
+      Estes são os 14 tipos de DF-e previstos, com o modelo oficial e o tipo de operação que
       cada um documenta. Informe o tipo correto no campo <code class="inline">type</code> ao
       criar um documento.
     </p>
@@ -90,14 +90,17 @@
       <tr><td>nfe</td><td>Nota Fiscal Eletrônica (NF-e)</td><td>55</td><td>Circulação de mercadorias entre empresas</td></tr>
       <tr><td>nfce</td><td>Nota Fiscal de Consumidor Eletrônica (NFC-e)</td><td>65</td><td>Vendas ao consumidor final, presenciais ou por entrega</td></tr>
       <tr><td>cte</td><td>Conhecimento de Transporte Eletrônico (CT-e)</td><td>57</td><td>Prestação de serviço de transporte de cargas</td></tr>
-      <tr><td>cte-os</td><td>CT-e para Outros Serviços (CT-e OS)</td><td>67</td><td>Outros serviços vinculados ao transporte (excesso de bagagem, transporte de valores, multimodal, internacional de carga)</td></tr>
+      <tr><td>cte-os</td><td>CT-e para Outros Serviços (CT-e OS)</td><td>67</td><td>Outros serviços vinculados ao transporte (excesso de bagagem, multimodal, internacional de carga)</td></tr>
       <tr><td>bpe</td><td>Bilhete de Passagem Eletrônico (BP-e)</td><td>63</td><td>Transporte de passageiros intermunicipal, interestadual e internacional</td></tr>
       <tr><td>mdfe</td><td>Manifesto de Documentos Fiscais Eletrônicos (MDF-e)</td><td>58</td><td>Reúne os documentos fiscais vinculados a uma carga transportada</td></tr>
-      <tr><td>nfcom</td><td>Nota Fiscal Fatura de Serviços de Comunicação (NFCom)</td><td>62</td><td>Cobrança de serviços de comunicação/telecomunicação</td></tr>
+      <tr><td>gtv-e</td><td>Guia de Transporte de Valores Eletrônica (GTV-e)</td><td>64</td><td>Transporte de valores em espécie</td></tr>
+      <tr><td>nfcom</td><td>Nota Fiscal de Comunicação Eletrônica (NFCom)</td><td>62</td><td>Cobrança de serviços de comunicação/telecomunicação</td></tr>
       <tr><td>nf3e</td><td>Nota Fiscal de Energia Elétrica Eletrônica (NF3-e)</td><td>66</td><td>Consumo de energia elétrica</td></tr>
-      <tr><td>nfag</td><td>Nota Fiscal da Água e Saneamento Eletrônica (NFAg)</td><td>75</td><td>Consumo de água e serviços de saneamento</td></tr>
+      <tr><td>nfag</td><td>Nota Fiscal de Água e Saneamento Eletrônica (NFAg)</td><td>75</td><td>Consumo de água e serviços de saneamento</td></tr>
       <tr><td>nfgas</td><td>Nota Fiscal Eletrônica do Gás (NFGás)</td><td>76</td><td>Distribuição de gás canalizado</td></tr>
       <tr><td>nfe-abi</td><td>NF-e de Alienação de Bens Imóveis (NF-e ABI)</td><td>77</td><td>Venda/alienação de bens imóveis</td></tr>
+      <tr><td>nfs-e</td><td>Nota Fiscal de Serviço Eletrônica (NFS-e)</td><td>-</td><td>Prestação de serviços</td></tr>
+      <tr><td>nfs-e-via</td><td>Nota Fiscal de Serviço Eletrônica - Via Exploração (NFS-e Via)</td><td>-</td><td>Exploração de vias (pedágios e concessões)</td></tr>
     </table>
 
     <div class="callout">
@@ -326,7 +329,7 @@
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
       <tr><td>id</td><td>string</td><td>Identificador único do documento fiscal ingerido</td></tr>
-      <tr><td>type</td><td>string</td><td>Um dos 11 tipos de DF (nfe, nfce, cte, cte-os, bpe, mdfe, nfcom, nf3e, nfag, nfgas, nfe-abi)</td></tr>
+      <tr><td>type</td><td>string</td><td>Um dos 14 tipos de DF (nfe, nfce, cte, cte-os, bpe, mdfe, gtv-e, nfcom, nf3e, nfag, nfgas, nfe-abi, nfs-e, nfs-e-via)</td></tr>
       <tr><td>model</td><td>string</td><td>Número do modelo oficial do documento (ex.: 55 para NF-e)</td></tr>
       <tr><td>status</td><td>string</td><td>pending, processing, completed or error</td></tr>
       <tr><td>identification / emission / destination</td><td>object</td><td>Grupos de identificação, emitente e destinatário, no padrão da NF-e 4.0</td></tr>
