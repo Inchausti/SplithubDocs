@@ -72,15 +72,15 @@
     <div class="breadcrumb">Introdução e aspectos gerais / Autenticação</div>
     <h1>Autenticação</h1>
     <p class="lede">
-      Splithub uses JSON Web Token (JWT) authentication. Exchange your client credentials
-      for an access token, then pass it in the <code class="inline">Authorization</code> header
-      of all subsequent requests.
+      O Splithub utiliza autenticação JSON Web Token (JWT). Envie suas credenciais de cliente
+      para obter um access token e utilize-o no cabeçalho <code class="inline">Authorization</code>
+      de todas as requisições subsequentes.
     </p>
 
     <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       <div>
-        <p style="margin:0;line-height:1.6;">Never send the access token in the URL or query string. It must only travel in the <code class="inline">Authorization</code> header, always over HTTPS.</p>
+        <p style="margin:0;line-height:1.6;">Nunca envie o access token na URL ou query string. Ele deve ser transmitido apenas no cabeçalho <code class="inline">Authorization</code>, sempre via HTTPS.</p>
       </div>
     </div>
 
@@ -117,29 +117,29 @@
 }</pre>
     </div>
 
-    <h2 id="usar-token">Step 2: use the token in API calls</h2>
+    <h2 id="usar-token">Passo 2: usar o token nas chamadas de API</h2>
     <p>
-      Include the access token in the <code class="inline">Authorization</code> header of all requests
-      using the format <code class="inline">Bearer {access_token}</code>.
+      Inclua o access token no cabeçalho <code class="inline">Authorization</code> de todas as requisições
+      usando o formato <code class="inline">Bearer {access_token}</code>.
     </p>
 
     <div class="code-block">
       <div class="code-head">
-        <span>Authenticated request</span>
+        <span>Requisição autenticada</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/suppliers</span> \
+      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/fornecedores</span> \
   -H <span class="tok-s">"Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."</span></pre>
     </div>
 
-    <h2 id="renovacao">Token expiration</h2>
+    <h2 id="renovacao">Expiração do token</h2>
     <p>
-      The access token expires after the time specified in <code class="inline">expires_in</code> (in seconds).
-      Requests made with an expired token receive <code class="inline">401 Unauthorized</code>; in that case,
-      repeat step 1 to obtain a new access token.
+      O access token expira após o tempo especificado em <code class="inline">expires_in</code> (em segundos).
+      Requisições feitas com um token expirado recebem <code class="inline">401 Unauthorized</code>; neste caso,
+      repita o Passo 1 para obter um novo access token.
     </p>
 
     <div class="code-block">
@@ -152,9 +152,9 @@
 
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>token</td><td>string</td><td>JWT assinado, usado no cabeçalho Authorization</td></tr>
-      <tr><td>expiresIn</td><td>number</td><td>Tempo de vida do token, em segundos</td></tr>
-      <tr><td>tokenType</td><td>string</td><td>Sempre "Bearer"</td></tr>
+      <tr><td>access_token</td><td>string</td><td>JWT assinado, usado no cabeçalho Authorization</td></tr>
+      <tr><td>expires_in</td><td>number</td><td>Tempo de vida do token, em segundos</td></tr>
+      <tr><td>token_type</td><td>string</td><td>Sempre "Bearer"</td></tr>
     </table>
 
     <div class="page-footer-nav">
