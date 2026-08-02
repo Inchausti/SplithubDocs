@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAD · Splithub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <button class="menu-toggle" aria-label="Abrir menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <div class="brand"><span class="mark"></span><span class="wordmark">splithub</span></div>
+  <nav class="topnav">
+    <a href="visao-geral.html" class="active">Guias</a>
+    <a href="em-breve.html">Referência</a>
+    <a href="changelog.html">Changelog</a>
+  </nav>
+  <div class="topbar-right">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      Buscar na documentação
+      <span class="kbd">⌘K</span>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <a href="index.html" class="nav-flat">Home</a>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Introdução e aspectos gerais
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="visao-geral.html" class="nav-item">Visão geral</a>
+        <a href="autenticacao.html" class="nav-item">Autenticação</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Recursos
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="ingestao-dfs.html" class="nav-item">Ingestão DFs</a>
+        <a href="rad.html" class="nav-item active">RAD</a>
+        <a href="garantia-credito.html" class="nav-item">Garantia de crédito</a>
+        <a href="automacoes.html" class="nav-item">Automações</a>
+        <a href="contratos.html" class="nav-item">Contratos</a>
+        <a href="fornecedores.html" class="nav-item">Fornecedores</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Webhooks
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="breadcrumb">Recursos / RAD</div>
+    <h1>RAD (Recolhimento pelo Adquirente)</h1>
+    <p class="lede">
+      RAD é o mecanismo em que o adquirente da transação — a instituição de pagamento — recolhe
+      e retém a parcela de tributos diretamente na liquidação, repassando ao lojista apenas o
+      valor líquido. O Splithub recebe a guia de DARF gerada nesse fluxo e o comprovante do
+      pagamento realizado, para manter a conciliação completa.
+    </p>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">O RAD está relacionado ao split payment previsto na Reforma Tributária: parte do valor da transação pode deixar de transitar pela conta do lojista, sendo recolhida automaticamente pelo adquirente.</p>
+      </div>
+    </div>
+
+    <h2 id="webhook-darf">Webhook event: guia de DARF recebida</h2>
+    <p>
+      Assim que uma guia de DARF (CBS ou IBS) é gerada no fluxo de RAD, o Splithub dispara este
+      evento por <strong>POST</strong> para a URL de webhook configurada na sua conta — você não
+      chama nenhum endpoint do Splithub para isso, apenas recebe o evento.
+    </p>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">Nesta versão só é suportada a <code class="inline">payment_method</code> RAD (Recolhimento pelo Adquirente); PRESP (Pagamento pelo Responsável) fica reservado para uma versão futura. Como cada evento se refere a um único tributo, incluímos o campo <code class="inline">darf_type</code> (<code class="inline">ibs</code> ou <code class="inline">cbs</code>) para identificar qual guia foi recebida.</p>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST {sua_url_de_webhook}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>{
+  <span class="tok-k">"event"</span>: <span class="tok-s">"rad.darf_recebida"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T12:00:00.000Z"</span>,
+  <span class="tok-k">"data"</span>: {
+    <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
+    <span class="tok-k">"darf_type"</span>: <span class="tok-s">"cbs"</span>,
+    <span class="tok-k">"return_code"</span>: <span class="tok-s">"DARF_GERADO"</span>,
+    <span class="tok-k">"pix_key"</span>: <span class="tok-s">"34028316000103"</span>,
+    <span class="tok-k">"barcode"</span>: <span class="tok-s">"858100000012345678901234567890123456789012"</span>,
+    <span class="tok-k">"darf_pdf_link"</span>: <span class="tok-s">"https://sistema.rfb.gov.br/darf/df_8f3a1c2b.pdf"</span>,
+    <span class="tok-k">"darf_principal_value"</span>: <span class="tok-s">57.60</span>,
+    <span class="tok-k">"darf_penalty_value"</span>: <span class="tok-s">0.00</span>,
+    <span class="tok-k">"darf_interest_value"</span>: <span class="tok-s">0.00</span>,
+    <span class="tok-k">"darf_total_value"</span>: <span class="tok-s">57.60</span>
+  }
+}</pre>
+    </div>
+
+    <p>Seu endpoint deve responder <code class="inline">200 OK</code> para confirmar o recebimento. Sem essa confirmação, o Splithub reenvia o evento.</p>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta esperada do seu endpoint</span></div>
+      <pre>200 OK</pre>
+    </div>
+
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+      <tr><td>event</td><td>string</td><td>Nome do evento: rad.darf_recebida</td></tr>
+      <tr><td>created_at</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
+      <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF-e ao qual a guia se refere</td></tr>
+      <tr><td>data.darf_type</td><td>string</td><td>Tributo da guia: ibs ou cbs</td></tr>
+      <tr><td>data.return_code</td><td>string</td><td>DARF_GERADO, DFE_NAO_ENCONTRADO ou VALOR_PARCIAL_SUPERIOR_DFE</td></tr>
+      <tr><td>data.pix_key</td><td>string</td><td>Chave PIX disponível para pagamento do DARF</td></tr>
+      <tr><td>data.barcode</td><td>string</td><td>Código de barras para pagamento do DARF</td></tr>
+      <tr><td>data.darf_pdf_link</td><td>string</td><td>Link para download do PDF do DARF</td></tr>
+      <tr><td>data.darf_principal_value</td><td>number</td><td>Valor principal considerado na emissão do DARF</td></tr>
+      <tr><td>data.darf_penalty_value</td><td>number</td><td>Valor de multa considerado na emissão do DARF</td></tr>
+      <tr><td>data.darf_interest_value</td><td>number</td><td>Valor de juros considerado na emissão do DARF</td></tr>
+      <tr><td>data.darf_total_value</td><td>number</td><td>Valor total considerado na emissão do DARF</td></tr>
+    </table>
+
+    <h2 id="comprovante-pagamento">Enviar comprovante de pagamento</h2>
+    <p>
+      Após pagar um DARF via PIX ou Boleto, envie o comprovante ao Splithub para conciliar a
+      retenção com o pagamento efetivamente realizado. Utilize <code class="inline">tipo_pagamento</code>
+      para indicar o método e inclua os campos específicos: <code class="inline">pix</code> (com
+      <code class="inline">end_to_end_id</code>, <code class="inline">txid</code>, <code class="inline">chave_pix</code>,
+      <code class="inline">valor</code>, <code class="inline">timestamp</code>) ou <code class="inline">boleto</code>
+      (com <code class="inline">nosso_numero</code>, <code class="inline">codigo_barras</code>,
+      <code class="inline">valor_pago</code>, <code class="inline">data_pagamento</code>).
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST /v1/rad/comprovantes — Exemplo PIX</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/rad/comprovantes</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "darf_id": "darf_9f21ab",
+    "tipo_pagamento": "pix",
+    "pix": {
+      "end_to_end_id": "E14200166202607291200a1b2c3d4",
+      "txid": "cbs_df_8f3a1c2b",
+      "chave_pix": "14200166000187",
+      "valor": "57.60",
+      "timestamp": "2026-07-29T12:00:00.000Z",
+      "descricao": "Pagamento DARF CBS - chave DFe 35260714200166000187550010000012341234567890"
+    }
+  }'</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST /v1/rad/comprovantes — Exemplo Boleto</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/rad/comprovantes</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "darf_id": "darf_8e32kc",
+    "tipo_pagamento": "boleto",
+    "boleto": {
+      "nosso_numero": "12345678",
+      "codigo_barras": "00190123456000012345678001234567890112345",
+      "linha_digitavel": "00190.12345 00012345678 00123456789 1 12345678901234",
+      "banco": "001",
+      "agencia": "1234",
+      "conta": "123456",
+      "valor_pago": "125.40",
+      "data_pagamento": "2026-07-31T14:30:00.000Z",
+      "descricao": "Pagamento DARF IBS - chave DFe 35260714200166000187550010000054321098765432"
+    }
+  }'</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 201 Created</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"comp_5e21fa"</span>,
+  <span class="tok-k">"darf_id"</span>: <span class="tok-s">"darf_9f21ab"</span>,
+  <span class="tok-k">"tipo_pagamento"</span>: <span class="tok-s">"pix"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"confirmed"</span>,
+  <span class="tok-k">"valor_pago"</span>: <span class="tok-s">57.60</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T12:00:30.000Z"</span>
+}</pre>
+    </div>
+
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+      <tr><td>darf_id</td><td>string</td><td>Identificador do DARF ao qual este comprovante se refere</td></tr>
+      <tr><td>tipo_pagamento</td><td>string</td><td>pix ou boleto</td></tr>
+      <tr><td colspan="3"><strong>Campos PIX (quando tipo_pagamento = pix)</strong></td></tr>
+      <tr><td>pix.end_to_end_id</td><td>string</td><td>Identificador único end-to-end da transação PIX</td></tr>
+      <tr><td>pix.txid</td><td>string</td><td>ID da transação PIX (ID único por agência/conta)</td></tr>
+      <tr><td>pix.chave_pix</td><td>string</td><td>Chave PIX utilizada (CPF/CNPJ, email, telefone ou aleatória)</td></tr>
+      <tr><td>pix.valor</td><td>decimal</td><td>Valor da transação PIX</td></tr>
+      <tr><td>pix.timestamp</td><td>timestamp</td><td>Data e hora de liquidação do PIX (ISO 8601)</td></tr>
+      <tr><td>pix.descricao</td><td>string</td><td>Informação livre ou memo da transação</td></tr>
+      <tr><td colspan="3"><strong>Campos Boleto (quando tipo_pagamento = boleto)</strong></td></tr>
+      <tr><td>boleto.nosso_numero</td><td>string</td><td>Identificação única no sistema do banco emissor</td></tr>
+      <tr><td>boleto.codigo_barras</td><td>string</td><td>Código de barras do boleto (44 dígitos)</td></tr>
+      <tr><td>boleto.linha_digitavel</td><td>string</td><td>Linha digitável do boleto (48 dígitos)</td></tr>
+      <tr><td>boleto.banco</td><td>string</td><td>Código do banco (3 dígitos, ex: 001 para Banco do Brasil)</td></tr>
+      <tr><td>boleto.agencia</td><td>string</td><td>Número da agência</td></tr>
+      <tr><td>boleto.conta</td><td>string</td><td>Número da conta corrente</td></tr>
+      <tr><td>boleto.valor_pago</td><td>decimal</td><td>Valor pago do boleto</td></tr>
+      <tr><td>boleto.data_pagamento</td><td>timestamp</td><td>Data e hora do pagamento (ISO 8601)</td></tr>
+      <tr><td>boleto.descricao</td><td>string</td><td>Informação livre ou memo do pagamento</td></tr>
+      <tr><td colspan="3"><strong>Campos de Resposta (comuns)</strong></td></tr>
+      <tr><td>id</td><td>string</td><td>Identificador único do comprovante registrado</td></tr>
+      <tr><td>status</td><td>string</td><td>confirmed (valor confere com DARF), pending (validação em andamento) ou divergent (valor diverge)</td></tr>
+      <tr><td>valor_pago</td><td>decimal</td><td>Valor do comprovante registrado</td></tr>
+      <tr><td>created_at</td><td>timestamp</td><td>Data e hora do registro do comprovante</td></tr>
+    </table>
+
+    <h2 id="webhook-comprovante">Webhook event: comprovante de pagamento enviado</h2>
+    <p>
+      Quando o Splithub realiza o pagamento de uma guia de DARF via PIX, o sistema dispara este webhook
+      para sua URL configurada, informando que o pagamento foi realizado e enviando o comprovante da transação.
+      Este webhook notifica que o Splithub assumiu e liquidou a obrigação tributária em nome do lojista.
+    </p>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">Este webhook indica que o Splithub liquidou o DARF de forma automática via PIX. O campo <code class="inline">status</code> indica o resultado da transação: <code class="inline">success</code> (pagamento realizado com sucesso), <code class="inline">pending</code> (processamento em andamento) ou <code class="inline">failed</code> (falha na transação).</p>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST {sua_url_de_webhook} — Exemplo PIX</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>{
+  <span class="tok-k">"event"</span>: <span class="tok-s">"rad.comprovante_enviado"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T12:00:00.000Z"</span>,
+  <span class="tok-k">"data"</span>: {
+    <span class="tok-k">"comprovante_id"</span>: <span class="tok-s">"comp_5e21fa"</span>,
+    <span class="tok-k">"darf_id"</span>: <span class="tok-s">"darf_9f21ab"</span>,
+    <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
+    <span class="tok-k">"darf_type"</span>: <span class="tok-s">"cbs"</span>,
+    <span class="tok-k">"status"</span>: <span class="tok-s">"success"</span>,
+    <span class="tok-k">"tipo_pagamento"</span>: <span class="tok-s">"pix"</span>,
+    <span class="tok-k">"darf"</span>: {
+      <span class="tok-k">"numero_darf"</span>: <span class="tok-s">"3502607291234567890"</span>,
+      <span class="tok-k">"valor_principal"</span>: <span class="tok-s">57.60</span>,
+      <span class="tok-k">"valor_multa"</span>: <span class="tok-s">0.00</span>,
+      <span class="tok-k">"valor_juros"</span>: <span class="tok-s">0.00</span>,
+      <span class="tok-k">"valor_total"</span>: <span class="tok-s">57.60</span>
+    },
+    <span class="tok-k">"pagamento"</span>: {
+      <span class="tok-k">"metodo"</span>: <span class="tok-s">"pix"</span>,
+      <span class="tok-k">"identificador"</span>: {
+        <span class="tok-k">"end_to_end_id"</span>: <span class="tok-s">"E14200166202607291200a1b2c3d4"</span>,
+        <span class="tok-k">"txid"</span>: <span class="tok-s">"cbs_df_8f3a1c2b"</span>,
+        <span class="tok-k">"chave_pix"</span>: <span class="tok-s">"14200166000187"</span>
+      },
+      <span class="tok-k">"valor_pago"</span>: <span class="tok-s">57.60</span>,
+      <span class="tok-k">"data_pagamento"</span>: <span class="tok-s">"2026-07-29T12:00:00.000Z"</span>,
+      <span class="tok-k">"descricao"</span>: <span class="tok-s">"Pagamento DARF CBS - chave DFe 35260714200166000187550010000012341234567890"</span>
+    },
+    <span class="tok-k">"rastreamento_rfb"</span>: {
+      <span class="tok-k">"protocolo_pagamento"</span>: <span class="tok-s">"202607291200123"</span>,
+      <span class="tok-k">"status_rdoc"</span>: <span class="tok-s">"confirmado"</span>,
+      <span class="tok-k">"data_confirmacao_rfb"</span>: <span class="tok-s">"2026-07-29T12:15:00.000Z"</span>
+    }
+  }
+}</pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST {sua_url_de_webhook} — Exemplo Boleto</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>{
+  <span class="tok-k">"event"</span>: <span class="tok-s">"rad.comprovante_enviado"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-31T14:30:00.000Z"</span>,
+  <span class="tok-k">"data"</span>: {
+    <span class="tok-k">"comprovante_id"</span>: <span class="tok-s">"comp_7g32hb"</span>,
+    <span class="tok-k">"darf_id"</span>: <span class="tok-s">"darf_8e32kc"</span>,
+    <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000054321098765432"</span>,
+    <span class="tok-k">"darf_type"</span>: <span class="tok-s">"ibs"</span>,
+    <span class="tok-k">"status"</span>: <span class="tok-s">"pending"</span>,
+    <span class="tok-k">"tipo_pagamento"</span>: <span class="tok-s">"boleto"</span>,
+    <span class="tok-k">"darf"</span>: {
+      <span class="tok-k">"numero_darf"</span>: <span class="tok-s">"3502607311234567890"</span>,
+      <span class="tok-k">"valor_principal"</span>: <span class="tok-s">125.40</span>,
+      <span class="tok-k">"valor_multa"</span>: <span class="tok-s">0.00</span>,
+      <span class="tok-k">"valor_juros"</span>: <span class="tok-s">0.00</span>,
+      <span class="tok-k">"valor_total"</span>: <span class="tok-s">125.40</span>,
+      <span class="tok-k">"data_vencimento"</span>: <span class="tok-s">"2026-08-31"</span>
+    },
+    <span class="tok-k">"pagamento"</span>: {
+      <span class="tok-k">"metodo"</span>: <span class="tok-s">"boleto"</span>,
+      <span class="tok-k">"identificador"</span>: {
+        <span class="tok-k">"nosso_numero"</span>: <span class="tok-s">"12345678"</span>,
+        <span class="tok-k">"linha_digitavel"</span>: <span class="tok-s">"00190.12345 00012345678 00123456789 1 12345678901234"</span>,
+        <span class="tok-k">"codigo_barras"</span>: <span class="tok-s">"00190123456000012345678001234567890112345"</span>
+      },
+      <span class="tok-k">"valor_pago"</span>: <span class="tok-s">125.40</span>,
+      <span class="tok-k">"data_pagamento"</span>: <span class="tok-s">"2026-07-31T14:30:00.000Z"</span>,
+      <span class="tok-k">"banco"</span>: <span class="tok-s">"001"</span>,
+      <span class="tok-k">"agencia"</span>: <span class="tok-s">"1234"</span>,
+      <span class="tok-k">"conta"</span>: <span class="tok-s">"123456"</span>,
+      <span class="tok-k">"descricao"</span>: <span class="tok-s">"Pagamento DARF IBS - chave DFe 35260714200166000187550010000054321098765432"</span>
+    },
+    <span class="tok-k">"rastreamento_rfb"</span>: {
+      <span class="tok-k">"protocolo_pagamento"</span>: <span class="tok-s">"202607311430456"</span>,
+      <span class="tok-k">"status_rdoc"</span>: <span class="tok-s">"pendente"</span>,
+      <span class="tok-k">"data_confirmacao_rfb"</span>: <span class="tok-s">"2026-08-02T09:00:00.000Z"</span>
+    }
+  }
+}</pre>
+    </div>
+
+    <p>Seu endpoint deve responder <code class="inline">200 OK</code> para confirmar o recebimento. Sem essa confirmação, o Splithub reenvia o evento.</p>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta esperada do seu endpoint</span></div>
+      <pre>200 OK</pre>
+    </div>
+
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+      <tr><td>event</td><td>string</td><td>Nome do evento: rad.comprovante_enviado</td></tr>
+      <tr><td>created_at</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
+      <tr><td>data.comprovante_id</td><td>string</td><td>Identificador único do comprovante enviado</td></tr>
+      <tr><td>data.darf_id</td><td>string</td><td>Identificador do DARF que foi pago</td></tr>
+      <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF-e original</td></tr>
+      <tr><td>data.darf_type</td><td>string</td><td>Tributo: ibs ou cbs</td></tr>
+      <tr><td>data.status</td><td>string</td><td>success (pagamento confirmado), pending (confirmação em andamento) ou failed (falha na transação)</td></tr>
+      <tr><td>data.tipo_pagamento</td><td>string</td><td>pix ou boleto</td></tr>
+      <tr><td>data.darf.numero_darf</td><td>string</td><td>Número oficial do DARF pago</td></tr>
+      <tr><td>data.darf.valor_principal</td><td>number</td><td>Valor principal do DARF</td></tr>
+      <tr><td>data.darf.valor_multa</td><td>number</td><td>Valor de multa (se houver)</td></tr>
+      <tr><td>data.darf.valor_juros</td><td>number</td><td>Valor de juros (se houver)</td></tr>
+      <tr><td>data.darf.valor_total</td><td>number</td><td>Valor total pago</td></tr>
+      <tr><td>data.darf.data_vencimento</td><td>date</td><td>Data de vencimento do DARF (boleto apenas)</td></tr>
+      <tr><td>data.pagamento.metodo</td><td>string</td><td>pix ou boleto</td></tr>
+      <tr><td>data.pagamento.identificador.end_to_end_id</td><td>string</td><td>End-to-end PIX (PIX apenas)</td></tr>
+      <tr><td>data.pagamento.identificador.txid</td><td>string</td><td>TXID da transação PIX (PIX apenas)</td></tr>
+      <tr><td>data.pagamento.identificador.chave_pix</td><td>string</td><td>Chave PIX utilizada (PIX apenas)</td></tr>
+      <tr><td>data.pagamento.identificador.nosso_numero</td><td>string</td><td>Nosso número do boleto (Boleto apenas)</td></tr>
+      <tr><td>data.pagamento.identificador.linha_digitavel</td><td>string</td><td>Linha digitável do boleto (Boleto apenas)</td></tr>
+      <tr><td>data.pagamento.identificador.codigo_barras</td><td>string</td><td>Código de barras do boleto (Boleto apenas)</td></tr>
+      <tr><td>data.pagamento.valor_pago</td><td>number</td><td>Valor efetivamente pago</td></tr>
+      <tr><td>data.pagamento.data_pagamento</td><td>timestamp</td><td>Data e hora do pagamento</td></tr>
+      <tr><td>data.pagamento.banco</td><td>string</td><td>Código do banco (boleto apenas)</td></tr>
+      <tr><td>data.pagamento.agencia</td><td>string</td><td>Agência do banco (boleto apenas)</td></tr>
+      <tr><td>data.pagamento.conta</td><td>string</td><td>Número da conta (boleto apenas)</td></tr>
+      <tr><td>data.pagamento.descricao</td><td>string</td><td>Descrição/memo do pagamento</td></tr>
+      <tr><td>data.rastreamento_rfb.protocolo_pagamento</td><td>string</td><td>Protocolo da Receita Federal</td></tr>
+      <tr><td>data.rastreamento_rfb.status_rdoc</td><td>string</td><td>Status no RDOC: pendente, confirmado ou rejeitado</td></tr>
+      <tr><td>data.rastreamento_rfb.data_confirmacao_rfb</td><td>timestamp</td><td>Data e hora de confirmação na RFB</td></tr>
+    </table>
+
+    <div class="page-footer-nav">
+      <a href="ingestao-dfs.html">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        <span><span class="side-label">Anterior</span>Ingestão DFs</span>
+      </a>
+      <a href="garantia-credito.html">
+        <span style="text-align:right;"><span class="side-label">Próximo</span>Garantia de crédito</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+    </div>
+  </main>
+
+  <aside class="toc">
+    <div class="toc-label">Nesta página</div>
+    <a href="#webhook-darf" class="toc-link active"><span class="toc-method toc-method-webhook">WEBHOOK</span>Guia de DARF recebida</a>
+    <a href="#comprovante-pagamento" class="toc-link"><span class="toc-method toc-method-post">POST</span>Enviar comprovante de pagamento</a>
+    <a href="#webhook-comprovante" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Comprovante recebido</a>
+
+    <div class="help-box">
+      <p>Precisa de ajuda?</p>
+      <button class="help-btn">Falar com suporte</button>
+    </div>
+  </aside>
+
+</div>
+
+<div class="site-footer">
+  <span class="wordmark">splithub</span>
+  <span>Sua tributação simplificada.</span>
+  <span class="partner">POSITIVO<span>SOLUÇÕES EM PAGAMENTOS</span></span>
+</div>
+
+<script src="assets/script.js"></script>
+</body>
+</html>

@@ -1,28 +1,89 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>SplithubDocs — Página inicial</title>
-    <style>
-      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#f7f9fc; color:#0b1220; margin:0; padding:40px; }
-      .container{max-width:760px;margin:0 auto;background:white;padding:36px;border-radius:10px;box-shadow:0 6px 18px rgba(11,18,32,0.08)}
-      h1{margin-top:0;color:#0b3b66}
-      a.button{display:inline-block;margin-top:18px;padding:10px 14px;background:#0366d6;color:white;border-radius:8px;text-decoration:none}
-      footer{margin-top:28px;color:#556; font-size:90%}
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>SplithubDocs</h1>
-      <p>Bem-vindo! Esta é a página inicial do site público gerado a partir da pasta <code>docs/</code> do repositório <strong>Inchausti/SplithubDocs</strong>.</p>
-      <p>Para publicar esta página com GitHub Pages, ative a fonte das Pages apontando para a branch principal e a pasta <code>/docs</code> nas configurações do repositório.</p>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documentação · Splithub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
 
-      <p><a class="button" href="https://github.com/Inchausti/SplithubDocs">Ver repositório no GitHub</a></p>
-
-      <footer>
-        <div>Se você não esperava esse arquivo, me diga e eu removo ou ajusto o conteúdo.</div>
-      </footer>
+<div class="topbar">
+  <div class="brand"><span class="mark"></span><span class="wordmark">splithub</span></div>
+  <nav class="topnav">
+    <a href="visao-geral.html" class="active">Guias</a>
+    <a href="em-breve.html">Referência</a>
+    <a href="changelog.html">Changelog</a>
+  </nav>
+  <div class="topbar-right">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      Buscar na documentação
+      <span class="kbd">⌘K</span>
     </div>
-  </body>
+  </div>
+</div>
+
+<div class="hero">
+  <h1>Documentação APIs do Splithub</h1>
+  <p>
+    Integre a plataforma de tributação e financeira do Splithub à sua operação. Gerencie fornecedores
+    e contratos, ingira documentos fiscais, configure RAD, monitore ciclos de crédito/débito e
+    automatize suas rotinas fiscais. Comece com um guia abaixo.
+  </p>
+</div>
+
+<div class="card-grid">
+  <div class="card">
+    <h3>Visão geral</h3>
+    <p>Entenda a plataforma, como a API é estruturada e os principais casos de uso fiscais.</p>
+    <a href="visao-geral.html">Ler guia →</a>
+  </div>
+  <div class="card">
+    <h3>Autenticação</h3>
+    <p>Gere um token JWT e aprenda a usá-lo nas suas requisições de API.</p>
+    <a href="autenticacao.html">Ler guia →</a>
+  </div>
+  <div class="card">
+    <h3>Fornecedores</h3>
+    <p>Gerencie a base de fornecedores com CNPJ, contatos, endereços e representantes fiscais.</p>
+    <a href="fornecedores.html">Ler guia →</a>
+  </div>
+  <div class="card">
+    <h3>Ingestão DFs</h3>
+    <p>Envie documentos fiscais para identificação automática de tributos IBS/CBS.</p>
+    <a href="ingestao-dfs.html">Ler guia →</a>
+  </div>
+  <div class="card">
+    <h3>RAD</h3>
+    <p>Recolhimento pelo adquirente: webhooks de guias DARF e comprovantes de pagamento Pix.</p>
+    <a href="rad.html">Ler guia →</a>
+  </div>
+  <div class="card">
+    <h3>Garantia de crédito</h3>
+    <p>Acompanhe o ciclo de vida de créditos e débitos com webhooks de mudanças de status.</p>
+    <a href="garantia-credito.html">Ler guia →</a>
+  </div>
+  <div class="card">
+    <h3>Automações</h3>
+    <p>Crie regras que disparam ações automaticamente quando eventos específicos ocorrem.</p>
+    <a href="automacoes.html">Ler guia →</a>
+  </div>
+  <div class="card">
+    <h3>Contratos</h3>
+    <p>Gerencie contratos entre CNPJs com referência ERP, vigência, valor e opção de RAD.</p>
+    <a href="contratos.html">Ler guia →</a>
+  </div>
+</div>
+
+<div class="site-footer">
+  <span class="wordmark">splithub</span>
+  <span>Sua tributação simplificada.</span>
+  <span class="partner">POSITIVO<span>SOLUÇÕES EM PAGAMENTOS</span></span>
+</div>
+
+<script src="assets/script.js"></script>
+</body>
 </html>

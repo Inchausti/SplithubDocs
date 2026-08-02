@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contratos · Splithub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <button class="menu-toggle" aria-label="Abrir menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <div class="brand"><span class="mark"></span><span class="wordmark">splithub</span></div>
+  <nav class="topnav">
+    <a href="visao-geral.html" class="active">Guias</a>
+    <a href="em-breve.html">Referência</a>
+    <a href="changelog.html">Changelog</a>
+  </nav>
+  <div class="topbar-right">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      Buscar na documentação
+      <span class="kbd">⌘K</span>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <a href="index.html" class="nav-flat">Home</a>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Introdução e aspectos gerais
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="visao-geral.html" class="nav-item">Visão geral</a>
+        <a href="autenticacao.html" class="nav-item">Autenticação</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Recursos
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="ingestao-dfs.html" class="nav-item">Ingestão DFs</a>
+        <a href="rad.html" class="nav-item">RAD</a>
+        <a href="garantia-credito.html" class="nav-item">Garantia de crédito</a>
+        <a href="automacoes.html" class="nav-item">Automações</a>
+        <a href="contratos.html" class="nav-item active">Contratos</a>
+        <a href="fornecedores.html" class="nav-item">Fornecedores</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Webhooks
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="breadcrumb">Recursos / Contratos</div>
+    <h1>Contratos</h1>
+    <p class="lede">
+      Gerencie contratos entre CNPJs no Splithub. Registre, atualize e rastreie contratos com
+      referência do seu ERP, dados de ambas as partes, vigência, valor e condições de pagamento.
+    </p>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">O campo <code class="inline">external_contract_id</code> referencia o contrato no seu ERP; mantenha-o estável para evitar duplicação.</p>
+      </div>
+    </div>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">CNPJs são aceitos em formato alfanumérico conforme <a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/cnpj-alfanumerico" target="_blank">especificação oficial da Receita Federal</a> (implementação a partir de 27/07/2026).</p>
+      </div>
+    </div>
+
+    <h2 id="criar-contrato">Criar um contrato</h2>
+    <p>
+      Registre um novo contrato entre duas empresas, definindo partes, valor, vigência e
+      condições de pagamento.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST /v1/contratos</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/contratos</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "external_contract_id": "CTR-2026-001",
+    "description": "Contrato de fornecimento de insumos",
+    "buyer_cnpj": "14200166000187",
+    "supplier_cnpj": "98765432000188",
+    "start_date": "2026-08-01",
+    "end_date": "2027-07-31",
+    "total_value": 120000.00,
+    "payment_conditions": "30-60-90",
+    "rad_eligible": true,
+    "status": "active",
+    "notes": "Supply contract subject to Tax Reform - IBS/CBS"
+  }'</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 201 Created</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"ctr_5f8a2d"</span>,
+  <span class="tok-k">"external_contract_id"</span>: <span class="tok-s">"CTR-2026-001"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
+}</pre>
+    </div>
+
+    <h2 id="listar-contratos">Listar contratos</h2>
+    <p>
+      Liste todos os contratos registrados com suporte a paginação e filtros por status, CNPJ
+      ou data.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>GET /v1/contratos</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/contratos?status=ativo&page=1&limit=20"</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"data"</span>: [
+    {
+      <span class="tok-k">"id"</span>: <span class="tok-s">"ctr_5f8a2d"</span>,
+      <span class="tok-k">"external_contract_id"</span>: <span class="tok-s">"CTR-2026-001"</span>,
+      <span class="tok-k">"description"</span>: <span class="tok-s">"Contrato de fornecimento de insumos"</span>,
+      <span class="tok-k">"buyer_cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
+      <span class="tok-k">"supplier_cnpj"</span>: <span class="tok-s">"98765432000188"</span>,
+      <span class="tok-k">"start_date"</span>: <span class="tok-s">"2026-08-01"</span>,
+      <span class="tok-k">"end_date"</span>: <span class="tok-s">"2027-07-31"</span>,
+      <span class="tok-k">"total_value"</span>: <span class="tok-s">120000.00</span>,
+      <span class="tok-k">"rad_eligible"</span>: <span class="tok-s">true</span>,
+      <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
+      <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
+    }
+  ],
+  <span class="tok-k">"total"</span>: <span class="tok-s">1</span>,
+  <span class="tok-k">"page"</span>: <span class="tok-s">1</span>,
+  <span class="tok-k">"limit"</span>: <span class="tok-s">20</span>
+}</pre>
+    </div>
+
+    <h2 id="consultar-contrato">Consultar um contrato</h2>
+    <p>
+      Obtenha os dados completos de um contrato, incluindo todas as datas, valores e condições.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>GET /v1/contratos/{id}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/contratos/ctr_5f8a2d</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"ctr_5f8a2d"</span>,
+  <span class="tok-k">"external_contract_id"</span>: <span class="tok-s">"CTR-2026-001"</span>,
+  <span class="tok-k">"description"</span>: <span class="tok-s">"Contrato de fornecimento de insumos"</span>,
+  <span class="tok-k">"buyer_cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
+  <span class="tok-k">"supplier_cnpj"</span>: <span class="tok-s">"98765432000188"</span>,
+  <span class="tok-k">"start_date"</span>: <span class="tok-s">"2026-08-01"</span>,
+  <span class="tok-k">"end_date"</span>: <span class="tok-s">"2027-07-31"</span>,
+  <span class="tok-k">"total_value"</span>: <span class="tok-s">120000.00</span>,
+  <span class="tok-k">"payment_conditions"</span>: <span class="tok-s">"30-60-90"</span>,
+  <span class="tok-k">"rad_eligible"</span>: <span class="tok-s">true</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
+  <span class="tok-k">"notes"</span>: <span class="tok-s">"Supply contract subject to Tax Reform - IBS/CBS"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>,
+  <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
+}</pre>
+    </div>
+
+    <h2 id="atualizar-contrato">Atualizar um contrato</h2>
+    <p>
+      Atualize qualquer campo de um contrato, incluindo status, datas, valor ou observações.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>PATCH /v1/contratos/{id}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/contratos/ctr_5f8a2d</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "end_date": "2027-12-31",
+    "payment_conditions": "30-60-90-120",
+    "status": "active"
+  }'</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"ctr_5f8a2d"</span>,
+  <span class="tok-k">"external_contract_id"</span>: <span class="tok-s">"CTR-2026-001"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
+  <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-07-29T16:45:00.000Z"</span>
+}</pre>
+    </div>
+
+    <h2 id="deletar-contrato">Deletar um contrato</h2>
+    <p>
+      Remova um contrato do sistema. Uma vez deletado, o contrato não poderá ser selecionado
+      em novas operações, mas o histórico permanecerá para auditoria.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>DELETE /v1/contratos/{id}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X DELETE <span class="tok-k">https://api.splithub.com.br/v1/contratos/ctr_5f8a2d</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 204 No Content</span></div>
+      <pre></pre>
+    </div>
+
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+      <tr><td>id</td><td>string</td><td>Identificador único do contrato no Splithub</td></tr>
+      <tr><td>external_contract_id</td><td>string</td><td>Referência do contrato no seu ERP</td></tr>
+      <tr><td>description</td><td>string</td><td>Descrição/objeto do contrato</td></tr>
+      <tr><td>buyer_cnpj</td><td>string</td><td>CNPJ da empresa contratante (alfanumérico: letras e números)</td></tr>
+      <tr><td>supplier_cnpj</td><td>string</td><td>CNPJ da empresa contratada (alfanumérico: letras e números)</td></tr>
+      <tr><td>start_date</td><td>date</td><td>Data de início da vigência (YYYY-MM-DD)</td></tr>
+      <tr><td>end_date</td><td>date</td><td>Data de término/vigência (YYYY-MM-DD)</td></tr>
+      <tr><td>total_value</td><td>number</td><td>Valor total do contrato</td></tr>
+      <tr><td>payment_conditions</td><td>string</td><td>Condições de pagamento (ex: 30-60-90)</td></tr>
+      <tr><td>rad_eligible</td><td>boolean</td><td>true ou false — define se o contrato é sujeito a RAD (Recolhimento pelo Adquirente)</td></tr>
+      <tr><td>status</td><td>string</td><td>active, closed, suspended or cancelled</td></tr>
+      <tr><td>notes</td><td>string</td><td>Observações e anotações sobre o contrato</td></tr>
+      <tr><td>created_at</td><td>timestamp</td><td>Data e hora da criação</td></tr>
+      <tr><td>updated_at</td><td>timestamp</td><td>Data e hora da última atualização</td></tr>
+    </table>
+
+    <div class="page-footer-nav">
+      <a href="automacoes.html">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        <span><span class="side-label">Anterior</span>Automações</span>
+      </a>
+      <a href="fornecedores.html">
+        <span style="text-align:right;"><span class="side-label">Próximo</span>Fornecedores</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+    </div>
+  </main>
+
+  <aside class="toc">
+    <div class="toc-label">Nesta página</div>
+    <a href="#criar-contrato" class="toc-link active"><span class="toc-method toc-method-post">POST</span>Criar um contrato</a>
+    <a href="#listar-contratos" class="toc-link"><span class="toc-method toc-method-get">GET</span>Listar contratos</a>
+    <a href="#consultar-contrato" class="toc-link"><span class="toc-method toc-method-get">GET</span>Consultar um contrato</a>
+    <a href="#atualizar-contrato" class="toc-link"><span class="toc-method toc-method-patch">PATCH</span>Atualizar um contrato</a>
+    <a href="#deletar-contrato" class="toc-link"><span class="toc-method toc-method-delete">DELETE</span>Deletar um contrato</a>
+
+    <div class="help-box">
+      <p>Precisa de ajuda?</p>
+      <button class="help-btn">Falar com suporte</button>
+    </div>
+  </aside>
+
+</div>
+
+<div class="site-footer">
+  <span class="wordmark">splithub</span>
+  <span>Sua tributação simplificada.</span>
+  <span class="partner">POSITIVO<span>SOLUÇÕES EM PAGAMENTOS</span></span>
+</div>
+
+<script src="assets/script.js"></script>
+</body>
+</html>

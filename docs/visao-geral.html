@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visão geral · Splithub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <button class="menu-toggle" aria-label="Abrir menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <div class="brand"><span class="mark"></span><span class="wordmark">splithub</span></div>
+  <nav class="topnav">
+    <a href="visao-geral.html" class="active">Guias</a>
+    <a href="em-breve.html">Referência</a>
+    <a href="changelog.html">Changelog</a>
+  </nav>
+  <div class="topbar-right">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      Buscar na documentação
+      <span class="kbd">⌘K</span>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <a href="index.html" class="nav-flat">Home</a>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Introdução e aspectos gerais
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="visao-geral.html" class="nav-item active">Visão geral</a>
+        <a href="autenticacao.html" class="nav-item">Autenticação</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Recursos
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="ingestao-dfs.html" class="nav-item">Ingestão DFs</a>
+        <a href="rad.html" class="nav-item">RAD</a>
+        <a href="garantia-credito.html" class="nav-item">Garantia de crédito</a>
+        <a href="automacoes.html" class="nav-item">Automações</a>
+        <a href="contratos.html" class="nav-item">Contratos</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Webhooks
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="breadcrumb">Introdução e aspectos gerais / Visão geral</div>
+    <h1>Visão geral</h1>
+    <p class="lede">
+      O Splithub dá à sua empresa governança completa sobre o recolhimento de tributos junto aos
+      fornecedores: operamos o RAD, cuidamos da conciliação financeira e identificamos
+      inconsistências em cada etapa do processo, para que nada fique fora do seu controle. Esta
+      documentação reúne todas as integrações disponíveis na plataforma, para você conectar o
+      Splithub à sua operação com confiança.
+    </p>
+
+    <div class="callout" style="display:block;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <strong style="vertical-align:middle;">Base URLs</strong>
+      <table style="margin-top:10px;border-collapse:collapse;width:100%;font-size:0.875rem;">
+        <tr>
+          <td style="padding:5px 12px 5px 0;white-space:nowrap;font-weight:600;color:#555;">Sandbox</td>
+          <td><code class="inline">https://sandbox-api.splithub.com.br/v1</code></td>
+        </tr>
+        <tr>
+          <td style="padding:5px 12px 5px 0;white-space:nowrap;font-weight:600;color:#555;">Production</td>
+          <td><code class="inline">https://api.splithub.com.br/v1</code></td>
+        </tr>
+      </table>
+      <p style="margin:10px 0 0;font-size:0.85rem;color:#666;">All endpoints respond in JSON.</p>
+    </div>
+
+    <h2 id="webhooks">Webhooks</h2>
+    <p>
+      O Splithub utiliza webhooks para notificar sua aplicação em tempo real quando eventos importantes
+      ocorrem no sistema. Em vez de fazer polling (perguntar repetidamente), sua aplicação recebe
+      notificações HTTP POST automáticas quando eventos como "DARF recebido", "crédito alterado" ou
+      "comprovante enviado" acontecem. Isso permite que você mantenha seus sistemas sincronizados
+      com baixa latência e sem sobrecarga desnecessária.
+    </p>
+
+    <h3 id="webhook-conceitos">Conceitos e Configuração</h3>
+    <p>
+      Para começar a receber webhooks, configure uma URL pública em sua conta Splithub onde
+      seu servidor possa receber requisições POST. O Splithub envia eventos para essa URL
+      com todas as informações do evento no corpo (body) da requisição em formato JSON.
+    </p>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">Seu endpoint de webhook deve responder com status <code class="inline">200 OK</code> em até 30 segundos. Sem confirmação, o Splithub faz retry automático com backoff exponencial (até 10 tentativas ao longo de ~18 horas). Processe o evento de forma assíncrona se a lógica for complexa.</p>
+      </div>
+    </div>
+
+    <h3 id="webhook-seguranca">Segurança: Verificação de Assinatura</h3>
+    <p>
+      Todo webhook enviado pelo Splithub inclui um cabeçalho <code class="inline">X-Splithub-Signature</code>
+      contendo uma assinatura HMAC-SHA256 do corpo da requisição. Valide essa assinatura para garantir
+      que o webhook veio realmente do Splithub e não foi alterado em trânsito.
+    </p>
+
+    <p><strong>Processo de verificação:</strong></p>
+    <ol style="margin-left:20px;">
+      <li>Recupere o secret da sua conta (configurado no portal Splithub)</li>
+      <li>Pegue o corpo bruto da requisição (raw body, não parseado)</li>
+      <li>Calcule <code class="inline">HMAC-SHA256(secret, raw_body)</code></li>
+      <li>Compare o resultado com o valor do header <code class="inline">X-Splithub-Signature</code> usando comparação timing-safe</li>
+      <li>Rejeite se as assinaturas não forem idênticas</li>
+    </ol>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>Exemplo: Validar assinatura em Python</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>import hmac
+import hashlib
+from flask import Flask, request
+
+app = Flask(__name__)
+WEBHOOK_SECRET = "seu_secret_aqui"  # Guarde em variável de ambiente
+
+@app.route("/webhooks/splithub", methods=["POST"])
+def handle_webhook():
+    signature = request.headers.get("X-Splithub-Signature")
+    body = request.get_data()  # Raw body é crítico
+
+    # Calcular assinatura esperada
+    expected_signature = hmac.new(
+        WEBHOOK_SECRET.encode(),
+        body,
+        hashlib.sha256
+    ).hexdigest()
+
+    # Comparação timing-safe
+    if not hmac.compare_digest(expected_signature, signature):
+        return {"error": "Assinatura inválida"}, 401
+
+    # Processar webhook
+    data = request.json
+    event_type = data.get("event")
+
+    if event_type == "rad.darf_recebida":
+        processar_darf(data)
+    elif event_type == "rad.comprovante_enviado":
+        processar_comprovante(data)
+
+    return {"status": "received"}, 200</pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>Exemplo: Validar assinatura em JavaScript/Node.js</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>const crypto = require("crypto");
+const express = require("express");
+
+const app = express();
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
+
+// Middleware para capturar raw body
+app.use(express.raw({ type: "application/json" }));
+
+app.post("/webhooks/splithub", (req, res) => {
+  const signature = req.headers["x-splithub-signature"];
+  const rawBody = req.body; // Buffer com o corpo bruto
+
+  // Calcular assinatura esperada
+  const expectedSignature = crypto
+    .createHmac("sha256", WEBHOOK_SECRET)
+    .update(rawBody)
+    .digest("hex");
+
+  // Comparação timing-safe
+  if (!crypto.timingSafeEqual(
+    Buffer.from(expectedSignature),
+    Buffer.from(signature)
+  )) {
+    return res.status(401).json({ error: "Assinatura inválida" });
+  }
+
+  // Processar webhook
+  const data = JSON.parse(rawBody);
+  const eventType = data.event;
+
+  if (eventType === "rad.darf_recebida") {
+    processarDarf(data);
+  } else if (eventType === "rad.comprovante_enviado") {
+    processarComprovante(data);
+  }
+
+  return res.json({ status: "received" });
+});</pre>
+    </div>
+
+    <table class="response-table">
+      <tr><th>Aspecto</th><th>Descrição</th></tr>
+      <tr><td>Header de Assinatura</td><td><code class="inline">X-Splithub-Signature</code> contém HMAC-SHA256 hexadecimal</td></tr>
+      <tr><td>Algoritmo</td><td>HMAC-SHA256</td></tr>
+      <tr><td>Input</td><td>Raw body da requisição (bytes brutos, não parseado)</td></tr>
+      <tr><td>Secret</td><td>Chave única da sua conta (gerada e exibida uma vez no portal)</td></tr>
+      <tr><td>Comparação</td><td>Usar <code class="inline">hmac.compare_digest()</code> (Python) ou <code class="inline">crypto.timingSafeEqual()</code> (Node.js) para evitar timing attacks</td></tr>
+      <tr><td>Retry</td><td>Backoff exponencial: 10 tentativas ao longo de ~18 horas se não receber 200 OK</td></tr>
+      <tr><td>Timeout</td><td>30 segundos para resposta; processe de forma assíncrona se necessário</td></tr>
+    </table>
+
+    <h3 id="webhook-best-practices">Melhores Práticas</h3>
+    <ul style="margin-left:20px;">
+      <li><strong>Deduplicação:</strong> Use o campo <code class="inline">id</code> do evento para deduplicar (em cache Redis ou banco de dados) e evitar processar o mesmo evento duas vezes</li>
+      <li><strong>Processamento Assíncrono:</strong> Não faça operações pesadas no handler do webhook; enfileire o evento e retorne 200 OK imediatamente</li>
+      <li><strong>Logging:</strong> Registre todos os webhooks recebidos (timestamp, ID, tipo de evento, status) para auditoria</li>
+      <li><strong>Monitoramento:</strong> Crie alertas para taxa de erro > 5% ou latência > 10s</li>
+      <li><strong>Validação de Dados:</strong> Mesmo após validar assinatura, valide os dados do evento (tipos, campos obrigatórios)</li>
+      <li><strong>Respeite Retry-After:</strong> Se enviar status 429 (too many requests), inclua header <code class="inline">Retry-After</code></li>
+    </ul>
+
+    <h2 id="proximos-passos">Próximos passos</h2>
+    <p>
+      Continue para Autenticação para gerar seu token, ou vá direto para um dos recursos
+      (Ingestão DFs, RAD, Garantia de crédito, Automações ou Contratos) se já tiver um token ativo.
+    </p>
+
+    <div class="page-footer-nav">
+      <a href="index.html">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        <span><span class="side-label">Voltar</span>Home</span>
+      </a>
+      <a href="autenticacao.html">
+        <span style="text-align:right;"><span class="side-label">Próximo</span>Autenticação</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+    </div>
+  </main>
+
+  <aside class="toc">
+    <div class="toc-label">Nesta página</div>
+    <a href="#webhooks" class="toc-link active">Webhooks</a>
+    <a href="#webhook-conceitos" class="toc-link">Conceitos e Configuração</a>
+    <a href="#webhook-seguranca" class="toc-link">Segurança: Verificação de Assinatura</a>
+    <a href="#webhook-best-practices" class="toc-link">Melhores Práticas</a>
+    <a href="#proximos-passos" class="toc-link">Próximos passos</a>
+
+    <div class="help-box">
+      <p>Precisa de ajuda?</p>
+      <button class="help-btn">Falar com suporte</button>
+    </div>
+  </aside>
+
+</div>
+
+<div class="site-footer">
+  <span class="wordmark">splithub</span>
+  <span>Sua tributação simplificada.</span>
+  <span class="partner">POSITIVO<span>SOLUÇÕES EM PAGAMENTOS</span></span>
+</div>
+
+<script src="assets/script.js"></script>
+</body>
+</html>
