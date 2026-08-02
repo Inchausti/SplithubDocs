@@ -121,6 +121,13 @@
       </div>
     </div>
 
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">O campo <code class="inline">contract_id</code> referencia o contrato entre cliente (destinatário) e fornecedor (emitente) no módulo de Contratos. Quando informado, permite rastrear qual contrato gerou a obrigação fiscal. Use o identificador retornado na criação do contrato (ex: <code class="inline">ctr_5f8a2d</code>).</p>
+      </div>
+    </div>
+
     <h2 id="criar-documento">Criar um documento fiscal</h2>
     <p>
       Envie o XML do documento assinado em base64 ou um JSON estruturado. A API adapta-se automaticamente conforme o <code class="inline">type</code> informado (NF-e, NFCom, CT-e, BP-e, etc.). Independentemente do tipo, inclua: <code class="inline">identification</code> (identificação), <code class="inline">emission</code> (emitente), <code class="inline">destination</code> (destinatário), <code class="inline">items</code> (itens ou serviços), e <code class="inline">total</code> (totalizadores). O Grupo de IBS/CBS (<code class="inline">items[].tax.ibs_cbs</code>) é obrigatório em todos os tipos; para NFCom, CT-e OS e outros, inclua também campos específicos (como <code class="inline">competence_date</code> em NFCom). A API retorna um identificador para acompanhar o processamento.
@@ -141,6 +148,7 @@
     "type": "nfe",
     "model": "55",
     "access_key": "35260714200166000187550010000012341234567890",
+    "contract_id": "ctr_5f8a2d",
     "identification": {
       "number": "123456",
       "series": "1",
@@ -208,6 +216,7 @@
     "type": "nfcom",
     "model": "62",
     "access_key": "35260714200166000187550010000087654321098765",
+    "contract_id": "ctr_8g9b3e",
     "identification": {
       "number": "654321",
       "series": "1",
@@ -417,6 +426,7 @@
       <tr><td>type</td><td>string</td><td>Um dos 14 tipos de DF: nfe, nfce, cte, cte-os, bpe, mdfe, gtv-e, nfcom, nf3e, nfag, nfgas, nfe-abi, nfs-e, nfs-e-via</td></tr>
       <tr><td>model</td><td>string</td><td>Número do modelo oficial (55=NF-e, 65=NFC-e, 62=NFCom, 63=BP-e, 57=CT-e, 58=MDF-e, 64=GTV-e, 66=NF3-e, 75=NFAg, 76=NFGás, 77=NF-e ABI)</td></tr>
       <tr><td>access_key</td><td>string</td><td>Chave de acesso única de 44 dígitos do documento fiscal</td></tr>
+      <tr><td>contract_id</td><td>string</td><td>Identificador do contrato entre cliente e fornecedor relacionado a este documento fiscal (opcional)</td></tr>
       <tr><td>identification</td><td>object</td><td>Identificação: number (número do DF), series (série), emission_date (data e hora de emissão)</td></tr>
       <tr><td>emission</td><td>object</td><td>Emitente: cnpj, legal_name, state (obrigatório)</td></tr>
       <tr><td>destination</td><td>object</td><td>Destinatário: cnpj_cpf, name, state (opcional para alguns DF-e)</td></tr>
