@@ -175,19 +175,39 @@ document.addEventListener('DOMContentLoaded', function() {
     if (themeToggle) themeToggle.setAttribute('aria-label', 'Ativar modo escuro');
   }
 
-  // Event listener para toggle
+  // Event listener para toggle (ciclo: light -> dark -> green -> light)
   if (themeToggle) {
     themeToggle.addEventListener('click', function() {
-      var isDark = html.getAttribute('data-theme') === 'dark';
-      if (isDark) {
+      var currentTheme = html.getAttribute('data-theme') || 'light';
+      var nextTheme;
+      var nextLabel;
+
+      switch(currentTheme) {
+        case 'light':
+          nextTheme = 'dark';
+          nextLabel = 'Ativar modo verde';
+          break;
+        case 'dark':
+          nextTheme = 'green';
+          nextLabel = 'Ativar modo claro';
+          break;
+        case 'green':
+          nextTheme = null;
+          nextLabel = 'Ativar modo escuro';
+          break;
+        default:
+          nextTheme = 'dark';
+          nextLabel = 'Ativar modo verde';
+      }
+
+      if (nextTheme) {
+        html.setAttribute('data-theme', nextTheme);
+        localStorage.setItem('theme', nextTheme);
+      } else {
         html.removeAttribute('data-theme');
         localStorage.setItem('theme', 'light');
-        themeToggle.setAttribute('aria-label', 'Ativar modo escuro');
-      } else {
-        html.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-        themeToggle.setAttribute('aria-label', 'Ativar modo claro');
       }
+      themeToggle.setAttribute('aria-label', nextLabel);
     });
   }
 
