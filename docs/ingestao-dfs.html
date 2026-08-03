@@ -298,6 +298,181 @@
 }</pre>
     </div>
 
+    <h2 id="criar-documentos-lote">Criar documentos em lote</h2>
+    <p>
+      Envie múltiplos documentos fiscais de uma só vez para processamento paralelo.
+      O endpoint aceita um array de documentos com a mesma estrutura do endpoint individual.
+      Cada documento é processado de forma assíncrona, e você recebe confirmação de recebimento com
+      IDs para rastreamento individual.
+    </p>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">O limite de documentos por requisição é <code class="inline">500</code>. Requisições com mais de 500 documentos serão rejeitadas com status 400. Para volumes maiores, divida em múltiplas chamadas.</p>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST /v1/documentos-fiscais/batch</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/batch</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "documents": [
+      {
+        "type": "nfe",
+        "model": "55",
+        "access_key": "35260714200166000187550010000012341234567890",
+        "contract_id": "ctr_5f8a2d",
+        "identification": {
+          "number": "123456",
+          "series": "1",
+          "emission_date": "2026-08-02T14:30:00-03:00"
+        },
+        "emission": {
+          "cnpj": "14200166000187",
+          "legal_name": "Fornecedor Exemplo LTDA",
+          "state": "SP"
+        },
+        "destination": {
+          "cnpj_cpf": "98765432000188",
+          "name": "Cliente Exemplo LTDA",
+          "state": "RJ"
+        },
+        "items": [
+          {
+            "code": "PROD-001",
+            "description": "Produtos diversos",
+            "ncm": "1234567890",
+            "cfop": "1102",
+            "quantity": 100,
+            "unit": "unit",
+            "unit_price": 64.00,
+            "total_value": 6400.00,
+            "tax": {
+              "ibs_cbs": {
+                "cst": "00",
+                "c_class_trib": "0101",
+                "v_bc": 6400.00,
+                "g_ibs_uf": { "p_ibs_uf": 0.05, "v_ibs_uf": 32.00 },
+                "g_ibs_mun": { "p_ibs_mun": 0.05, "v_ibs_mun": 32.00 },
+                "g_cbs": { "p_cbs": 0.9, "v_cbs": 576.00 }
+              }
+            }
+          }
+        ],
+        "total": {
+          "products_value": 6400.00,
+          "total_note_value": 6400.00,
+          "ibs_cbs_total": {
+            "v_bc": 6400.00,
+            "v_tot_ibs": 64.00,
+            "v_tot_cbs": 576.00
+          }
+        }
+      },
+      {
+        "type": "nfce",
+        "model": "65",
+        "access_key": "35260714200166000187550010000054321098765432",
+        "identification": {
+          "number": "654321",
+          "series": "2",
+          "emission_date": "2026-08-02T15:45:00-03:00"
+        },
+        "emission": {
+          "cnpj": "14200166000187",
+          "legal_name": "Fornecedor Exemplo LTDA",
+          "state": "SP"
+        },
+        "destination": {
+          "cnpj_cpf": "12345678901234",
+          "name": "Consumidor Final",
+          "state": "RJ"
+        },
+        "items": [
+          {
+            "code": "PROD-002",
+            "description": "Produtos para venda",
+            "ncm": "9876543210",
+            "cfop": "5102",
+            "quantity": 50,
+            "unit": "unit",
+            "unit_price": 128.00,
+            "total_value": 6400.00,
+            "tax": {
+              "ibs_cbs": {
+                "cst": "00",
+                "c_class_trib": "0101",
+                "v_bc": 6400.00,
+                "g_ibs_uf": { "p_ibs_uf": 0.05, "v_ibs_uf": 32.00 },
+                "g_ibs_mun": { "p_ibs_mun": 0.05, "v_ibs_mun": 32.00 },
+                "g_cbs": { "p_cbs": 0.9, "v_cbs": 576.00 }
+              }
+            }
+          }
+        ],
+        "total": {
+          "products_value": 6400.00,
+          "total_note_value": 6400.00,
+          "ibs_cbs_total": {
+            "v_bc": 6400.00,
+            "v_tot_ibs": 64.00,
+            "v_tot_cbs": 576.00
+          }
+        }
+      }
+    ]
+  }'</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 202 Accepted</span></div>
+      <pre>{
+  <span class="tok-k">"batch_id"</span>: <span class="tok-s">"batch_7x2k9q1m"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"processing"</span>,
+  <span class="tok-k">"total_documents"</span>: <span class="tok-s">2</span>,
+  <span class="tok-k">"documents"</span>: [
+    {
+      <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>,
+      <span class="tok-k">"status"</span>: <span class="tok-s">"processing"</span>,
+      <span class="tok-k">"access_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>
+    },
+    {
+      <span class="tok-k">"id"</span>: <span class="tok-s">"df_9g4b2d3c"</span>,
+      <span class="tok-k">"status"</span>: <span class="tok-s">"processing"</span>,
+      <span class="tok-k">"access_key"</span>: <span class="tok-s">"35260714200166000187550010000054321098765432"</span>
+    }
+  ],
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T10:00:00.000Z"</span>
+}</pre>
+    </div>
+
+    <p><strong>Mapa de Campos (POST /v1/documentos-fiscais/batch):</strong></p>
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
+      <tr><td>documents</td><td>array</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Array de documentos fiscais (máximo 500 documentos por requisição). Cada documento segue a mesma estrutura do endpoint individual POST /v1/documentos-fiscais</td></tr>
+      <tr><td colspan="4"><strong>Estrutura de cada documento dentro de documents[]:</strong></td></tr>
+      <tr><td>type</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Um dos 14 tipos de DF: nfe, nfce, cte, cte-os, bpe, mdfe, gtv-e, nfcom, nf3e, nfag, nfgas, nfe-abi, nfs-e, nfs-e-via</td></tr>
+      <tr><td>model</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Número do modelo oficial conforme tipo de documento</td></tr>
+      <tr><td>access_key</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Chave de acesso única de 44 dígitos do documento fiscal</td></tr>
+      <tr><td>identification, emission, destination, items, total</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Mesma estrutura do endpoint individual — ver documentação de POST /v1/documentos-fiscais para detalhes completos</td></tr>
+    </table>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">Monitorar progresso: use o <code class="inline">batch_id</code> retornado para consultar o status de todo o lote via GET <code class="inline">/v1/documentos-fiscais/batch/{batch_id}</code>. Cada documento dentro do lote possui um <code class="inline">id</code> único que pode ser consultado individualmente.</p>
+      </div>
+    </div>
+
     <h2 id="consultar-documento">Consultar um documento fiscal</h2>
     <p>
       Use o <code class="inline">id</code> retornado para consultar o andamento do processamento
@@ -447,6 +622,7 @@
     <div class="toc-label">Nesta página</div>
     <a href="#tipos-de-dfs" class="toc-link active">Tipos de documentos fiscais (DFs)</a>
     <a href="#criar-documento" class="toc-link"><span class="toc-method toc-method-post">POST</span>Criar um documento fiscal</a>
+    <a href="#criar-documentos-lote" class="toc-link"><span class="toc-method toc-method-post">POST</span>Criar documentos em lote</a>
     <a href="#consultar-documento" class="toc-link"><span class="toc-method toc-method-get">GET</span>Consultar um documento fiscal</a>
     <a href="#listar-documentos" class="toc-link"><span class="toc-method toc-method-get">GET</span>Listar documentos fiscais</a>
     <a href="#atualizar-documento" class="toc-link"><span class="toc-method toc-method-patch">PATCH</span>Atualizar um documento fiscal</a>
