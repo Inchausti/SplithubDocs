@@ -25,6 +25,23 @@ if (toggle && sidebar) {
   });
 }
 
+// Colapsável das seções de navegação (nav-group)
+document.querySelectorAll('.nav-group-title').forEach(function(title) {
+  title.addEventListener('click', function(e) {
+    e.preventDefault();
+    var navGroup = this.closest('.nav-group');
+    var navItems = navGroup.querySelector('.nav-items');
+
+    if (navItems) {
+      navItems.classList.toggle('collapsed');
+      this.classList.toggle('collapsed');
+    }
+  });
+
+  // Adicionar cursor pointer
+  title.style.cursor = 'pointer';
+});
+
 // Destaca o link do índice (TOC) conforme a seção visível
 var tocLinks = document.querySelectorAll('.toc-link');
 if (tocLinks.length) {
