@@ -242,34 +242,6 @@
       <tr><td>boleto.descricao</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Informação livre ou memo da transação</td></tr>
     </table>
 
-    <table class="response-table">
-      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>darf_id</td><td>string</td><td>Identificador do DARF ao qual este comprovante se refere</td></tr>
-      <tr><td>tipo_pagamento</td><td>string</td><td>pix ou boleto</td></tr>
-      <tr><td colspan="3"><strong>Campos PIX (quando tipo_pagamento = pix)</strong></td></tr>
-      <tr><td>pix.end_to_end_id</td><td>string</td><td>Identificador único end-to-end da transação PIX</td></tr>
-      <tr><td>pix.txid</td><td>string</td><td>ID da transação PIX (ID único por agência/conta)</td></tr>
-      <tr><td>pix.chave_pix</td><td>string</td><td>Chave PIX utilizada (CPF/CNPJ, email, telefone ou aleatória)</td></tr>
-      <tr><td>pix.valor</td><td>decimal</td><td>Valor da transação PIX</td></tr>
-      <tr><td>pix.timestamp</td><td>timestamp</td><td>Data e hora de liquidação do PIX (ISO 8601)</td></tr>
-      <tr><td>pix.descricao</td><td>string</td><td>Informação livre ou memo da transação</td></tr>
-      <tr><td colspan="3"><strong>Campos Boleto (quando tipo_pagamento = boleto)</strong></td></tr>
-      <tr><td>boleto.nosso_numero</td><td>string</td><td>Identificação única no sistema do banco emissor</td></tr>
-      <tr><td>boleto.codigo_barras</td><td>string</td><td>Código de barras do boleto (44 dígitos)</td></tr>
-      <tr><td>boleto.linha_digitavel</td><td>string</td><td>Linha digitável do boleto (48 dígitos)</td></tr>
-      <tr><td>boleto.banco</td><td>string</td><td>Código do banco (3 dígitos, ex: 001 para Banco do Brasil)</td></tr>
-      <tr><td>boleto.agencia</td><td>string</td><td>Número da agência</td></tr>
-      <tr><td>boleto.conta</td><td>string</td><td>Número da conta corrente</td></tr>
-      <tr><td>boleto.valor_pago</td><td>decimal</td><td>Valor pago do boleto</td></tr>
-      <tr><td>boleto.data_pagamento</td><td>timestamp</td><td>Data e hora do pagamento (ISO 8601)</td></tr>
-      <tr><td>boleto.descricao</td><td>string</td><td>Informação livre ou memo do pagamento</td></tr>
-      <tr><td colspan="3"><strong>Campos de Resposta (comuns)</strong></td></tr>
-      <tr><td>id</td><td>string</td><td>Identificador único do comprovante registrado</td></tr>
-      <tr><td>status</td><td>string</td><td>confirmed (valor confere com DARF), pending (validação em andamento) ou divergent (valor diverge)</td></tr>
-      <tr><td>valor_pago</td><td>decimal</td><td>Valor do comprovante registrado</td></tr>
-      <tr><td>created_at</td><td>timestamp</td><td>Data e hora do registro do comprovante</td></tr>
-    </table>
-
     <h2 id="webhook-proof">Webhook event: recepção comprovante</h2>
     <p>
       Quando o Splithub realiza o pagamento de uma guia de DARF via PIX, o sistema dispara este webhook
