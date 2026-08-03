@@ -88,6 +88,72 @@
       <p style="margin:10px 0 0;font-size:0.85rem;color:#666;">All endpoints respond in JSON.</p>
     </div>
 
+    <h2 id="mapa-integracao">Mapa de Integração</h2>
+    <p>
+      O Splithub conecta-se a diversos sistemas e órgãos reguladores através de integrações bem definidas.
+      O diagrama abaixo apresenta a arquitetura de integrações do projeto, classificadas em três categorias
+      conforme sua criticidade e obrigatoriedade:
+    </p>
+
+    <div style="text-align: center; margin: 30px 0;">
+      <img src="assets/images/mapa-integracao.png" alt="Mapa de Integrações Splithub" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    </div>
+
+    <h3>Classificação das Integrações</h3>
+
+    <table class="response-table">
+      <tr><th>Tipo</th><th>Cor</th><th>Descrição</th><th>Exemplos</th></tr>
+      <tr>
+        <td><strong>Essenciais</strong></td>
+        <td style="color:#E53935;"><strong>Vermelho</strong></td>
+        <td>Integrações obrigatórias para o funcionamento core da plataforma. Fluxos críticos de processamento tributário.</td>
+        <td>DFs (Documentos Fiscais), DARF RAD, Comprovante de Pagamento</td>
+      </tr>
+      <tr>
+        <td><strong>Opcionais</strong></td>
+        <td style="color:#4DB8A8;"><strong>Verde</strong></td>
+        <td>Integrações que expandem funcionalidades e melhoram operação, mas não são obrigatórias para o core.</td>
+        <td>Ciclo Crédito/Débito, Automações, Sync Fornecedores, Sync Contratos, Analytics (BI)</td>
+      </tr>
+      <tr>
+        <td><strong>Órgãos Externos</strong></td>
+        <td style="color:#1E88E5;"><strong>Azul</strong></td>
+        <td>Integrações com órgãos reguladores e sistemas de terceiros. Comunicação com autoridades fiscais.</td>
+        <td>Receita Federal (Agenda, RAD CBS/IBS), PSP (Pagamento RAD)</td>
+      </tr>
+    </table>
+
+    <h3>Detalhamento por Tipo</h3>
+
+    <h4>Integrações Essenciais</h4>
+    <ul style="margin-left: 20px;">
+      <li><strong>Documentos Fiscais (DFs):</strong> Ingestão de DFs (NF-e, CT-e, NFCom, etc.) para processamento de tributos e cálculo de créditos de IBS/CBS.</li>
+      <li><strong>DARF RAD:</strong> Emissão e processamento de DARFs (Documento de Arrecadação) conforme regras de RAD (Recolhimento pelo Adquirente).</li>
+      <li><strong>Comprovante de Pagamento:</strong> Rastreamento de comprovantes de pagamento para validação de créditos e ciclo de vida fiscal.</li>
+    </ul>
+
+    <h4>Integrações Opcionais</h4>
+    <ul style="margin-left: 20px;">
+      <li><strong>Ciclo Crédito/Débito:</strong> Rastreamento detalhado do ciclo de vida de créditos e débitos tributários, com webhooks de mudança de status.</li>
+      <li><strong>Automações:</strong> Disparo automático de ações com base em eventos fiscais (ITSM, cobrança fornecedor, relatórios).</li>
+      <li><strong>Sync Fornecedores:</strong> Sincronização bidirecional de dados cadastrais de fornecedores com seu ERP.</li>
+      <li><strong>Sync Contratos:</strong> Sincronização de contratos entre cliente e fornecedor, vinculação com obrigações fiscais.</li>
+      <li><strong>Analytics (BI):</strong> Exportação de dados para ferramentas de inteligência de negócios e análise fiscal.</li>
+    </ul>
+
+    <h4>Integrações com Órgãos Externos</h4>
+    <ul style="margin-left: 20px;">
+      <li><strong>Receita Federal - Comitê Gestor:</strong> Submissão de dados de RAD e IBS/CBS para órgãos reguladores. Inclui Agenda de Arrecadação (Agenda A.A) e informações de RAD CBS/IBS.</li>
+      <li><strong>PSP (Prestador de Serviço de Pagamento):</strong> Coordenação de pagamentos RAD através de instituições financeiras autorizadas.</li>
+    </ul>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">As integrações essenciais formam o backbone tributário da plataforma. Integrações opcionais permitem otimização de processos. Integrações com órgãos externos garantem conformidade regulatória com a Reforma Tributária 2026.</p>
+      </div>
+    </div>
+
     <h2 id="proximos-passos">Próximos passos</h2>
     <p>
       Continue para Autenticação para gerar seu token, ou vá direto para um dos recursos
@@ -108,7 +174,8 @@
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#proximos-passos" class="toc-link active">Próximos passos</a>
+    <a href="#mapa-integracao" class="toc-link active">Mapa de Integração</a>
+    <a href="#proximos-passos" class="toc-link">Próximos passos</a>
 
     <div class="help-box">
       <p>Precisa de ajuda?</p>
