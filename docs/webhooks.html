@@ -105,49 +105,6 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>Exemplo: Validar assinatura em Python</span>
-        <button>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copiar
-        </button>
-      </div>
-      <pre>import hmac
-import hashlib
-from flask import Flask, request
-
-app = Flask(__name__)
-WEBHOOK_SECRET = "seu_secret_aqui"  # Guarde em variável de ambiente
-
-@app.route("/webhooks/splithub", methods=["POST"])
-def handle_webhook():
-    signature = request.headers.get("X-Splithub-Signature")
-    body = request.get_data()  # Raw body é crítico
-
-    # Calcular assinatura esperada
-    expected_signature = hmac.new(
-        WEBHOOK_SECRET.encode(),
-        body,
-        hashlib.sha256
-    ).hexdigest()
-
-    # Comparação timing-safe
-    if not hmac.compare_digest(expected_signature, signature):
-        return {"error": "Assinatura inválida"}, 401
-
-    # Processar webhook
-    data = request.json
-    event_type = data.get("event")
-
-    if event_type == "rad.darf_recebida":
-        processar_darf(data)
-    elif event_type == "rad.comprovante_enviado":
-        processar_comprovante(data)
-
-    return {"status": "received"}, 200</pre>
-    </div>
-
-    <div class="code-block">
-      <div class="code-head">
         <span>Exemplo: Validar assinatura em JavaScript/Node.js</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -201,7 +158,7 @@ app.post("/webhooks/splithub", (req, res) => {
       <tr><td>Algoritmo</td><td>HMAC-SHA256</td></tr>
       <tr><td>Input</td><td>Raw body da requisição (bytes brutos, não parseado)</td></tr>
       <tr><td>Secret</td><td>Chave única da sua conta (gerada e exibida uma vez no portal)</td></tr>
-      <tr><td>Comparação</td><td>Usar <code class="inline">hmac.compare_digest()</code> (Python) ou <code class="inline">crypto.timingSafeEqual()</code> (Node.js) para evitar timing attacks</td></tr>
+      <tr><td>Comparação</td><td>Usar <code class="inline">crypto.timingSafeEqual()</code> (Node.js) para evitar timing attacks</td></tr>
       <tr><td>Retry</td><td>Backoff exponencial: 10 tentativas ao longo de ~18 horas se não receber 200 OK</td></tr>
       <tr><td>Timeout</td><td>30 segundos para resposta; processe de forma assíncrona se necessário</td></tr>
     </table>
