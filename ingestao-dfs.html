@@ -455,6 +455,32 @@
 }</pre>
     </div>
 
+    <h3>Criar documentos em lote com arquivo CSV</h3>
+    <p>
+      Alternativamente, você pode enviar os documentos em um arquivo CSV. O endpoint aceita
+      o arquivo com as colunas mapeadas para a mesma estrutura JSON. Cada linha representa um documento.
+      Use <code class="inline">Content-Type: text/csv</code> para enviar o arquivo.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST /v1/documentos-fiscais/batch (upload via CSV)</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/batch</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Content-Type: text/csv"</span> \
+  --data-binary @documentos-fiscais-batch.csv</pre>
+    </div>
+
+    <p>
+      <strong>Template CSV:</strong> Baixe o <a href="assets/templates/documentos-fiscais-batch.csv" download>modelo CSV</a>
+      e preencha com seus dados. O arquivo deve conter um cabeçalho com os nomes dos campos e uma linha por documento.
+    </p>
+
     <p><strong>Mapa de Campos (POST /v1/documentos-fiscais/batch):</strong></p>
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
