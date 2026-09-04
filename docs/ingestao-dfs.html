@@ -338,6 +338,9 @@
         "model": "55",
         "access_key": "35260714200166000187550010000012341234567890",
         "contract_id": "ctr_5f8a2d",
+        "override_contract_params": true,
+        "payment_method": "RAD",
+        "payment_term_days": 30,
         "identification": {
           "number": "123456",
           "series": "1",
@@ -389,6 +392,7 @@
         "type": "nfce",
         "model": "65",
         "access_key": "35260714200166000187550010000054321098765432",
+        "override_contract_params": false,
         "identification": {
           "number": "654321",
           "series": "2",
@@ -499,6 +503,10 @@
       <tr><td>type</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Um dos 14 tipos de DF: nfe, nfce, cte, cte-os, bpe, mdfe, gtv-e, nfcom, nf3e, nfag, nfgas, nfe-abi, nfs-e, nfs-e-via</td></tr>
       <tr><td>model</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Número do modelo oficial conforme tipo de documento</td></tr>
       <tr><td>access_key</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Chave de acesso única de 44 dígitos do documento fiscal</td></tr>
+      <tr><td>contract_id</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Identificador do contrato relacionado a este documento fiscal</td></tr>
+      <tr><td>override_contract_params</td><td>boolean</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Se true, sobrescreve parâmetros de contrato para este DF específico. Default: false</td></tr>
+      <tr><td>payment_method</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>RAD ou FORNECEDOR. Obrigatório apenas se override_contract_params = true para este DF</td></tr>
+      <tr><td>payment_term_days</td><td>integer</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Prazo de pagamento em dias. Obrigatório apenas se override_contract_params = true para este DF</td></tr>
       <tr><td>identification, emission, destination, items, total</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Mesma estrutura do endpoint individual — ver documentação de POST /v1/documentos-fiscais para detalhes completos</td></tr>
     </table>
 
