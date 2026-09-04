@@ -98,15 +98,54 @@
   <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T12:00:00.000Z"</span>,
   <span class="tok-k">"data"</span>: {
     <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
-    <span class="tok-k">"darf_type"</span>: <span class="tok-s">"cbs"</span>,
-    <span class="tok-k">"return_code"</span>: <span class="tok-s">"DARF_GERADO"</span>,
-    <span class="tok-k">"pix_key"</span>: <span class="tok-s">"34028316000103"</span>,
-    <span class="tok-k">"barcode"</span>: <span class="tok-s">"858100000012345678901234567890123456789012"</span>,
-    <span class="tok-k">"darf_pdf_link"</span>: <span class="tok-s">"https://sistema.rfb.gov.br/darf/df_8f3a1c2b.pdf"</span>,
-    <span class="tok-k">"darf_principal_value"</span>: <span class="tok-s">57.60</span>,
-    <span class="tok-k">"darf_penalty_value"</span>: <span class="tok-s">0.00</span>,
-    <span class="tok-k">"darf_interest_value"</span>: <span class="tok-s">0.00</span>,
-    <span class="tok-k">"darf_total_value"</span>: <span class="tok-s">57.60</span>
+    <span class="tok-k">"dfe_type"</span>: <span class="tok-s">"nfe"</span>,
+    <span class="tok-k">"dfe_issue_date"</span>: <span class="tok-s">"2026-07-28T10:30:00-03:00"</span>,
+    <span class="tok-k">"acquisition_cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
+    <span class="tok-k">"supplier_cnpj"</span>: <span class="tok-s">"98765432000188"</span>,
+    <span class="tok-k">"cbs_guide"</span>: {
+      <span class="tok-k">"darf_type"</span>: <span class="tok-s">"cbs"</span>,
+      <span class="tok-k">"return_code"</span>: <span class="tok-s">"DARF_GERADO"</span>,
+      <span class="tok-k">"guide_number"</span>: <span class="tok-s">"00000000000012345"</span>,
+      <span class="tok-k">"due_date"</span>: <span class="tok-s">"2026-08-11</span>,
+      <span class="tok-k">"pix_key"</span>: <span class="tok-s">"34028316000103"</span>,
+      <span class="tok-k">"barcode"</span>: <span class="tok-s">"858100000012345678901234567890123456789012"</span>,
+      <span class="tok-k">"pdf_link"</span>: <span class="tok-s">"https://sistema.rfb.gov.br/darf/cbs_12345.pdf"</span>,
+      <span class="tok-k">"principal_value"</span>: <span class="tok-s">57.60</span>,
+      <span class="tok-k">"penalty_value"</span>: <span class="tok-s">0.00</span>,
+      <span class="tok-k">"interest_value"</span>: <span class="tok-s">0.00</span>,
+      <span class="tok-k">"total_value"</span>: <span class="tok-s">57.60</span>
+    },
+    <span class="tok-k">"ibs_guide"</span>: {
+      <span class="tok-k">"darf_type"</span>: <span class="tok-s">"ibs"</span>,
+      <span class="tok-k">"return_code"</span>: <span class="tok-s">"DARF_GERADO"</span>,
+      <span class="tok-k">"guide_number"</span>: <span class="tok-s">"00000000000054321"</span>,
+      <span class="tok-k">"due_date"</span>: <span class="tok-s">"2026-08-11"</span>,
+      <span class="tok-k">"pix_key"</span>: <span class="tok-s">"34028316000103"</span>,
+      <span class="tok-k">"barcode"</span>: <span class="tok-s">"858100000054321876543210987654321876543210"</span>,
+      <span class="tok-k">"pdf_link"</span>: <span class="tok-s">"https://sistema.rfb.gov.br/darf/ibs_54321.pdf"</span>,
+      <span class="tok-k">"principal_value"</span>: <span class="tok-s">57.60</span>,
+      <span class="tok-k">"penalty_value"</span>: <span class="tok-s">0.00</span>,
+      <span class="tok-k">"interest_value"</span>: <span class="tok-s">0.00</span>,
+      <span class="tok-k">"total_value"</span>: <span class="tok-s">57.60</span>
+    },
+    <span class="tok-k">"fiscal_operation"</span>: {
+      <span class="tok-k">"gross_value"</span>: <span class="tok-s">6400.00</span>,
+      <span class="tok-k">"cbs_base"</span>: <span class="tok-s">6400.00</span>,
+      <span class="tok-k">"cbs_rate"</span>: <span class="tok-s">0.9</span>,
+      <span class="tok-k">"cbs_calculated"</span>: <span class="tok-s">57.60</span>,
+      <span class="tok-k">"ibs_base"</span>: <span class="tok-s">6400.00</span>,
+      <span class="tok-k">"ibs_rate"</span>: <span class="tok-s">0.9</span>,
+      <span class="tok-k">"ibs_calculated"</span>: <span class="tok-s">57.60</span>,
+      <span class="tok-k">"total_tributes_retained"</span>: <span class="tok-s">115.20</span>,
+      <span class="tok-k">"net_value_to_supplier"</span>: <span class="tok-s">6284.80</span>
+    },
+    <span class="tok-k">"credit_status_change"</span>: {
+      <span class="tok-k">"previous_status"</span>: <span class="tok-s">"pending"</span>,
+      <span class="tok-k">"current_status"</span>: <span class="tok-s">"retained"</span>,
+      <span class="tok-k">"cbs_credit_id"</span>: <span class="tok-s">"cred_cbs_8f3a1c2b"</span>,
+      <span class="tok-k">"ibs_credit_id"</span>: <span class="tok-s">"cred_ibs_9g4b2d3c"</span>,
+      <span class="tok-k">"retention_date"</span>: <span class="tok-s">"2026-07-29"</span>
+    }
   }
 }</pre>
     </div>
@@ -120,18 +159,55 @@
 
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+      <tr><td colspan="3"><strong>Evento e Metadados</strong></td></tr>
       <tr><td>event</td><td>string</td><td>Nome do evento: rad.darf_recebida</td></tr>
       <tr><td>created_at</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
-      <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF-e ao qual a guia se refere</td></tr>
-      <tr><td>data.darf_type</td><td>string</td><td>Tributo da guia: ibs ou cbs</td></tr>
-      <tr><td>data.return_code</td><td>string</td><td>DARF_GERADO, DFE_NAO_ENCONTRADO ou VALOR_PARCIAL_SUPERIOR_DFE</td></tr>
-      <tr><td>data.pix_key</td><td>string</td><td>Chave PIX disponível para pagamento do DARF</td></tr>
-      <tr><td>data.barcode</td><td>string</td><td>Código de barras para pagamento do DARF</td></tr>
-      <tr><td>data.darf_pdf_link</td><td>string</td><td>Link para download do PDF do DARF</td></tr>
-      <tr><td>data.darf_principal_value</td><td>number</td><td>Valor principal considerado na emissão do DARF</td></tr>
-      <tr><td>data.darf_penalty_value</td><td>number</td><td>Valor de multa considerado na emissão do DARF</td></tr>
-      <tr><td>data.darf_interest_value</td><td>number</td><td>Valor de juros considerado na emissão do DARF</td></tr>
-      <tr><td>data.darf_total_value</td><td>number</td><td>Valor total considerado na emissão do DARF</td></tr>
+      <tr><td colspan="3"><strong>Informações do Documento Fiscal</strong></td></tr>
+      <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF-e (44 dígitos) ao qual a guia se refere</td></tr>
+      <tr><td>data.dfe_type</td><td>string</td><td>Tipo de DF-e: nfe, nfce, cte, etc.</td></tr>
+      <tr><td>data.dfe_issue_date</td><td>timestamp</td><td>Data e hora de emissão do DF-e (ISO 8601)</td></tr>
+      <tr><td>data.acquisition_cnpj</td><td>string</td><td>CNPJ do adquirente (empresa compradora, retentora dos tributos)</td></tr>
+      <tr><td>data.supplier_cnpj</td><td>string</td><td>CNPJ do fornecedor (empresa vendedora, beneficiária do crédito)</td></tr>
+      <tr><td colspan="3"><strong>Guia CBS (Contribuição sobre Bens e Serviços)</strong></td></tr>
+      <tr><td>data.cbs_guide.darf_type</td><td>string</td><td>Identificador do tributo: cbs</td></tr>
+      <tr><td>data.cbs_guide.return_code</td><td>string</td><td>DARF_GERADO, DFE_NAO_ENCONTRADO ou VALOR_PARCIAL_SUPERIOR_DFE</td></tr>
+      <tr><td>data.cbs_guide.guide_number</td><td>string</td><td>Número sequencial da guia CBS gerada</td></tr>
+      <tr><td>data.cbs_guide.due_date</td><td>date</td><td>Data de vencimento da guia CBS (YYYY-MM-DD)</td></tr>
+      <tr><td>data.cbs_guide.pix_key</td><td>string</td><td>Chave PIX disponível para pagamento da guia CBS</td></tr>
+      <tr><td>data.cbs_guide.barcode</td><td>string</td><td>Código de barras para pagamento da guia CBS</td></tr>
+      <tr><td>data.cbs_guide.pdf_link</td><td>string</td><td>Link para download do PDF da guia CBS</td></tr>
+      <tr><td>data.cbs_guide.principal_value</td><td>number</td><td>Valor principal de CBS retido</td></tr>
+      <tr><td>data.cbs_guide.penalty_value</td><td>number</td><td>Valor de multa sobre CBS (se aplicável)</td></tr>
+      <tr><td>data.cbs_guide.interest_value</td><td>number</td><td>Valor de juros sobre CBS (se aplicável)</td></tr>
+      <tr><td>data.cbs_guide.total_value</td><td>number</td><td>Valor total da guia CBS a recolher</td></tr>
+      <tr><td colspan="3"><strong>Guia IBS (Imposto sobre Bens e Serviços)</strong></td></tr>
+      <tr><td>data.ibs_guide.darf_type</td><td>string</td><td>Identificador do tributo: ibs</td></tr>
+      <tr><td>data.ibs_guide.return_code</td><td>string</td><td>DARF_GERADO, DFE_NAO_ENCONTRADO ou VALOR_PARCIAL_SUPERIOR_DFE</td></tr>
+      <tr><td>data.ibs_guide.guide_number</td><td>string</td><td>Número sequencial da guia IBS gerada</td></tr>
+      <tr><td>data.ibs_guide.due_date</td><td>date</td><td>Data de vencimento da guia IBS (YYYY-MM-DD)</td></tr>
+      <tr><td>data.ibs_guide.pix_key</td><td>string</td><td>Chave PIX disponível para pagamento da guia IBS</td></tr>
+      <tr><td>data.ibs_guide.barcode</td><td>string</td><td>Código de barras para pagamento da guia IBS</td></tr>
+      <tr><td>data.ibs_guide.pdf_link</td><td>string</td><td>Link para download do PDF da guia IBS</td></tr>
+      <tr><td>data.ibs_guide.principal_value</td><td>number</td><td>Valor principal de IBS retido</td></tr>
+      <tr><td>data.ibs_guide.penalty_value</td><td>number</td><td>Valor de multa sobre IBS (se aplicável)</td></tr>
+      <tr><td>data.ibs_guide.interest_value</td><td>number</td><td>Valor de juros sobre IBS (se aplicável)</td></tr>
+      <tr><td>data.ibs_guide.total_value</td><td>number</td><td>Valor total da guia IBS a recolher</td></tr>
+      <tr><td colspan="3"><strong>Informações Financeiras da Operação</strong></td></tr>
+      <tr><td>data.fiscal_operation.gross_value</td><td>number</td><td>Valor bruto da operação fiscal</td></tr>
+      <tr><td>data.fiscal_operation.cbs_base</td><td>number</td><td>Base de cálculo para CBS</td></tr>
+      <tr><td>data.fiscal_operation.cbs_rate</td><td>number</td><td>Alíquota de CBS (em percentual, ex: 0.9 = 0,9%)</td></tr>
+      <tr><td>data.fiscal_operation.cbs_calculated</td><td>number</td><td>Valor calculado de CBS retido</td></tr>
+      <tr><td>data.fiscal_operation.ibs_base</td><td>number</td><td>Base de cálculo para IBS</td></tr>
+      <tr><td>data.fiscal_operation.ibs_rate</td><td>number</td><td>Alíquota de IBS (em percentual, ex: 0.9 = 0,9%)</td></tr>
+      <tr><td>data.fiscal_operation.ibs_calculated</td><td>number</td><td>Valor calculado de IBS retido</td></tr>
+      <tr><td>data.fiscal_operation.total_tributes_retained</td><td>number</td><td>Soma total de CBS + IBS retidos nesta operação</td></tr>
+      <tr><td>data.fiscal_operation.net_value_to_supplier</td><td>number</td><td>Valor líquido repassado ao fornecedor (gross - tributos)</td></tr>
+      <tr><td colspan="3"><strong>Alteração de Status de Crédito</strong></td></tr>
+      <tr><td>data.credit_status_change.previous_status</td><td>string</td><td>Status anterior: pending, retained, paid, disputed, etc.</td></tr>
+      <tr><td>data.credit_status_change.current_status</td><td>string</td><td>Status atual após retenção: retained</td></tr>
+      <tr><td>data.credit_status_change.cbs_credit_id</td><td>string</td><td>ID único do crédito de CBS para rastreamento</td></tr>
+      <tr><td>data.credit_status_change.ibs_credit_id</td><td>string</td><td>ID único do crédito de IBS para rastreamento</td></tr>
+      <tr><td>data.credit_status_change.retention_date</td><td>date</td><td>Data da retenção dos tributos (YYYY-MM-DD)</td></tr>
     </table>
 
     <h2 id="submit-proof">Submit payment proof</h2>
