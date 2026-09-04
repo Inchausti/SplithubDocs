@@ -139,10 +139,13 @@
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
-    "type": "nfe",                   
-    "model": "55",                   
-    "access_key": "3526071420016...", 
-    "contract_id": "ctr_5f8a2d",     
+    "type": "nfe",
+    "model": "55",
+    "access_key": "3526071420016...",
+    "contract_id": "ctr_5f8a2d",
+    "override_contract_params": true,
+    "payment_method": "RAD",
+    "payment_term_days": 30,
     "identification": {              
       "number": "123456",            
       "series": "1",                 
@@ -211,6 +214,7 @@
     "model": "62",
     "access_key": "35260714200166000187550010000087654321098765",
     "contract_id": "ctr_8g9b3e",
+    "override_contract_params": false,
     "identification": {
       "number": "654321",
       "series": "1",
@@ -275,6 +279,9 @@
       <tr><td>model</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Número do modelo oficial (55=NF-e, 65=NFC-e, 62=NFCom, 63=BP-e, 57=CT-e, 58=MDF-e, 64=GTV-e, 66=NF3-e, 75=NFAg, 76=NFGás, 77=NF-e ABI)</td></tr>
       <tr><td>access_key</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Chave de acesso única de 44 dígitos do documento fiscal</td></tr>
       <tr><td>contract_id</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Identificador do contrato entre cliente e fornecedor relacionado a este documento fiscal</td></tr>
+      <tr><td>override_contract_params</td><td>boolean</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Se true, os parâmetros de contrato (método de pagamento e prazo) definidos na aplicação serão sobrescritos pelos valores enviados neste documento. Default: false</td></tr>
+      <tr><td>payment_method</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Método de pagamento: RAD (Recolhimento pelo Adquirente) ou FORNECEDOR (pagamento direto pelo fornecedor). Obrigatório apenas se override_contract_params = true</td></tr>
+      <tr><td>payment_term_days</td><td>integer</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Prazo de pagamento em dias (ex: 30, 45, 60). Obrigatório apenas se override_contract_params = true</td></tr>
       <tr><td>identification</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Identificação: number (número do DF), series (série), emission_date (data e hora de emissão)</td></tr>
       <tr><td>emission</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Emitente: cnpj, legal_name, state</td></tr>
       <tr><td>destination</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Destinatário: cnpj_cpf, name, state (state é condicional para alguns DF-e)</td></tr>
