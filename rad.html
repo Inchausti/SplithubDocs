@@ -210,6 +210,147 @@
       <tr><td>data.credit_status_change.retention_date</td><td>date</td><td>Data da retenção dos tributos (YYYY-MM-DD)</td></tr>
     </table>
 
+    <h2 id="webhook-darf-lote">Webhook event: guia de DARF recebida (em lote)</h2>
+    <p>
+      Quando um lote de documentos fiscais é processado no fluxo de RAD, o Splithub dispara este webhook consolidado
+      para agregar todas as guias de DARF (CBS e IBS) geradas em uma única operação. Em vez de disparar centenas de webhooks
+      individuais (um por documento), você recebe um único evento contendo todas as guias e um sumário consolidado dos valores retidos.
+    </p>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">Este webhook é disparado <strong>uma única vez por lote de DFs</strong>, consolidando todas as guias de ambos os tributos (CBS e IBS). O campo <code class="inline">summary</code> agrupa os totais de retenção para facilitar auditoria e reconciliação contábil no seu ERP.</p>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST {sua_url_de_webhook}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>{
+  <span class="tok-k">"event"</span>: <span class="tok-s">"rad.darf_recebida_lote"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-09-08T12:00:00.000Z"</span>,
+  <span class="tok-k">"data"</span>: {
+    <span class="tok-k">"batch_id"</span>: <span class="tok-s">"batch_7x2k9q1m"</span>,
+    <span class="tok-k">"total_guides"</span>: <span class="tok-s">500</span>,
+    <span class="tok-k">"guides"</span>: [
+      {
+        <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
+        <span class="tok-k">"dfe_type"</span>: <span class="tok-s">"nfe"</span>,
+        <span class="tok-k">"acquisition_cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
+        <span class="tok-k">"supplier_cnpj"</span>: <span class="tok-s">"98765432000188"</span>,
+        <span class="tok-k">"cbs_guide"</span>: {
+          <span class="tok-k">"darf_id"</span>: <span class="tok-s">"darf_9f21ab"</span>,
+          <span class="tok-k">"darf_type"</span>: <span class="tok-s">"cbs"</span>,
+          <span class="tok-k">"return_code"</span>: <span class="tok-s">"DARF_GERADO"</span>,
+          <span class="tok-k">"pix_key"</span>: <span class="tok-s">"34028316000103"</span>,
+          <span class="tok-k">"barcode"</span>: <span class="tok-s">"858100000012345678901234567890123456789012"</span>,
+          <span class="tok-k">"darf_pdf_link"</span>: <span class="tok-s">"https://sistema.rfb.gov.br/darf/df_8f3a1c2b.pdf"</span>,
+          <span class="tok-k">"darf_principal_value"</span>: <span class="tok-s">57.60</span>,
+          <span class="tok-k">"darf_penalty_value"</span>: <span class="tok-s">0.00</span>,
+          <span class="tok-k">"darf_interest_value"</span>: <span class="tok-s">0.00</span>,
+          <span class="tok-k">"darf_total_value"</span>: <span class="tok-s">57.60</span>
+        },
+        <span class="tok-k">"ibs_guide"</span>: {
+          <span class="tok-k">"darf_id"</span>: <span class="tok-s">"darf_9f21ac"</span>,
+          <span class="tok-k">"darf_type"</span>: <span class="tok-s">"ibs"</span>,
+          <span class="tok-k">"return_code"</span>: <span class="tok-s">"DARF_GERADO"</span>,
+          <span class="tok-k">"pix_key"</span>: <span class="tok-s">"34028316000103"</span>,
+          <span class="tok-k">"barcode"</span>: <span class="tok-s">"858100000012345678901234567890123456789013"</span>,
+          <span class="tok-k">"darf_pdf_link"</span>: <span class="tok-s">"https://sistema.rfb.gov.br/darf/df_8f3a1c2c.pdf"</span>,
+          <span class="tok-k">"darf_principal_value"</span>: <span class="tok-s">125.40</span>,
+          <span class="tok-k">"darf_penalty_value"</span>: <span class="tok-s">0.00</span>,
+          <span class="tok-k">"darf_interest_value"</span>: <span class="tok-s">0.00</span>,
+          <span class="tok-k">"darf_total_value"</span>: <span class="tok-s">125.40</span>
+        },
+        <span class="tok-k">"fiscal_operation"</span>: {
+          <span class="tok-k">"dfe_base"</span>: <span class="tok-s">1000.00</span>,
+          <span class="tok-k">"cbs_rate"</span>: <span class="tok-s">0.0576</span>,
+          <span class="tok-k">"ibs_rate"</span>: <span class="tok-s">0.1254</span>,
+          <span class="tok-k">"net_value_to_supplier"</span>: <span class="tok-s">816.80</span>
+        }
+      },
+      {
+        <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000054321098765432"</span>,
+        <span class="tok-k">"dfe_type"</span>: <span class="tok-s">"nfc_e"</span>,
+        <span class="tok-k">"acquisition_cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
+        <span class="tok-k">"supplier_cnpj"</span>: <span class="tok-s">"11223344000199"</span>,
+        <span class="tok-k">"cbs_guide"</span>: { <span class="tok-c">/* ... */</span> },
+        <span class="tok-k">"ibs_guide"</span>: { <span class="tok-c">/* ... */</span> },
+        <span class="tok-k">"fiscal_operation"</span>: { <span class="tok-c">/* ... */</span> }
+      }
+    ],
+    <span class="tok-k">"summary"</span>: {
+      <span class="tok-k">"total_documents"</span>: <span class="tok-s">500</span>,
+      <span class="tok-k">"total_cbs_retained"</span>: <span class="tok-s">28800.00</span>,
+      <span class="tok-k">"total_ibs_retained"</span>: <span class="tok-s">62700.00</span>,
+      <span class="tok-k">"total_tributes"</span>: <span class="tok-s">91500.00</span>,
+      <span class="tok-k">"total_net_value"</span>: <span class="tok-s">408400.00</span>
+    }
+  }
+}</pre>
+    </div>
+
+    <p>Seu endpoint deve responder <code class="inline">200 OK</code> para confirmar o recebimento. Sem essa confirmação, o Splithub reenvia o evento.</p>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta esperada do seu endpoint</span></div>
+      <pre>200 OK</pre>
+    </div>
+
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+      <tr><th colspan="3"><strong>Envelope do Webhook</strong></th></tr>
+      <tr><td>event</td><td>string</td><td>Nome do evento: rad.darf_recebida_lote</td></tr>
+      <tr><td>created_at</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
+      <tr><th colspan="3"><strong>Metadados do Lote</strong></th></tr>
+      <tr><td>data.batch_id</td><td>string</td><td>Identificador único do lote de documentos processados</td></tr>
+      <tr><td>data.total_guides</td><td>integer</td><td>Quantidade total de documentos no lote</td></tr>
+      <tr><th colspan="3"><strong>Guias (array: data.guides[])</strong></th></tr>
+      <tr><td>guides[].dfe_key</td><td>string</td><td>Chave de acesso do DF-e ao qual as guias se referem</td></tr>
+      <tr><td>guides[].dfe_type</td><td>string</td><td>Tipo do DF-e: nfe ou nfc_e</td></tr>
+      <tr><td>guides[].acquisition_cnpj</td><td>string</td><td>CNPJ da empresa adquirente (retentora)</td></tr>
+      <tr><td>guides[].supplier_cnpj</td><td>string</td><td>CNPJ do fornecedor (beneficiário do líquido)</td></tr>
+      <tr><th colspan="3"><strong>Guia CBS (data.guides[].cbs_guide)</strong></th></tr>
+      <tr><td>guides[].cbs_guide.darf_id</td><td>string</td><td>Identificador único do DARF CBS</td></tr>
+      <tr><td>guides[].cbs_guide.darf_type</td><td>string</td><td>Sempre "cbs"</td></tr>
+      <tr><td>guides[].cbs_guide.return_code</td><td>string</td><td>DARF_GERADO, DFE_NAO_ENCONTRADO ou VALOR_PARCIAL_SUPERIOR_DFE</td></tr>
+      <tr><td>guides[].cbs_guide.pix_key</td><td>string</td><td>Chave PIX disponível para pagamento do DARF CBS</td></tr>
+      <tr><td>guides[].cbs_guide.barcode</td><td>string</td><td>Código de barras para pagamento do DARF CBS</td></tr>
+      <tr><td>guides[].cbs_guide.darf_pdf_link</td><td>string</td><td>Link para download do PDF do DARF CBS</td></tr>
+      <tr><td>guides[].cbs_guide.darf_principal_value</td><td>number</td><td>Valor principal da guia CBS</td></tr>
+      <tr><td>guides[].cbs_guide.darf_penalty_value</td><td>number</td><td>Valor de multa (se houver)</td></tr>
+      <tr><td>guides[].cbs_guide.darf_interest_value</td><td>number</td><td>Valor de juros (se houver)</td></tr>
+      <tr><td>guides[].cbs_guide.darf_total_value</td><td>number</td><td>Valor total da guia CBS</td></tr>
+      <tr><th colspan="3"><strong>Guia IBS (data.guides[].ibs_guide)</strong></th></tr>
+      <tr><td>guides[].ibs_guide.darf_id</td><td>string</td><td>Identificador único do DARF IBS</td></tr>
+      <tr><td>guides[].ibs_guide.darf_type</td><td>string</td><td>Sempre "ibs"</td></tr>
+      <tr><td>guides[].ibs_guide.return_code</td><td>string</td><td>DARF_GERADO, DFE_NAO_ENCONTRADO ou VALOR_PARCIAL_SUPERIOR_DFE</td></tr>
+      <tr><td>guides[].ibs_guide.pix_key</td><td>string</td><td>Chave PIX disponível para pagamento do DARF IBS</td></tr>
+      <tr><td>guides[].ibs_guide.barcode</td><td>string</td><td>Código de barras para pagamento do DARF IBS</td></tr>
+      <tr><td>guides[].ibs_guide.darf_pdf_link</td><td>string</td><td>Link para download do PDF do DARF IBS</td></tr>
+      <tr><td>guides[].ibs_guide.darf_principal_value</td><td>number</td><td>Valor principal da guia IBS</td></tr>
+      <tr><td>guides[].ibs_guide.darf_penalty_value</td><td>number</td><td>Valor de multa (se houver)</td></tr>
+      <tr><td>guides[].ibs_guide.darf_interest_value</td><td>number</td><td>Valor de juros (se houver)</td></tr>
+      <tr><td>guides[].ibs_guide.darf_total_value</td><td>number</td><td>Valor total da guia IBS</td></tr>
+      <tr><th colspan="3"><strong>Informações Financeiras (data.guides[].fiscal_operation)</strong></th></tr>
+      <tr><td>guides[].fiscal_operation.dfe_base</td><td>number</td><td>Base de cálculo do DF-e (valor da operação)</td></tr>
+      <tr><td>guides[].fiscal_operation.cbs_rate</td><td>number</td><td>Alíquota CBS aplicada (ex: 0.0576 = 5.76%)</td></tr>
+      <tr><td>guides[].fiscal_operation.ibs_rate</td><td>number</td><td>Alíquota IBS aplicada (ex: 0.1254 = 12.54%)</td></tr>
+      <tr><td>guides[].fiscal_operation.net_value_to_supplier</td><td>number</td><td>Valor líquido a repassar ao fornecedor (base - CBS - IBS)</td></tr>
+      <tr><th colspan="3"><strong>Sumário Consolidado (data.summary)</strong></th></tr>
+      <tr><td>summary.total_documents</td><td>integer</td><td>Quantidade de documentos processados no lote</td></tr>
+      <tr><td>summary.total_cbs_retained</td><td>number</td><td>Soma de todas as retenções CBS</td></tr>
+      <tr><td>summary.total_ibs_retained</td><td>number</td><td>Soma de todas as retenções IBS</td></tr>
+      <tr><td>summary.total_tributes</td><td>number</td><td>Soma total de tributos retidos (CBS + IBS)</td></tr>
+      <tr><td>summary.total_net_value</td><td>number</td><td>Soma de todos os valores líquidos a repassar aos fornecedores</td></tr>
+    </table>
+
     <h2 id="submit-proof">Submit payment proof</h2>
     <p>
       Após pagar um DARF via PIX ou Boleto, envie o comprovante ao Splithub para conciliar a
@@ -474,8 +615,9 @@
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
     <a href="#webhook-darf" class="toc-link active"><span class="toc-method toc-method-webhook">WEBHOOK</span>Guia de DARF recebida</a>
-    <a href="#comprovante-pagamento" class="toc-link"><span class="toc-method toc-method-post">POST</span>Enviar comprovante de pagamento</a>
-    <a href="#webhook-comprovante" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Comprovante recebido</a>
+    <a href="#webhook-darf-lote" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Guia de DARF recebida (lote)</a>
+    <a href="#submit-proof" class="toc-link"><span class="toc-method toc-method-post">POST</span>Enviar comprovante de pagamento</a>
+    <a href="#webhook-proof" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Comprovante recebido</a>
 
     <div class="help-box">
       <p>Precisa de ajuda?</p>
