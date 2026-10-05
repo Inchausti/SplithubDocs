@@ -67,8 +67,24 @@
     <h1>RAD (Recolhimento pelo Adquirente)</h1>
     <p class="lede">
       RAD é o mecanismo em que o adquirente da transação — a empresa que atua como compradora na operação e é contribuinte do IBS e da CBS no regime regular — retém e recolhe a parcela de tributos diretamente à Receita Federal e ao Comitê Gestor do IBS, repassando ao fornecedor – a empresa que atua como vendedora na operação – apenas o valor líquido. O Splithub recebe as guias de pagamento da CBS e do IBS geradas nesse fluxo e o comprovante dos pagamentos realizados, para manter a conciliação completa.
-      O RAD é o antecessor natural do split payment previsto na Reforma Tributária, que será implantado posteriormente no Sistema de Pagamentos Brasileiro (SPB): parte do valor da transação pode deixar de transitar pela conta do fornecedor, sendo recolhida automaticamente à Receita Federal e ao Comitê Gestor do IBS pelos prestadores de serviços de pagamentos (PSPs) do pagador ou do recebedor.
     </p>
+
+    <h2 id="modos">Os dois modos de pagamento da guia</h2>
+    <p>
+      Quem paga a guia RAD é sempre o adquirente. O que muda é quem executa o pagamento — e isso é escolhido na implantação, para
+      cada cliente:
+    </p>
+    <table class="response-table">
+      <tr><th>Modo</th><th>Como funciona</th><th>O que seu sistema faz</th></tr>
+      <tr><td><strong>Instrução pelo Splithub</strong></td><td>O Splithub instrui o pagamento da guia em nome do adquirente</td><td>Recebe <code class="inline">rad.darf_received</code> para os lançamentos e <code class="inline">rad.proof_received</code> quando o pagamento é feito. Não envia comprovante</td></tr>
+      <tr><td><strong>Pagamento pelo ERP</strong></td><td>O ERP do adquirente paga a guia e devolve o comprovante ao Splithub</td><td>Recebe <code class="inline">rad.darf_received</code>, paga a guia e envia o comprovante por <a href="#submit-proof"><code class="inline">POST /v1/rad/proofs</code></a>. Recebe <code class="inline">rad.proof_received</code> quando o comprovante é processado</td></tr>
+    </table>
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">O contrato da instrução de pagamento pelo Splithub será publicado neste changelog. Até lá, a integração completa está descrita para o modo de pagamento pelo ERP.</p>
+      </div>
+    </div>
 
     <h2 id="webhook-darf">Webhook event: guia de DARF recebida</h2>
     <p>
@@ -95,7 +111,7 @@
       </div>
       <pre>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"evt_3c8e5f"</span>,
-  <span class="tok-k">"type"</span>: <span class="tok-s">"rad.darf_recebida"</span>,
+  <span class="tok-k">"type"</span>: <span class="tok-s">"rad.darf_received"</span>,
   <span class="tok-k">"occurred_at"</span>: <span class="tok-s">"2026-07-29T12:00:00.000Z"</span>,
   <span class="tok-k">"data"</span>: {
     <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
@@ -107,7 +123,7 @@
       <span class="tok-k">"darf_type"</span>: <span class="tok-s">"cbs"</span>,
       <span class="tok-k">"return_code"</span>: <span class="tok-s">"DARF_GERADO"</span>,
       <span class="tok-k">"guide_number"</span>: <span class="tok-s">"00000000000012345"</span>,
-      <span class="tok-k">"due_date"</span>: <span class="tok-s">"2026-08-11</span>,
+      <span class="tok-k">"due_date"</span>: <span class="tok-s">"2026-08-11"</span>,
       <span class="tok-k">"pix_key"</span>: <span class="tok-s">"34028316000103"</span>,
       <span class="tok-k">"barcode"</span>: <span class="tok-s">"858100000012345678901234567890123456789012"</span>,
       <span class="tok-k">"pdf_link"</span>: <span class="tok-s">"https://sistema.rfb.gov.br/darf/cbs_12345.pdf"</span>,
@@ -124,10 +140,10 @@
       <span class="tok-k">"pix_key"</span>: <span class="tok-s">"34028316000103"</span>,
       <span class="tok-k">"barcode"</span>: <span class="tok-s">"858100000054321876543210987654321876543210"</span>,
       <span class="tok-k">"pdf_link"</span>: <span class="tok-s">"https://sistema.rfb.gov.br/darf/ibs_54321.pdf"</span>,
-      <span class="tok-k">"principal_value"</span>: <span class="tok-s">"57.60"</span>,
+      <span class="tok-k">"principal_value"</span>: <span class="tok-s">"6.40"</span>,
       <span class="tok-k">"penalty_value"</span>: <span class="tok-s">"0.00"</span>,
       <span class="tok-k">"interest_value"</span>: <span class="tok-s">"0.00"</span>,
-      <span class="tok-k">"total_value"</span>: <span class="tok-s">"57.60"</span>
+      <span class="tok-k">"total_value"</span>: <span class="tok-s">"6.40"</span>
     },
     <span class="tok-k">"fiscal_operation"</span>: {
       <span class="tok-k">"gross_value"</span>: <span class="tok-s">"6400.00"</span>,
@@ -135,10 +151,10 @@
       <span class="tok-k">"cbs_rate"</span>: <span class="tok-s">"0.9"</span>,
       <span class="tok-k">"cbs_calculated"</span>: <span class="tok-s">"57.60"</span>,
       <span class="tok-k">"ibs_base"</span>: <span class="tok-s">"6400.00"</span>,
-      <span class="tok-k">"ibs_rate"</span>: <span class="tok-s">"0.9"</span>,
-      <span class="tok-k">"ibs_calculated"</span>: <span class="tok-s">"57.60"</span>,
-      <span class="tok-k">"total_tributes_retained"</span>: <span class="tok-s">"115.20"</span>,
-      <span class="tok-k">"net_value_to_supplier"</span>: <span class="tok-s">"6284.80"</span>
+      <span class="tok-k">"ibs_rate"</span>: <span class="tok-s">"0.1"</span>,
+      <span class="tok-k">"ibs_calculated"</span>: <span class="tok-s">"6.40"</span>,
+      <span class="tok-k">"total_tributes_retained"</span>: <span class="tok-s">"64.00"</span>,
+      <span class="tok-k">"net_value_to_supplier"</span>: <span class="tok-s">"6336.00"</span>
     }
   }
 }</pre>
@@ -155,7 +171,7 @@
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
       <tr><td colspan="3"><strong>Evento e Metadados</strong></td></tr>
       <tr><td>id</td><td>string</td><td>Identificador do evento. Use-o para deduplicar: reentregas repetem o mesmo valor</td></tr>
-      <tr><td>type</td><td>string</td><td>Tipo do evento: rad.darf_recebida</td></tr>
+      <tr><td>type</td><td>string</td><td>Tipo do evento: rad.darf_received</td></tr>
       <tr><td>occurred_at</td><td>timestamp</td><td>Momento em que o fato ocorreu — não o do envio; os dois divergem quando há retentativa</td></tr>
       <tr><td colspan="3"><strong>Informações do Documento Fiscal</strong></td></tr>
       <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF-e (44 dígitos) ao qual a guia se refere</td></tr>
@@ -193,7 +209,7 @@
       <tr><td>data.fiscal_operation.cbs_rate</td><td>string (decimal)</td><td>Alíquota de CBS (em percentual, ex: 0.9 = 0,9%)</td></tr>
       <tr><td>data.fiscal_operation.cbs_calculated</td><td>string (decimal)</td><td>Valor calculado de CBS retido</td></tr>
       <tr><td>data.fiscal_operation.ibs_base</td><td>string (decimal)</td><td>Base de cálculo para IBS</td></tr>
-      <tr><td>data.fiscal_operation.ibs_rate</td><td>string (decimal)</td><td>Alíquota de IBS (em percentual, ex: 0.9 = 0,9%)</td></tr>
+      <tr><td>data.fiscal_operation.ibs_rate</td><td>string (decimal)</td><td>Alíquota de IBS (em percentual, ex: 0.1 = 0,1%)</td></tr>
       <tr><td>data.fiscal_operation.ibs_calculated</td><td>string (decimal)</td><td>Valor calculado de IBS retido</td></tr>
       <tr><td>data.fiscal_operation.total_tributes_retained</td><td>string (decimal)</td><td>Soma total de CBS + IBS retidos nesta operação</td></tr>
       <tr><td>data.fiscal_operation.net_value_to_supplier</td><td>string (decimal)</td><td>Valor líquido repassado ao fornecedor (gross - tributos)</td></tr>
@@ -230,7 +246,7 @@
       </div>
       <pre>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"evt_5a6b7c"</span>,
-  <span class="tok-k">"type"</span>: <span class="tok-s">"rad.darf_recebida_lote"</span>,
+  <span class="tok-k">"type"</span>: <span class="tok-s">"rad.darf_batch_received"</span>,
   <span class="tok-k">"occurred_at"</span>: <span class="tok-s">"2026-09-08T12:00:00.000Z"</span>,
   <span class="tok-k">"data"</span>: {
     <span class="tok-k">"batch_id"</span>: <span class="tok-s">"batch_7x2k9q1m"</span>,
@@ -304,7 +320,7 @@
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
       <tr><th colspan="3"><strong>Envelope do Webhook</strong></th></tr>
       <tr><td>id</td><td>string</td><td>Identificador do evento. Use-o para deduplicar: reentregas repetem o mesmo valor</td></tr>
-      <tr><td>type</td><td>string</td><td>Tipo do evento: rad.darf_recebida_lote</td></tr>
+      <tr><td>type</td><td>string</td><td>Tipo do evento: rad.darf_batch_received</td></tr>
       <tr><td>occurred_at</td><td>timestamp</td><td>Momento em que o fato ocorreu — não o do envio; os dois divergem quando há retentativa</td></tr>
       <tr><th colspan="3"><strong>Metadados do Lote</strong></th></tr>
       <tr><td>data.batch_id</td><td>string</td><td>Identificador único do lote de documentos processados</td></tr>
@@ -359,13 +375,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>GET /v1/rad/guias</span>
+        <span>GET /v1/rad/guides</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/rad/guias?competencia=2026-07&situacao=a_vencer&tributo=cbs&limit=50"</span> \
+      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/rad/guides?period=2026-07&status=upcoming&tax_type=cbs&limit=50"</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
     </div>
 
@@ -373,7 +389,7 @@
       <div class="code-head"><span>Resposta 200 OK</span></div>
       <pre>{
   <span class="tok-k">"data"</span>: [
-    { <span class="tok-k">"id"</span>: <span class="tok-s">"darf_9f21ab"</span>, <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"3526071420016600018755001000001234…"</span>, <span class="tok-k">"tributo"</span>: <span class="tok-s">"cbs"</span>, <span class="tok-k">"situacao"</span>: <span class="tok-s">"a_vencer"</span>, <span class="tok-k">"vencimento"</span>: <span class="tok-s">"2026-08-11"</span>, <span class="tok-k">"valor"</span>: <span class="tok-s">"57.60"</span>, <span class="tok-c">/* demais campos como na consulta individual */</span> }
+    { <span class="tok-k">"id"</span>: <span class="tok-s">"darf_9f21ab"</span>, <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"3526071420016600018755001000001234…"</span>, <span class="tok-k">"tax_type"</span>: <span class="tok-s">"cbs"</span>, <span class="tok-k">"status"</span>: <span class="tok-s">"upcoming"</span>, <span class="tok-k">"due_date"</span>: <span class="tok-s">"2026-08-11"</span>, <span class="tok-k">"total_value"</span>: <span class="tok-s">"57.60"</span>, <span class="tok-c">/* demais campos como na consulta individual */</span> }
   ],
   <span class="tok-k">"next_cursor"</span>: <span class="tok-s">null</span>,
   <span class="tok-k">"has_more"</span>: <span class="tok-s">false</span>
@@ -382,13 +398,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>GET /v1/rad/guias/{id}</span>
+        <span>GET /v1/rad/guides/{id}</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/rad/guias/darf_9f21ab</span> \
+      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/rad/guides/darf_9f21ab</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
     </div>
 
@@ -399,23 +415,23 @@
   <span class="tok-k">"document_id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>,
   <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
   <span class="tok-k">"supplier_cnpj"</span>: <span class="tok-s">"98765432000188"</span>,
-  <span class="tok-k">"tributo"</span>: <span class="tok-s">"cbs"</span>,
-  <span class="tok-k">"competencia"</span>: <span class="tok-s">"2026-07"</span>,
-  <span class="tok-k">"situacao"</span>: <span class="tok-s">"a_vencer"</span>,
+  <span class="tok-k">"tax_type"</span>: <span class="tok-s">"cbs"</span>,
+  <span class="tok-k">"period"</span>: <span class="tok-s">"2026-07"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"upcoming"</span>,
   <span class="tok-k">"guide_number"</span>: <span class="tok-s">"00000000000012345"</span>,
-  <span class="tok-k">"vencimento"</span>: <span class="tok-s">"2026-08-11"</span>,
-  <span class="tok-k">"valor"</span>: <span class="tok-s">"57.60"</span>,
+  <span class="tok-k">"due_date"</span>: <span class="tok-s">"2026-08-11"</span>,
+  <span class="tok-k">"total_value"</span>: <span class="tok-s">"57.60"</span>,
   <span class="tok-k">"principal_value"</span>: <span class="tok-s">"57.60"</span>,
   <span class="tok-k">"penalty_value"</span>: <span class="tok-s">"0.00"</span>,
   <span class="tok-k">"interest_value"</span>: <span class="tok-s">"0.00"</span>,
   <span class="tok-k">"barcode"</span>: <span class="tok-s">"858100000012345678901234567890123456789012"</span>,
   <span class="tok-k">"pix_key"</span>: <span class="tok-s">"34028316000103"</span>,
   <span class="tok-k">"pdf_link"</span>: <span class="tok-s">"https://sistema.rfb.gov.br/darf/cbs_12345.pdf"</span>,
-  <span class="tok-k">"extincao"</span>: <span class="tok-s">null</span>
+  <span class="tok-k">"extinction_type"</span>: <span class="tok-s">null</span>
 }</pre>
     </div>
-    <p><strong>Filtros da listagem:</strong> <code class="inline">competencia</code> (YYYY-MM), <code class="inline">situacao</code>,
-      <code class="inline">tributo</code>, <code class="inline">vencimento</code> (data), <code class="inline">supplier_cnpj</code>,
+    <p><strong>Filtros da listagem:</strong> <code class="inline">period</code> (YYYY-MM), <code class="inline">status</code>,
+      <code class="inline">tax_type</code>, <code class="inline">due_date</code> (data), <code class="inline">supplier_cnpj</code>,
       e a paginação por cursor (<a href="visao-geral.html#paginacao">Paginação</a>).</p>
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
@@ -423,30 +439,30 @@
       <tr><td>document_id</td><td>string</td><td>Documento fiscal a que a guia se refere (<code class="inline">df_...</code>)</td></tr>
       <tr><td>dfe_key</td><td>string</td><td>Chave de acesso do documento</td></tr>
       <tr><td>supplier_cnpj</td><td>string</td><td>CNPJ do fornecedor (alfanumérico)</td></tr>
-      <tr><td>tributo</td><td>string</td><td>ibs ou cbs</td></tr>
-      <tr><td>competencia</td><td>string</td><td>Competência (YYYY-MM)</td></tr>
-      <tr><td>situacao</td><td>string</td><td>pendente, a_vencer, atrasado, pago, cancelado ou em_risco</td></tr>
+      <tr><td>tax_type</td><td>string</td><td>ibs ou cbs</td></tr>
+      <tr><td>period</td><td>string</td><td>Competência (YYYY-MM)</td></tr>
+      <tr><td>status</td><td>string</td><td>pending, upcoming, overdue, paid, cancelled ou at_risk</td></tr>
       <tr><td>guide_number</td><td>string</td><td>Número da guia</td></tr>
-      <tr><td>vencimento</td><td>date</td><td>Data de vencimento</td></tr>
-      <tr><td>valor</td><td>string (decimal)</td><td>Valor total a recolher</td></tr>
+      <tr><td>due_date</td><td>date</td><td>Data de vencimento</td></tr>
+      <tr><td>total_value</td><td>string (decimal)</td><td>Valor total a recolher</td></tr>
       <tr><td>principal_value</td><td>string (decimal)</td><td>Principal</td></tr>
       <tr><td>penalty_value</td><td>string (decimal)</td><td>Multa, se houver</td></tr>
       <tr><td>interest_value</td><td>string (decimal)</td><td>Juros, se houver</td></tr>
       <tr><td>barcode</td><td>string</td><td>Código de barras para pagamento</td></tr>
       <tr><td>pix_key</td><td>string</td><td>Chave PIX para pagamento</td></tr>
       <tr><td>pdf_link</td><td>string</td><td>Link para o PDF da guia</td></tr>
-      <tr><td>extincao</td><td>string</td><td>Modalidade de extinção, depois de paga</td></tr>
+      <tr><td>extinction_type</td><td>string</td><td>Modalidade de extinção, depois de paga</td></tr>
     </table>
 
-    <h2 id="submit-proof">Submit payment proof</h2>
+    <h2 id="submit-proof">Enviar o comprovante de pagamento</h2>
     <p>
-      Após pagar um DARF via PIX ou Boleto, envie o comprovante ao Splithub para conciliar a
-      retenção com o pagamento efetivamente realizado. Utilize <code class="inline">tipo_pagamento</code>
+      No modo de pagamento pelo ERP, depois de pagar a guia por PIX ou boleto, envie o comprovante ao Splithub para conciliar a
+      retenção com o pagamento efetivamente realizado. Utilize <code class="inline">payment_type</code>
       para indicar o método e inclua os campos específicos: <code class="inline">pix</code> (com
-      <code class="inline">end_to_end_id</code>, <code class="inline">txid</code>, <code class="inline">chave_pix</code>,
-      <code class="inline">valor</code>, <code class="inline">timestamp</code>) ou <code class="inline">boleto</code>
-      (com <code class="inline">nosso_numero</code>, <code class="inline">codigo_barras</code>,
-      <code class="inline">valor_pago</code>, <code class="inline">data_pagamento</code>).
+      <code class="inline">end_to_end_id</code>, <code class="inline">txid</code>, <code class="inline">pix_key</code>,
+      <code class="inline">amount</code>, <code class="inline">paid_at</code>) ou <code class="inline">bank_slip</code>
+      (com <code class="inline">our_number</code>, <code class="inline">barcode</code>,
+      <code class="inline">amount_paid</code>, <code class="inline">paid_at</code>).
     </p>
 
     <div class="code-block">
@@ -463,21 +479,21 @@
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "darf_id": "darf_9f21ab",                   
-    "tipo_pagamento": "pix",                   
-    "pix": {                                    <span class="tok-c">// REQUIRED (when tipo_pagamento=pix)</span>
+    "payment_type": "pix",                   
+    "pix": {                                    <span class="tok-c">// REQUIRED (when payment_type=pix)</span>
       "end_to_end_id": "E14200166...",        
       "txid": "cbs_df_8f3a1c2b",              
-      "chave_pix": "14200166000187",          
-      "valor": "57.60",                       
-      "timestamp": "2026-07-29T12:00:00.000Z", <span class="tok-c">// REQUIRED - ISO 8601</span>
-      "descricao": "Pagamento DARF CBS..."     
+      "pix_key": "14200166000187",          
+      "amount": "57.60",                       
+      "paid_at": "2026-07-29T12:00:00.000Z", <span class="tok-c">// REQUIRED - ISO 8601</span>
+      "description": "Pagamento DARF CBS..."     
     }
   }'</span></pre>
     </div>
 
     <div class="code-block">
       <div class="code-head">
-        <span>POST /v1/rad/proofs — Exemplo Boleto</span>
+        <span>POST /v1/rad/proofs — Exemplo boleto</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
@@ -489,17 +505,17 @@
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "darf_id": "darf_8e32kc",                  
-    "tipo_pagamento": "boleto",                
-    "boleto": {                                 <span class="tok-c">// REQUIRED (when tipo_pagamento=boleto)</span>
-      "nosso_numero": "12345678",             
-      "codigo_barras": "00190123456...",       <span class="tok-c">// REQUIRED - 44 dígitos</span>
-      "linha_digitavel": "00190.12345...",     <span class="tok-c">// REQUIRED - 48 dígitos</span>
-      "banco": "001",                          <span class="tok-c">// REQUIRED - código banco</span>
-      "agencia": "1234",                      
-      "conta": "123456",                      
-      "valor_pago": "125.40",                 
-      "data_pagamento": "2026-07-31T14:30...", <span class="tok-c">// REQUIRED - ISO 8601</span>
-      "descricao": "Pagamento DARF IBS..."     
+    "payment_type": "bank_slip",                
+    "bank_slip": {                                 <span class="tok-c">// REQUIRED (when payment_type=bank_slip)</span>
+      "our_number": "12345678",             
+      "barcode": "00190123456...",       <span class="tok-c">// REQUIRED - 44 dígitos</span>
+      "digitable_line": "00190.12345...",     <span class="tok-c">// REQUIRED - 48 dígitos</span>
+      "bank_code": "001",                          <span class="tok-c">// REQUIRED - código banco</span>
+      "branch": "1234",                      
+      "account": "123456",                      
+      "amount_paid": "125.40",                 
+      "paid_at": "2026-07-31T14:30...", <span class="tok-c">// REQUIRED - ISO 8601</span>
+      "description": "Pagamento DARF IBS..."     
     }
   }'</span></pre>
     </div>
@@ -509,9 +525,9 @@
       <pre>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"comp_5e21fa"</span>,
   <span class="tok-k">"darf_id"</span>: <span class="tok-s">"darf_9f21ab"</span>,
-  <span class="tok-k">"tipo_pagamento"</span>: <span class="tok-s">"pix"</span>,
+  <span class="tok-k">"payment_type"</span>: <span class="tok-s">"pix"</span>,
   <span class="tok-k">"status"</span>: <span class="tok-s">"confirmed"</span>,
-  <span class="tok-k">"valor_pago"</span>: <span class="tok-s">"57.60"</span>,
+  <span class="tok-k">"amount_paid"</span>: <span class="tok-s">"57.60"</span>,
   <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T12:00:30.000Z"</span>
 }</pre>
     </div>
@@ -520,37 +536,37 @@
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
       <tr><td>darf_id</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Identificador do DARF ao qual este comprovante se refere</td></tr>
-      <tr><td>tipo_pagamento</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>pix ou boleto</td></tr>
-      <tr><td colspan="4"><strong>Campos PIX (quando tipo_pagamento = pix)</strong></td></tr>
+      <tr><td>payment_type</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>pix ou bank_slip</td></tr>
+      <tr><td colspan="4"><strong>Campos de PIX (quando payment_type = pix)</strong></td></tr>
       <tr><td>pix.end_to_end_id</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Identificador único end-to-end da transação PIX</td></tr>
       <tr><td>pix.txid</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>ID da transação PIX (ID único por agência/conta)</td></tr>
-      <tr><td>pix.chave_pix</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Chave PIX utilizada (CPF/CNPJ, email, telefone ou aleatória)</td></tr>
-      <tr><td>pix.valor</td><td>string (decimal)</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Valor da transação PIX</td></tr>
-      <tr><td>pix.timestamp</td><td>timestamp</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Data e hora de liquidação do PIX (ISO 8601)</td></tr>
-      <tr><td>pix.descricao</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Informação livre ou memo da transação</td></tr>
-      <tr><td colspan="4"><strong>Campos Boleto (quando tipo_pagamento = boleto)</strong></td></tr>
-      <tr><td>boleto.nosso_numero</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Identificação única no sistema do banco emissor</td></tr>
-      <tr><td>boleto.codigo_barras</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Código de barras do boleto (44 dígitos)</td></tr>
-      <tr><td>boleto.linha_digitavel</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Linha digitável do boleto (48 dígitos)</td></tr>
-      <tr><td>boleto.banco</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Código do banco (3 dígitos, ex: 001 para Banco do Brasil)</td></tr>
-      <tr><td>boleto.agencia</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Número da agência</td></tr>
-      <tr><td>boleto.conta</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Número da conta corrente</td></tr>
-      <tr><td>boleto.valor_pago</td><td>string (decimal)</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Valor efetivamente pago</td></tr>
-      <tr><td>boleto.data_pagamento</td><td>timestamp</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Data e hora do pagamento (ISO 8601)</td></tr>
-      <tr><td>boleto.descricao</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Informação livre ou memo da transação</td></tr>
+      <tr><td>pix.pix_key</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Chave PIX utilizada (CPF/CNPJ, email, telefone ou aleatória)</td></tr>
+      <tr><td>pix.amount</td><td>string (decimal)</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Valor da transação PIX</td></tr>
+      <tr><td>pix.paid_at</td><td>timestamp</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Data e hora de liquidação do PIX (ISO 8601)</td></tr>
+      <tr><td>pix.description</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Informação livre ou memo da transação</td></tr>
+      <tr><td colspan="4"><strong>Campos de boleto (quando payment_type = bank_slip)</strong></td></tr>
+      <tr><td>bank_slip.our_number</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Identificação única no sistema do banco emissor</td></tr>
+      <tr><td>bank_slip.barcode</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Código de barras do boleto (44 dígitos)</td></tr>
+      <tr><td>bank_slip.digitable_line</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Linha digitável do boleto (48 dígitos)</td></tr>
+      <tr><td>bank_slip.bank_code</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Código do banco (3 dígitos, ex: 001 para Banco do Brasil)</td></tr>
+      <tr><td>bank_slip.branch</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Número da agência</td></tr>
+      <tr><td>bank_slip.account</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Número da conta corrente</td></tr>
+      <tr><td>bank_slip.amount_paid</td><td>string (decimal)</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Valor efetivamente pago</td></tr>
+      <tr><td>bank_slip.paid_at</td><td>timestamp</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Data e hora do pagamento (ISO 8601)</td></tr>
+      <tr><td>bank_slip.description</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Informação livre ou memo da transação</td></tr>
     </table>
 
     <h2 id="webhook-proof">Webhook event: recepção comprovante</h2>
     <p>
-      Quando o Splithub realiza o pagamento de uma guia de DARF via PIX, o sistema dispara este webhook
-      para sua URL configurada, informando que o pagamento foi realizado e enviando o comprovante da transação.
-      Este webhook notifica que o Splithub assumiu e liquidou a obrigação tributária em nome do lojista.
+      Avisa que o pagamento de uma guia foi registrado. No modo de instrução pelo Splithub, sai quando o pagamento
+      instruído em nome do adquirente é feito; no modo de pagamento pelo ERP, quando o comprovante enviado é processado.
+      Quem recolhe é sempre o adquirente — o Splithub, quando instrui o pagamento, age em nome dele.
     </p>
 
     <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       <div>
-        <p style="margin:0;line-height:1.6;">Este webhook indica que o Splithub liquidou o DARF de forma automática via PIX. O campo <code class="inline">status</code> indica o resultado da transação: <code class="inline">success</code> (pagamento realizado com sucesso), <code class="inline">pending</code> (processamento em andamento) ou <code class="inline">failed</code> (falha na transação).</p>
+        <p style="margin:0;line-height:1.6;">O campo <code class="inline">status</code> indica o resultado da transação: <code class="inline">success</code> (pagamento realizado com sucesso), <code class="inline">pending</code> (processamento em andamento) ou <code class="inline">failed</code> (falha na transação).</p>
       </div>
     </div>
 
@@ -567,34 +583,34 @@
   <span class="tok-k">"type"</span>: <span class="tok-s">"rad.proof_received"</span>,
   <span class="tok-k">"occurred_at"</span>: <span class="tok-s">"2026-07-29T12:00:00.000Z"</span>,
   <span class="tok-k">"data"</span>: {
-    <span class="tok-k">"comprovante_id"</span>: <span class="tok-s">"comp_5e21fa"</span>,
+    <span class="tok-k">"proof_id"</span>: <span class="tok-s">"comp_5e21fa"</span>,
     <span class="tok-k">"darf_id"</span>: <span class="tok-s">"darf_9f21ab"</span>,
     <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
     <span class="tok-k">"darf_type"</span>: <span class="tok-s">"cbs"</span>,
     <span class="tok-k">"status"</span>: <span class="tok-s">"success"</span>,
-    <span class="tok-k">"tipo_pagamento"</span>: <span class="tok-s">"pix"</span>,
+    <span class="tok-k">"payment_type"</span>: <span class="tok-s">"pix"</span>,
     <span class="tok-k">"darf"</span>: {
-      <span class="tok-k">"numero_darf"</span>: <span class="tok-s">"3502607291234567890"</span>,
-      <span class="tok-k">"valor_principal"</span>: <span class="tok-s">"57.60"</span>,
-      <span class="tok-k">"valor_multa"</span>: <span class="tok-s">"0.00"</span>,
-      <span class="tok-k">"valor_juros"</span>: <span class="tok-s">"0.00"</span>,
-      <span class="tok-k">"valor_total"</span>: <span class="tok-s">"57.60"</span>
+      <span class="tok-k">"number"</span>: <span class="tok-s">"3502607291234567890"</span>,
+      <span class="tok-k">"principal_value"</span>: <span class="tok-s">"57.60"</span>,
+      <span class="tok-k">"penalty_value"</span>: <span class="tok-s">"0.00"</span>,
+      <span class="tok-k">"interest_value"</span>: <span class="tok-s">"0.00"</span>,
+      <span class="tok-k">"total_value"</span>: <span class="tok-s">"57.60"</span>
     },
-    <span class="tok-k">"pagamento"</span>: {
-      <span class="tok-k">"metodo"</span>: <span class="tok-s">"pix"</span>,
-      <span class="tok-k">"identificador"</span>: {
+    <span class="tok-k">"payment"</span>: {
+      <span class="tok-k">"method"</span>: <span class="tok-s">"pix"</span>,
+      <span class="tok-k">"identifier"</span>: {
         <span class="tok-k">"end_to_end_id"</span>: <span class="tok-s">"E14200166202607291200a1b2c3d4"</span>,
         <span class="tok-k">"txid"</span>: <span class="tok-s">"cbs_df_8f3a1c2b"</span>,
-        <span class="tok-k">"chave_pix"</span>: <span class="tok-s">"14200166000187"</span>
+        <span class="tok-k">"pix_key"</span>: <span class="tok-s">"14200166000187"</span>
       },
-      <span class="tok-k">"valor_pago"</span>: <span class="tok-s">"57.60"</span>,
-      <span class="tok-k">"data_pagamento"</span>: <span class="tok-s">"2026-07-29T12:00:00.000Z"</span>,
-      <span class="tok-k">"descricao"</span>: <span class="tok-s">"Pagamento DARF CBS - chave DFe 35260714200166000187550010000012341234567890"</span>
+      <span class="tok-k">"amount_paid"</span>: <span class="tok-s">"57.60"</span>,
+      <span class="tok-k">"paid_at"</span>: <span class="tok-s">"2026-07-29T12:00:00.000Z"</span>,
+      <span class="tok-k">"description"</span>: <span class="tok-s">"Pagamento DARF CBS - chave DFe 35260714200166000187550010000012341234567890"</span>
     },
-    <span class="tok-k">"rastreamento_rfb"</span>: {
-      <span class="tok-k">"protocolo_pagamento"</span>: <span class="tok-s">"202607291200123"</span>,
-      <span class="tok-k">"status_rdoc"</span>: <span class="tok-s">"confirmado"</span>,
-      <span class="tok-k">"data_confirmacao_rfb"</span>: <span class="tok-s">"2026-07-29T12:15:00.000Z"</span>
+    <span class="tok-k">"rfb_tracking"</span>: {
+      <span class="tok-k">"payment_protocol"</span>: <span class="tok-s">"202607291200123"</span>,
+      <span class="tok-k">"rdoc_status"</span>: <span class="tok-s">"confirmed"</span>,
+      <span class="tok-k">"confirmed_at"</span>: <span class="tok-s">"2026-07-29T12:15:00.000Z"</span>
     }
   }
 }</pre>
@@ -602,7 +618,7 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>POST {sua_url_de_webhook} — Exemplo Boleto</span>
+        <span>POST {sua_url_de_webhook} — Exemplo boleto</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
@@ -613,38 +629,38 @@
   <span class="tok-k">"type"</span>: <span class="tok-s">"rad.proof_received"</span>,
   <span class="tok-k">"occurred_at"</span>: <span class="tok-s">"2026-07-31T14:30:00.000Z"</span>,
   <span class="tok-k">"data"</span>: {
-    <span class="tok-k">"comprovante_id"</span>: <span class="tok-s">"comp_7g32hb"</span>,
+    <span class="tok-k">"proof_id"</span>: <span class="tok-s">"comp_7g32hb"</span>,
     <span class="tok-k">"darf_id"</span>: <span class="tok-s">"darf_8e32kc"</span>,
     <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000054321098765432"</span>,
     <span class="tok-k">"darf_type"</span>: <span class="tok-s">"ibs"</span>,
     <span class="tok-k">"status"</span>: <span class="tok-s">"pending"</span>,
-    <span class="tok-k">"tipo_pagamento"</span>: <span class="tok-s">"boleto"</span>,
+    <span class="tok-k">"payment_type"</span>: <span class="tok-s">"bank_slip"</span>,
     <span class="tok-k">"darf"</span>: {
-      <span class="tok-k">"numero_darf"</span>: <span class="tok-s">"3502607311234567890"</span>,
-      <span class="tok-k">"valor_principal"</span>: <span class="tok-s">"125.40"</span>,
-      <span class="tok-k">"valor_multa"</span>: <span class="tok-s">"0.00"</span>,
-      <span class="tok-k">"valor_juros"</span>: <span class="tok-s">"0.00"</span>,
-      <span class="tok-k">"valor_total"</span>: <span class="tok-s">"125.40"</span>,
-      <span class="tok-k">"data_vencimento"</span>: <span class="tok-s">"2026-08-31"</span>
+      <span class="tok-k">"number"</span>: <span class="tok-s">"3502607311234567890"</span>,
+      <span class="tok-k">"principal_value"</span>: <span class="tok-s">"125.40"</span>,
+      <span class="tok-k">"penalty_value"</span>: <span class="tok-s">"0.00"</span>,
+      <span class="tok-k">"interest_value"</span>: <span class="tok-s">"0.00"</span>,
+      <span class="tok-k">"total_value"</span>: <span class="tok-s">"125.40"</span>,
+      <span class="tok-k">"due_date"</span>: <span class="tok-s">"2026-08-31"</span>
     },
-    <span class="tok-k">"pagamento"</span>: {
-      <span class="tok-k">"metodo"</span>: <span class="tok-s">"boleto"</span>,
-      <span class="tok-k">"identificador"</span>: {
-        <span class="tok-k">"nosso_numero"</span>: <span class="tok-s">"12345678"</span>,
-        <span class="tok-k">"linha_digitavel"</span>: <span class="tok-s">"00190.12345 00012345678 00123456789 1 12345678901234"</span>,
-        <span class="tok-k">"codigo_barras"</span>: <span class="tok-s">"00190123456000012345678001234567890112345"</span>
+    <span class="tok-k">"payment"</span>: {
+      <span class="tok-k">"method"</span>: <span class="tok-s">"bank_slip"</span>,
+      <span class="tok-k">"identifier"</span>: {
+        <span class="tok-k">"our_number"</span>: <span class="tok-s">"12345678"</span>,
+        <span class="tok-k">"digitable_line"</span>: <span class="tok-s">"00190.12345 00012345678 00123456789 1 12345678901234"</span>,
+        <span class="tok-k">"barcode"</span>: <span class="tok-s">"00190123456000012345678001234567890112345"</span>
       },
-      <span class="tok-k">"valor_pago"</span>: <span class="tok-s">"125.40"</span>,
-      <span class="tok-k">"data_pagamento"</span>: <span class="tok-s">"2026-07-31T14:30:00.000Z"</span>,
-      <span class="tok-k">"banco"</span>: <span class="tok-s">"001"</span>,
-      <span class="tok-k">"agencia"</span>: <span class="tok-s">"1234"</span>,
-      <span class="tok-k">"conta"</span>: <span class="tok-s">"123456"</span>,
-      <span class="tok-k">"descricao"</span>: <span class="tok-s">"Pagamento DARF IBS - chave DFe 35260714200166000187550010000054321098765432"</span>
+      <span class="tok-k">"amount_paid"</span>: <span class="tok-s">"125.40"</span>,
+      <span class="tok-k">"paid_at"</span>: <span class="tok-s">"2026-07-31T14:30:00.000Z"</span>,
+      <span class="tok-k">"bank_code"</span>: <span class="tok-s">"001"</span>,
+      <span class="tok-k">"branch"</span>: <span class="tok-s">"1234"</span>,
+      <span class="tok-k">"account"</span>: <span class="tok-s">"123456"</span>,
+      <span class="tok-k">"description"</span>: <span class="tok-s">"Pagamento DARF IBS - chave DFe 35260714200166000187550010000054321098765432"</span>
     },
-    <span class="tok-k">"rastreamento_rfb"</span>: {
-      <span class="tok-k">"protocolo_pagamento"</span>: <span class="tok-s">"202607311430456"</span>,
-      <span class="tok-k">"status_rdoc"</span>: <span class="tok-s">"pendente"</span>,
-      <span class="tok-k">"data_confirmacao_rfb"</span>: <span class="tok-s">"2026-08-02T09:00:00.000Z"</span>
+    <span class="tok-k">"rfb_tracking"</span>: {
+      <span class="tok-k">"payment_protocol"</span>: <span class="tok-s">"202607311430456"</span>,
+      <span class="tok-k">"rdoc_status"</span>: <span class="tok-s">"pending"</span>,
+      <span class="tok-k">"confirmed_at"</span>: <span class="tok-s">"2026-08-02T09:00:00.000Z"</span>
     }
   }
 }</pre>
@@ -662,34 +678,34 @@
       <tr><td>id</td><td>string</td><td>Identificador do evento. Use-o para deduplicar: reentregas repetem o mesmo valor</td></tr>
       <tr><td>type</td><td>string</td><td>Tipo do evento: rad.proof_received</td></tr>
       <tr><td>occurred_at</td><td>timestamp</td><td>Momento em que o fato ocorreu — não o do envio; os dois divergem quando há retentativa</td></tr>
-      <tr><td>data.comprovante_id</td><td>string</td><td>Identificador único do comprovante enviado</td></tr>
+      <tr><td>data.proof_id</td><td>string</td><td>Identificador único do comprovante enviado</td></tr>
       <tr><td>data.darf_id</td><td>string</td><td>Identificador do DARF que foi pago</td></tr>
       <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF-e original</td></tr>
       <tr><td>data.darf_type</td><td>string</td><td>Tributo: ibs ou cbs</td></tr>
       <tr><td>data.status</td><td>string</td><td>success (pagamento confirmado), pending (confirmação em andamento) ou failed (falha na transação)</td></tr>
-      <tr><td>data.tipo_pagamento</td><td>string</td><td>pix ou boleto</td></tr>
-      <tr><td>data.darf.numero_darf</td><td>string</td><td>Número oficial do DARF pago</td></tr>
-      <tr><td>data.darf.valor_principal</td><td>string (decimal)</td><td>Valor principal do DARF</td></tr>
-      <tr><td>data.darf.valor_multa</td><td>string (decimal)</td><td>Valor de multa (se houver)</td></tr>
-      <tr><td>data.darf.valor_juros</td><td>string (decimal)</td><td>Valor de juros (se houver)</td></tr>
-      <tr><td>data.darf.valor_total</td><td>string (decimal)</td><td>Valor total pago</td></tr>
-      <tr><td>data.darf.data_vencimento</td><td>date</td><td>Data de vencimento do DARF (boleto apenas)</td></tr>
-      <tr><td>data.pagamento.metodo</td><td>string</td><td>pix ou boleto</td></tr>
-      <tr><td>data.pagamento.identificador.end_to_end_id</td><td>string</td><td>End-to-end PIX (PIX apenas)</td></tr>
-      <tr><td>data.pagamento.identificador.txid</td><td>string</td><td>TXID da transação PIX (PIX apenas)</td></tr>
-      <tr><td>data.pagamento.identificador.chave_pix</td><td>string</td><td>Chave PIX utilizada (PIX apenas)</td></tr>
-      <tr><td>data.pagamento.identificador.nosso_numero</td><td>string</td><td>Nosso número do boleto (Boleto apenas)</td></tr>
-      <tr><td>data.pagamento.identificador.linha_digitavel</td><td>string</td><td>Linha digitável do boleto (Boleto apenas)</td></tr>
-      <tr><td>data.pagamento.identificador.codigo_barras</td><td>string</td><td>Código de barras do boleto (Boleto apenas)</td></tr>
-      <tr><td>data.pagamento.valor_pago</td><td>string (decimal)</td><td>Valor efetivamente pago</td></tr>
-      <tr><td>data.pagamento.data_pagamento</td><td>timestamp</td><td>Data e hora do pagamento</td></tr>
-      <tr><td>data.pagamento.banco</td><td>string</td><td>Código do banco (boleto apenas)</td></tr>
-      <tr><td>data.pagamento.agencia</td><td>string</td><td>Agência do banco (boleto apenas)</td></tr>
-      <tr><td>data.pagamento.conta</td><td>string</td><td>Número da conta (boleto apenas)</td></tr>
-      <tr><td>data.pagamento.descricao</td><td>string</td><td>Descrição/memo do pagamento</td></tr>
-      <tr><td>data.rastreamento_rfb.protocolo_pagamento</td><td>string</td><td>Protocolo da Receita Federal</td></tr>
-      <tr><td>data.rastreamento_rfb.status_rdoc</td><td>string</td><td>Status no RDOC: pendente, confirmado ou rejeitado</td></tr>
-      <tr><td>data.rastreamento_rfb.data_confirmacao_rfb</td><td>timestamp</td><td>Data e hora de confirmação na RFB</td></tr>
+      <tr><td>data.payment_type</td><td>string</td><td>pix ou bank_slip</td></tr>
+      <tr><td>data.darf.number</td><td>string</td><td>Número oficial do DARF pago</td></tr>
+      <tr><td>data.darf.principal_value</td><td>string (decimal)</td><td>Valor principal do DARF</td></tr>
+      <tr><td>data.darf.penalty_value</td><td>string (decimal)</td><td>Valor de multa (se houver)</td></tr>
+      <tr><td>data.darf.interest_value</td><td>string (decimal)</td><td>Valor de juros (se houver)</td></tr>
+      <tr><td>data.darf.total_value</td><td>string (decimal)</td><td>Valor total pago</td></tr>
+      <tr><td>data.darf.due_date</td><td>date</td><td>Data de vencimento do DARF (boleto apenas)</td></tr>
+      <tr><td>data.payment.method</td><td>string</td><td>pix ou bank_slip</td></tr>
+      <tr><td>data.payment.identifier.end_to_end_id</td><td>string</td><td>End-to-end PIX (PIX apenas)</td></tr>
+      <tr><td>data.payment.identifier.txid</td><td>string</td><td>TXID da transação PIX (PIX apenas)</td></tr>
+      <tr><td>data.payment.identifier.pix_key</td><td>string</td><td>Chave PIX utilizada (PIX apenas)</td></tr>
+      <tr><td>data.payment.identifier.our_number</td><td>string</td><td>Nosso número do boleto (Boleto apenas)</td></tr>
+      <tr><td>data.payment.identifier.digitable_line</td><td>string</td><td>Linha digitável do boleto (Boleto apenas)</td></tr>
+      <tr><td>data.payment.identifier.barcode</td><td>string</td><td>Código de barras do boleto (Boleto apenas)</td></tr>
+      <tr><td>data.payment.amount_paid</td><td>string (decimal)</td><td>Valor efetivamente pago</td></tr>
+      <tr><td>data.payment.paid_at</td><td>timestamp</td><td>Data e hora do pagamento</td></tr>
+      <tr><td>data.payment.bank_code</td><td>string</td><td>Código do banco (boleto apenas)</td></tr>
+      <tr><td>data.payment.branch</td><td>string</td><td>Agência do banco (boleto apenas)</td></tr>
+      <tr><td>data.payment.account</td><td>string</td><td>Número da conta (boleto apenas)</td></tr>
+      <tr><td>data.payment.description</td><td>string</td><td>Descrição/memo do pagamento</td></tr>
+      <tr><td>data.rfb_tracking.payment_protocol</td><td>string</td><td>Protocolo da Receita Federal</td></tr>
+      <tr><td>data.rfb_tracking.rdoc_status</td><td>string</td><td>Status no RDOC: pending, confirmed ou rejected</td></tr>
+      <tr><td>data.rfb_tracking.confirmed_at</td><td>timestamp</td><td>Data e hora de confirmação na RFB</td></tr>
     </table>
 
     <div class="page-footer-nav">
@@ -706,7 +722,8 @@
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#webhook-darf" class="toc-link active"><span class="toc-method toc-method-webhook">WEBHOOK</span>Guia de DARF recebida</a>
+    <a href="#modos" class="toc-link active">Modos de pagamento da guia</a>
+    <a href="#webhook-darf" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Guia de DARF recebida</a>
     <a href="#webhook-darf-lote" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Guia de DARF recebida (lote)</a>
     <a href="#consultar-guias" class="toc-link"><span class="toc-method toc-method-get">GET</span>Consultar guias</a>
     <a href="#submit-proof" class="toc-link"><span class="toc-method toc-method-post">POST</span>Enviar comprovante de pagamento</a>

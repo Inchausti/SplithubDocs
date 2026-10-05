@@ -111,7 +111,7 @@
     <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       <div>
-        <p style="margin:0;line-height:1.6;">Aceitamos o XML assinado do documento fiscal ou um JSON estruturado equivalente aos grupos da NF-e 4.0 e outros leiautes DF-e (NFCom, CT-e, BP-e, etc.) atualizados pela Nota Técnica 2025.002. A API adapta automaticamente conforme o <code class="inline">type</code> informado. Obrigatório: Grupo de IBS/CBS (CST e cClassTrib), valores de base e tributação. Sem esses dados, a partir de 03/08/2026 a nota é rejeitada pela SEFAZ. O processamento é assíncrono; use o endpoint de consulta para acompanhar o status.</p>
+        <p style="margin:0;line-height:1.6;">Por esta chamada aceitamos um JSON estruturado equivalente aos grupos da NF-e 4.0 e outros leiautes DF-e (NFCom, CT-e, BP-e, etc.) atualizados pela Nota Técnica 2025.002. A API adapta automaticamente conforme o <code class="inline">type</code> informado. Obrigatório: Grupo de IBS/CBS (CST e cClassTrib), valores de base e tributação. Sem esses dados, a partir de 03/08/2026 a nota é rejeitada pela SEFAZ. O processamento é assíncrono; use o endpoint de consulta para acompanhar o status.</p>
       </div>
     </div>
 
@@ -124,18 +124,18 @@
 
     <h2 id="criar-documento">Criar um documento fiscal</h2>
     <p>
-      Envie o XML do documento assinado em base64 ou um JSON estruturado. A API adapta-se automaticamente conforme o <code class="inline">type</code> informado (NF-e, NFCom, CT-e, BP-e, etc.). Independentemente do tipo, inclua: <code class="inline">identification</code> (identificação), <code class="inline">emission</code> (emitente), <code class="inline">destination</code> (destinatário), <code class="inline">items</code> (itens ou serviços), e <code class="inline">total</code> (totalizadores). O Grupo de IBS/CBS (<code class="inline">items[].tax.ibs_cbs</code>) é obrigatório em todos os tipos; para NFCom, CT-e OS e outros, inclua também campos específicos (como <code class="inline">competence_date</code> em NFCom). A API retorna um identificador para acompanhar o processamento.
+      Envie o documento como JSON estruturado — o XML assinado e o ZIP de XMLs entram pelo <a href="#enviar-arquivo">envio de arquivo</a>. A API adapta-se automaticamente conforme o <code class="inline">type</code> informado (NF-e, NFCom, CT-e, BP-e, etc.). Independentemente do tipo, inclua: <code class="inline">identification</code> (identificação), <code class="inline">emission</code> (emitente), <code class="inline">destination</code> (destinatário), <code class="inline">items</code> (itens ou serviços), e <code class="inline">total</code> (totalizadores). O Grupo de IBS/CBS (<code class="inline">items[].tax.ibs_cbs</code>) é obrigatório em todos os tipos; para NFCom, CT-e OS e outros, inclua também campos específicos (como <code class="inline">competence_date</code> em NFCom). A API retorna um identificador para acompanhar o processamento.
     </p>
 
     <div class="code-block">
       <div class="code-head">
-        <span>POST /v1/documentos-fiscais</span>
+        <span>POST /v1/fiscal-documents</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais</span> \
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/fiscal-documents</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Idempotency-Key: nfe-55-1-123456"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
@@ -145,7 +145,7 @@
     "access_key": "3526071420016...",
     "contract_id": "ctr_5f8a2d",
     "override_contract_params": true,
-    "payment_method": "RAD",
+    "payment_method": "rad",
     "payment_term_days": 30,
     "identification": {              
       "number": "123456",            
@@ -201,13 +201,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>POST /v1/documentos-fiscais (NFCom - exemplo)</span>
+        <span>POST /v1/fiscal-documents (NFCom - exemplo)</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais</span> \
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/fiscal-documents</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Idempotency-Key: nfcom-62-1-654321"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
@@ -274,7 +274,7 @@
       </div>
     </div>
 
-    <p><strong>Mapa de Campos (POST /v1/documentos-fiscais):</strong></p>
+    <p><strong>Mapa de Campos (POST /v1/fiscal-documents):</strong></p>
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
       <tr><td>type</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Um dos 14 tipos de DF: nfe, nfce, cte, cte-os, bpe, mdfe, gtv-e, nfcom, nf3e, nfag, nfgas, nfe-abi, nfs-e, nfs-e-via</td></tr>
@@ -282,7 +282,7 @@
       <tr><td>access_key</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Chave de acesso única de 44 dígitos do documento fiscal</td></tr>
       <tr><td>contract_id</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Identificador do contrato entre cliente e fornecedor relacionado a este documento fiscal</td></tr>
       <tr><td>override_contract_params</td><td>boolean</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Se true, os parâmetros de contrato (método de pagamento e prazo) definidos na aplicação serão sobrescritos pelos valores enviados neste documento. Default: false</td></tr>
-      <tr><td>payment_method</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Método de pagamento: RAD (Recolhimento pelo Adquirente) ou FORNECEDOR (pagamento direto pelo fornecedor). Obrigatório apenas se override_contract_params = true</td></tr>
+      <tr><td>payment_method</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Método de pagamento: rad (recolhimento pelo adquirente) ou supplier (recolhimento pelo fornecedor). Obrigatório apenas se override_contract_params = true</td></tr>
       <tr><td>payment_term_days</td><td>integer</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Prazo de pagamento em dias (ex: 30, 45, 60). Obrigatório apenas se override_contract_params = true</td></tr>
       <tr><td>identification</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Identificação: number (número do DF), series (série), emission_date (data e hora de emissão)</td></tr>
       <tr><td>emission</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Emitente: cnpj, legal_name, state</td></tr>
@@ -324,13 +324,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>POST /v1/documentos-fiscais/batch</span>
+        <span>POST /v1/fiscal-documents/batch</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/batch</span> \
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/fiscal-documents/batch</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Idempotency-Key: lote-2026-08-02-001"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
@@ -342,7 +342,7 @@
         "access_key": "35260714200166000187550010000012341234567890",
         "contract_id": "ctr_5f8a2d",
         "override_contract_params": true,
-        "payment_method": "RAD",
+        "payment_method": "rad",
         "payment_term_days": 30,
         "identification": {
           "number": "123456",
@@ -469,57 +469,282 @@
 }</pre>
     </div>
 
-    <h3>Criar documentos em lote com arquivo CSV</h3>
-    <p>
-      Alternativamente, você pode enviar os documentos em um arquivo CSV. O endpoint aceita
-      o arquivo com as colunas mapeadas para a mesma estrutura JSON. Cada linha representa um documento.
-      Use <code class="inline">Content-Type: text/csv</code> para enviar o arquivo.
-    </p>
-
-    <div class="code-block">
-      <div class="code-head">
-        <span>POST /v1/documentos-fiscais/batch (upload via CSV)</span>
-        <button>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copiar
-        </button>
-      </div>
-      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/batch</span> \
-  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
-  -H <span class="tok-s">"Idempotency-Key: lote-csv-2026-08-02-001"</span> \
-  -H <span class="tok-s">"Content-Type: text/csv"</span> \
-  --data-binary @documentos-fiscais-batch.csv</pre>
-    </div>
-
-    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;background:#F5F5F5;border-left:3px solid #2E7D32;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-      <div>
-        <p style="margin:0 0 6px 0;line-height:1.6;"><strong>Template CSV disponível</strong></p>
-        <p style="margin:0;line-height:1.6;">Baixe o <a href="assets/templates/documentos-fiscais-batch.csv" download style="color:#2E7D32;font-weight:500;text-decoration:none;border-bottom:1px solid #2E7D32;">modelo CSV</a> com a estrutura correta e preencha com seus dados. O arquivo deve conter um cabeçalho com os nomes dos campos e uma linha por documento.</p>
-      </div>
-    </div>
-
-    <p><strong>Mapa de Campos (POST /v1/documentos-fiscais/batch):</strong></p>
+    <p><strong>Mapa de Campos (POST /v1/fiscal-documents/batch):</strong></p>
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
-      <tr><td>documents</td><td>array</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Array de documentos fiscais (máximo 500 documentos por requisição). Cada documento segue a mesma estrutura do endpoint individual POST /v1/documentos-fiscais</td></tr>
+      <tr><td>documents</td><td>array</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Array de documentos fiscais (máximo 500 documentos por requisição). Cada documento segue a mesma estrutura do endpoint individual POST /v1/fiscal-documents</td></tr>
       <tr><td colspan="4"><strong>Estrutura de cada documento dentro de documents[]:</strong></td></tr>
       <tr><td>type</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Um dos 14 tipos de DF: nfe, nfce, cte, cte-os, bpe, mdfe, gtv-e, nfcom, nf3e, nfag, nfgas, nfe-abi, nfs-e, nfs-e-via</td></tr>
       <tr><td>model</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Número do modelo oficial conforme tipo de documento</td></tr>
       <tr><td>access_key</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Chave de acesso única de 44 dígitos do documento fiscal</td></tr>
       <tr><td>contract_id</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Identificador do contrato relacionado a este documento fiscal</td></tr>
       <tr><td>override_contract_params</td><td>boolean</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Se true, sobrescreve parâmetros de contrato para este DF específico. Default: false</td></tr>
-      <tr><td>payment_method</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>RAD ou FORNECEDOR. Obrigatório apenas se override_contract_params = true para este DF</td></tr>
+      <tr><td>payment_method</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>rad ou supplier. Obrigatório apenas se override_contract_params = true para este DF</td></tr>
       <tr><td>payment_term_days</td><td>integer</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO*</span></td><td>Prazo de pagamento em dias. Obrigatório apenas se override_contract_params = true para este DF</td></tr>
-      <tr><td>identification, emission, destination, items, total</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Mesma estrutura do endpoint individual — ver documentação de POST /v1/documentos-fiscais para detalhes completos</td></tr>
+      <tr><td>identification, emission, destination, items, total</td><td>object</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Mesma estrutura do endpoint individual — ver documentação de POST /v1/fiscal-documents para detalhes completos</td></tr>
     </table>
 
     <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       <div>
-        <p style="margin:0;line-height:1.6;">Monitorar progresso: use o <code class="inline">batch_id</code> retornado para consultar o status de todo o lote via GET <code class="inline">/v1/documentos-fiscais/batch/{batch_id}</code>. Cada documento dentro do lote possui um <code class="inline">id</code> único que pode ser consultado individualmente.</p>
+        <p style="margin:0;line-height:1.6;">Monitorar progresso: use o <code class="inline">batch_id</code> retornado para consultar o status de todo o lote via GET <code class="inline">/v1/fiscal-documents/batch/{batch_id}</code>. Cada documento dentro do lote possui um <code class="inline">id</code> único que pode ser consultado individualmente.</p>
       </div>
     </div>
+
+    <h2 id="enviar-arquivo">Enviar arquivo</h2>
+    <p>
+      Para carga em volume e para o XML assinado. Você envia o arquivo, vê o que entra e o que não entra — com o motivo de cada
+      recusa — e só então confirma. <strong>Nenhum documento é registrado antes da confirmação.</strong> Cada documento lido vira
+      o corpo de <code class="inline">POST /v1/fiscal-documents</code> e passa pelas mesmas verificações.
+    </p>
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">Nesta versão o arquivo é lido no nível do documento — identificação, partes, contrato e totais. Os itens não são lidos: o CSV tem uma linha por documento, e no JSON, no XML e no ZIP os itens são ignorados.</p>
+      </div>
+    </div>
+    <table class="response-table">
+      <tr><th>Passo</th><th>Chamada</th><th>O que faz</th></tr>
+      <tr><td>1</td><td><code class="inline">POST /v1/uploads</code></td><td>Recebe o arquivo e devolve o <code class="inline">id</code>. Não lê o conteúdo</td></tr>
+      <tr><td>2</td><td><code class="inline">POST /v1/ingestions</code></td><td>Lê, verifica e devolve a prévia: o que entra, o que não entra e por quê</td></tr>
+      <tr><td>3</td><td><code class="inline">POST /v1/ingestions/{id}/confirm</code></td><td>Importa só os documentos importáveis. Responde <code class="inline">202</code></td></tr>
+      <tr><td>4</td><td><code class="inline">GET /v1/ingestions/{id}</code></td><td>Acompanha até <code class="inline">confirmed</code> ou <code class="inline">failed</code></td></tr>
+    </table>
+
+    <h3 id="enviar-arquivo-upload">1. Enviar o arquivo</h3>
+    <p>Em <code class="inline">multipart/form-data</code>, com o arquivo e a finalidade. O mesmo arquivo enviado de novo em 24 horas traz em <code class="inline">duplicate_of</code> o envio anterior.</p>
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST /v1/uploads</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/uploads</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: entradas-2026-09"</span> \
+  -F <span class="tok-s">"purpose=fiscal_documents"</span> \
+  -F <span class="tok-s">"file=@entradas-setembro.csv"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 201 Created</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"upl_3c8e5f"</span>,
+  <span class="tok-k">"purpose"</span>: <span class="tok-s">"fiscal_documents"</span>,
+  <span class="tok-k">"filename"</span>: <span class="tok-s">"entradas-setembro.csv"</span>,
+  <span class="tok-k">"format"</span>: <span class="tok-s">"csv"</span>,
+  <span class="tok-k">"size_bytes"</span>: <span class="tok-s">1843512</span>,
+  <span class="tok-k">"sha256"</span>: <span class="tok-s">"9b1f0c7e…"</span>,
+  <span class="tok-k">"duplicate_of"</span>: <span class="tok-s">null</span>,
+  <span class="tok-k">"expires_at"</span>: <span class="tok-s">"2026-10-06T14:00:00Z"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-10-05T14:00:00Z"</span>
+}</pre>
+    </div>
+
+    <h3 id="enviar-arquivo-previa">2. Criar a importação e obter a prévia</h3>
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST /v1/ingestions</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/ingestions</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: entradas-2026-09"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{ "file_id": "upl_3c8e5f" }'</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 201 Created — a prévia</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"ing_7b1d4e"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"awaiting_confirmation"</span>,
+  <span class="tok-k">"file_id"</span>: <span class="tok-s">"upl_3c8e5f"</span>,
+  <span class="tok-k">"format"</span>: <span class="tok-s">"csv"</span>,
+  <span class="tok-k">"summary"</span>: {
+    <span class="tok-k">"documents"</span>: <span class="tok-s">412</span>,
+    <span class="tok-k">"importable"</span>: <span class="tok-s">405</span>,
+    <span class="tok-k">"unusable"</span>: <span class="tok-s">7</span>,
+    <span class="tok-k">"with_warnings"</span>: <span class="tok-s">38</span>,
+    <span class="tok-k">"v_tot_ibs"</span>: <span class="tok-s">"4210.35"</span>,
+    <span class="tok-k">"v_tot_cbs"</span>: <span class="tok-s">"37893.15"</span>
+  },
+  <span class="tok-k">"expires_at"</span>: <span class="tok-s">"2026-10-06T14:01:00Z"</span>,
+  <span class="tok-k">"created_by"</span>: <span class="tok-s">"cred_erp_producao"</span>,
+  <span class="tok-k">"documents"</span>: [
+    {
+      <span class="tok-k">"source"</span>: {
+        <span class="tok-k">"lines"</span>: [<span class="tok-s">2</span>]
+      },
+      <span class="tok-k">"access_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
+      <span class="tok-k">"type"</span>: <span class="tok-s">"nfe"</span>,
+      <span class="tok-k">"model"</span>: <span class="tok-s">"55"</span>,
+      <span class="tok-k">"number"</span>: <span class="tok-s">"123456"</span>,
+      <span class="tok-k">"series"</span>: <span class="tok-s">"1"</span>,
+      <span class="tok-k">"emission_date"</span>: <span class="tok-s">"2026-09-12T10:00:00-03:00"</span>,
+      <span class="tok-k">"emission_cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
+      <span class="tok-k">"destination_cnpj_cpf"</span>: <span class="tok-s">"98765432000188"</span>,
+      <span class="tok-k">"total_note_value"</span>: <span class="tok-s">"6800.00"</span>,
+      <span class="tok-k">"v_tot_ibs"</span>: <span class="tok-s">"6.80"</span>,
+      <span class="tok-k">"v_tot_cbs"</span>: <span class="tok-s">"61.20"</span>,
+      <span class="tok-k">"contract"</span>: {
+        <span class="tok-k">"id"</span>: <span class="tok-s">"ctr_5f8a2d"</span>,
+        <span class="tok-k">"origin"</span>: <span class="tok-s">"provided"</span>
+      },
+      <span class="tok-k">"payment_method"</span>: <span class="tok-s">"rad"</span>,
+      <span class="tok-k">"reconcilable"</span>: <span class="tok-s">true</span>,
+      <span class="tok-k">"warnings"</span>: []
+    }
+  ],
+  <span class="tok-k">"documents_next_cursor"</span>: <span class="tok-s">"eyJvZmZzZXQiOjEwMH0"</span>,
+  <span class="tok-k">"unusable"</span>: [
+    {
+      <span class="tok-k">"source"</span>: {
+        <span class="tok-k">"lines"</span>: [<span class="tok-s">57</span>]
+      },
+      <span class="tok-k">"access_key"</span>: <span class="tok-s">"35260914200166000187550010000004211234567891"</span>,
+      <span class="tok-k">"check"</span>: <span class="tok-s">"access_key"</span>,
+      <span class="tok-k">"code"</span>: <span class="tok-s">"access_key_already_registered"</span>,
+      <span class="tok-k">"message"</span>: <span class="tok-s">"Chave de acesso já registrada no documento df_2a9c11, importado em 03/09/2026."</span>,
+      <span class="tok-k">"document_id"</span>: <span class="tok-s">"df_2a9c11"</span>
+    }
+  ],
+  <span class="tok-k">"unusable_next_cursor"</span>: <span class="tok-s">null</span>
+}</pre>
+    </div>
+    <p>A resposta traz o resumo e os primeiros 100 registros de cada lista. As listas completas ficam em
+      <code class="inline">GET /v1/ingestions/{id}/documents</code> e <code class="inline">GET /v1/ingestions/{id}/unusable</code>, com paginação por cursor.</p>
+
+    <h3 id="enviar-arquivo-confirmar">3. Confirmar</h3>
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST /v1/ingestions/{id}/confirm</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/ingestions/ing_7b1d4e/confirm</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: entradas-2026-09-confirm"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 202 Accepted — a importação foi iniciada, não concluída</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"ing_7b1d4e"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"importing"</span>,
+  <span class="tok-k">"summary"</span>: {
+    <span class="tok-k">"documents"</span>: <span class="tok-s">412</span>,
+    <span class="tok-k">"importable"</span>: <span class="tok-s">405</span>,
+    <span class="tok-k">"unusable"</span>: <span class="tok-s">7</span>
+  },
+  <span class="tok-k">"confirmed_by"</span>: <span class="tok-s">"cred_erp_producao"</span>,
+  <span class="tok-k">"confirmed_at"</span>: <span class="tok-s">"2026-10-05T14:20:00Z"</span>
+}</pre>
+    </div>
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;"><strong>A duplicidade é verificada de novo na confirmação.</strong> Entre a prévia e a confirmação o mesmo documento pode chegar pela API; ele sai dos importáveis com <code class="inline">access_key_already_registered</code>, e o resumo final mostra quantos mudaram em <code class="inline">rechecked_at_confirmation</code>.</p>
+      </div>
+    </div>
+
+    <h3 id="enviar-arquivo-acompanhar">4. Acompanhar</h3>
+    <p>Consulte <code class="inline">GET /v1/ingestions/{id}</code> com espera crescente — 10 segundos, dobrando até 2 minutos — ou assine o evento <code class="inline">ingestion.completed</code>. Concluída a importação, <code class="inline">GET /v1/ingestions/{id}/documents</code> devolve o <code class="inline">document_id</code> de cada chave. Para desistir antes de confirmar, <code class="inline">POST /v1/ingestions/{id}/cancel</code>.</p>
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"ing_7b1d4e"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"confirmed"</span>,
+  <span class="tok-k">"summary"</span>: {
+    <span class="tok-k">"documents"</span>: <span class="tok-s">412</span>,
+    <span class="tok-k">"imported"</span>: <span class="tok-s">404</span>,
+    <span class="tok-k">"unusable"</span>: <span class="tok-s">8</span>,
+    <span class="tok-k">"rechecked_at_confirmation"</span>: <span class="tok-s">1</span>
+  },
+  <span class="tok-k">"failure_reason"</span>: <span class="tok-s">null</span>,
+  <span class="tok-k">"completed_at"</span>: <span class="tok-s">"2026-10-05T14:24:10Z"</span>
+}</pre>
+    </div>
+    <table class="response-table">
+      <tr><th>Situação</th><th>Quando</th></tr>
+      <tr><td><code class="inline">awaiting_confirmation</code></td><td>Prévia pronta</td></tr>
+      <tr><td><code class="inline">importing</code></td><td>Confirmada; documentos sendo registrados</td></tr>
+      <tr><td><code class="inline">confirmed</code></td><td>Documentos registrados. Final</td></tr>
+      <tr><td><code class="inline">failed</code></td><td>A importação não terminou; motivo em <code class="inline">failure_reason</code>. Nenhum documento fica pela metade. Final</td></tr>
+      <tr><td><code class="inline">cancelled</code></td><td>Cancelada antes da confirmação. Final</td></tr>
+      <tr><td><code class="inline">expired</code></td><td>24 horas sem confirmação; o arquivo é descartado. Final</td></tr>
+    </table>
+
+    <h3 id="enviar-arquivo-formatos">Formatos</h3>
+    <table class="response-table">
+      <tr><th>Formato</th><th>Conteúdo</th><th>Origem na prévia</th></tr>
+      <tr><td>JSON</td><td><code class="inline">{"documents": [ … ]}</code> — o corpo do lote, sem o teto de 500</td><td><code class="inline">{"index": 37}</code></td></tr>
+      <tr><td>XML</td><td>Um DF-e assinado. Sem contrato informado, vale o contrato vigente na emissão</td><td><code class="inline">{}</code></td></tr>
+      <tr><td>ZIP</td><td>Só XMLs de DF-e assinados</td><td><code class="inline">{"file": "nfe-0042.xml"}</code></td></tr>
+      <tr><td>CSV</td><td>Modelo abaixo, uma linha por documento</td><td><code class="inline">{"lines": [2]}</code></td></tr>
+    </table>
+    <p>O formato é reconhecido pelo conteúdo, não pela extensão.</p>
+
+    <h3 id="enviar-arquivo-csv">O CSV</h3>
+    <table class="response-table">
+      <tr><th>Regra</th><th>Como fica</th></tr>
+      <tr><td>Codificação</td><td>UTF-8, com ou sem BOM</td></tr>
+      <tr><td>Separador</td><td>Vírgula ou ponto e vírgula, reconhecido pelo cabeçalho</td></tr>
+      <tr><td>Cabeçalho</td><td>Obrigatório. Colunas lidas pelo nome, em qualquer ordem. Coluna obrigatória ausente ou coluna desconhecida recusa o arquivo, com o nome da coluna</td></tr>
+      <tr><td>Uma linha por documento</td><td>Duas linhas com a mesma <code class="inline">access_key</code> deixam as duas de fora</td></tr>
+      <tr><td>Valores</td><td>Texto decimal com ponto: até 2 casas em valores, até 4 em alíquotas. Vírgula decimal e separador de milhar tornam o documento inutilizável</td></tr>
+      <tr><td>Datas</td><td><code class="inline">identification_emission_date</code> em ISO 8601 com fuso; <code class="inline">competence_date</code> em AAAA-MM-DD</td></tr>
+      <tr><td>Célula vazia</td><td>Campo não informado. Diferente de zero</td></tr>
+    </table>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;background:#F5F5F5;border-left:3px solid #2E7D32;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+      <div>
+        <p style="margin:0 0 6px 0;line-height:1.6;"><strong>Modelo CSV</strong></p>
+        <p style="margin:0;line-height:1.6;">Baixe o <a href="assets/templates/fiscal-documents.csv" download style="color:#2E7D32;font-weight:500;text-decoration:none;border-bottom:1px solid #2E7D32;">modelo CSV</a>: 23 colunas, uma NF-e e uma NFCom de exemplo.</p>
+      </div>
+    </div>
+
+    <h3 id="enviar-arquivo-recusas">Recusas e avisos</h3>
+    <p>Toda recusa traz a verificação que falhou (<code class="inline">check</code>), um código estável e, quando o problema é um valor, o valor recebido.</p>
+    <table class="response-table">
+      <tr><th>Código</th><th>Nível</th><th>Quando</th></tr>
+      <tr><td><code class="inline">unsupported_format</code></td><td>Arquivo — 422</td><td>O conteúdo não é JSON, XML, ZIP nem CSV</td></tr>
+      <tr><td><code class="inline">invalid_encoding</code></td><td>Arquivo — 422</td><td>O texto não é UTF-8</td></tr>
+      <tr><td><code class="inline">empty_file</code></td><td>Arquivo — 422</td><td>Nenhum documento no arquivo</td></tr>
+      <tr><td><code class="inline">limit_exceeded</code></td><td>Arquivo — 422</td><td>Tamanho, documentos ou XMLs no ZIP acima do limite</td></tr>
+      <tr><td><code class="inline">missing_required_column</code> · <code class="inline">unknown_column</code></td><td>Arquivo — 422</td><td>Coluna obrigatória ausente ou coluna fora do modelo, no CSV</td></tr>
+      <tr><td><code class="inline">invalid_zip</code> · <code class="inline">unsafe_xml</code></td><td>Arquivo — 422</td><td>ZIP criptografado, aninhado ou com caminho inválido; XML com DTD ou entidade externa</td></tr>
+      <tr><td><code class="inline">invalid_schema</code></td><td>Documento</td><td>XML fora do XSD do modelo, ou JSON fora da estrutura</td></tr>
+      <tr><td><code class="inline">missing_required_field</code></td><td>Documento</td><td>Campo exigido para o tipo ausente, inclusive os condicionais</td></tr>
+      <tr><td><code class="inline">invalid_value</code> · <code class="inline">invalid_date</code></td><td>Documento</td><td>Valor ou data fora do formato, com o valor recebido</td></tr>
+      <tr><td><code class="inline">invalid_access_key</code></td><td>Documento</td><td>Chave sem 44 dígitos ou com dígito verificador inválido</td></tr>
+      <tr><td><code class="inline">access_key_already_registered</code></td><td>Documento</td><td>Chave já registrada, por qualquer canal. Traz o <code class="inline">document_id</code></td></tr>
+      <tr><td><code class="inline">duplicate_access_key_in_file</code></td><td>Documento</td><td>Dois documentos com a mesma chave no arquivo. Os dois ficam de fora</td></tr>
+      <tr><td><code class="inline">invalid_issuer_cnpj</code></td><td>Documento</td><td>CNPJ do emitente inexistente ou inativo na Receita Federal</td></tr>
+      <tr><td><code class="inline">recipient_not_registered</code></td><td>Documento</td><td>Destinatário não cadastrado ou inativo na sua organização</td></tr>
+      <tr><td><code class="inline">contract_not_found</code> · <code class="inline">contract_not_in_force</code></td><td>Documento</td><td>Contrato informado inexistente, ou sem vigência na data de emissão</td></tr>
+      <tr><td><code class="inline">no_contract_in_force</code></td><td>Aviso</td><td>Nenhum contrato vigente na emissão: o documento entra sem contrato vinculado</td></tr>
+      <tr><td><code class="inline">type_not_reconcilable</code></td><td>Aviso</td><td>Tipo ainda não conciliável com a apuração assistida: entra e fica visível, sem conciliação</td></tr>
+    </table>
+
+    <h3 id="enviar-arquivo-limites">Limites</h3>
+    <table class="response-table">
+      <tr><th>Aspecto</th><th>Regra</th></tr>
+      <tr><td>Tamanho</td><td>Até 50 MB por arquivo</td></tr>
+      <tr><td>Documentos</td><td>Até 10.000 por arquivo</td></tr>
+      <tr><td>ZIP</td><td>Até 10.000 XMLs e 500 MB descompactado</td></tr>
+      <tr><td>Validade</td><td>Arquivo sem importação e prévia sem confirmação expiram em 24 horas</td></tr>
+      <tr><td>Limite de requisição</td><td>Envio, criação e confirmação contam como operação pesada</td></tr>
+      <tr><td>Escopo</td><td><code class="inline">dfs:write</code> para enviar, criar, confirmar e cancelar; <code class="inline">dfs:read</code> para consultar</td></tr>
+    </table>
 
     <h2 id="consultar-documento">Consultar um documento fiscal</h2>
     <p>
@@ -529,13 +754,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>GET /v1/documentos-fiscais/{id}</span>
+        <span>GET /v1/fiscal-documents/{id}</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/df_8f3a1c2b</span> \
+      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/fiscal-documents/df_8f3a1c2b</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
     </div>
 
@@ -568,13 +793,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>GET /v1/documentos-fiscais</span>
+        <span>GET /v1/fiscal-documents</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/documentos-fiscais?type=nfe&status=completed&limit=50"</span> \
+      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/fiscal-documents?type=nfe&status=completed&limit=50"</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
     </div>
 
@@ -604,13 +829,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>PATCH /v1/documentos-fiscais/{id}</span>
+        <span>PATCH /v1/fiscal-documents/{id}</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/df_8f3a1c2b</span> \
+      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/fiscal-documents/df_8f3a1c2b</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Idempotency-Key: df_8f3a1c2b-correcao-01"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
@@ -639,13 +864,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>DELETE /v1/documentos-fiscais/{id}</span>
+        <span>DELETE /v1/fiscal-documents/{id}</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X DELETE <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/df_8f3a1c2b</span> \
+      <pre>curl -X DELETE <span class="tok-k">https://api.splithub.com.br/v1/fiscal-documents/df_8f3a1c2b</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
     </div>
 
@@ -671,6 +896,7 @@
     <a href="#tipos-de-dfs" class="toc-link active">Tipos de documentos fiscais (DFs)</a>
     <a href="#criar-documento" class="toc-link"><span class="toc-method toc-method-post">POST</span>Criar um documento fiscal</a>
     <a href="#criar-documentos-lote" class="toc-link"><span class="toc-method toc-method-post">POST</span>Criar documentos em lote</a>
+    <a href="#enviar-arquivo" class="toc-link"><span class="toc-method toc-method-post">POST</span>Enviar arquivo</a>
     <a href="#consultar-documento" class="toc-link"><span class="toc-method toc-method-get">GET</span>Consultar um documento fiscal</a>
     <a href="#listar-documentos" class="toc-link"><span class="toc-method toc-method-get">GET</span>Listar documentos fiscais</a>
     <a href="#atualizar-documento" class="toc-link"><span class="toc-method toc-method-patch">PATCH</span>Atualizar um documento fiscal</a>

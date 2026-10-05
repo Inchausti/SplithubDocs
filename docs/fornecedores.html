@@ -86,13 +86,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>POST /v1/fornecedores</span>
+        <span>POST /v1/suppliers</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/fornecedores</span> \
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/suppliers</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Idempotency-Key: forn-14200166000187"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
@@ -132,7 +132,7 @@
 }</pre>
     </div>
 
-    <p><strong>Mapa de Campos (POST /v1/fornecedores):</strong></p>
+    <p><strong>Mapa de Campos (POST /v1/suppliers):</strong></p>
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
       <tr><td>cnpj</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>CNPJ da empresa (formato alfanumérico conforme Receita Federal)</td></tr>
@@ -164,13 +164,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>GET /v1/fornecedores</span>
+        <span>GET /v1/suppliers</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/fornecedores?status=active&page=1&page_size=20"</span> \
+      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/suppliers?status=active&page=1&page_size=20"</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
     </div>
 
@@ -201,13 +201,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>GET /v1/fornecedores/{id}</span>
+        <span>GET /v1/suppliers/{id}</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/forn_abc123</span> \
+      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/suppliers/forn_abc123</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
     </div>
 
@@ -250,13 +250,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>PATCH /v1/fornecedores/{id}</span>
+        <span>PATCH /v1/suppliers/{id}</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/forn_abc123</span> \
+      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/suppliers/forn_abc123</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Idempotency-Key: forn_abc123-alteracao-001"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
@@ -289,13 +289,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>PATCH /v1/fornecedores/{id}/status</span>
+        <span>PATCH /v1/suppliers/{id}/status</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/forn_abc123/status</span> \
+      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/suppliers/forn_abc123/status</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Idempotency-Key: status-forn_abc123-001"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
@@ -362,13 +362,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>POST /v1/fornecedores/{cnpj}/representantes</span>
+        <span>POST /v1/suppliers/{cnpj}/representatives</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/14200166000187/representantes</span> \
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/suppliers/14200166000187/representatives</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Idempotency-Key: rep-12345678910"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
@@ -376,9 +376,7 @@
     "cpf": "12345678910",
     "name": "John Smith",
     "email": "john@fornecedora.com",
-    "phone": "11987654321",
-    "rg": "123456789",
-    "issuing_body": "SSP"
+    "phone": "11987654321"
   }'</span></pre>
     </div>
 
@@ -397,15 +395,13 @@
 }</pre>
     </div>
 
-    <p><strong>Mapa de Campos (POST /v1/fornecedores/{cnpj}/representantes):</strong></p>
+    <p><strong>Mapa de Campos (POST /v1/suppliers/{cnpj}/representatives):</strong></p>
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
       <tr><td>cpf</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>CPF (11 dígitos)</td></tr>
       <tr><td>name</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Nome completo do representante</td></tr>
       <tr><td>email</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Email de contato do representante</td></tr>
       <tr><td>phone</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Telefone com DDD</td></tr>
-      <tr><td>rg</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Número do RG</td></tr>
-      <tr><td>issuing_body</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Órgão expedidor do RG (SSP, PC, etc)</td></tr>
       <tr><td colspan="4"><strong>Resposta - Campos adicionados:</strong></td></tr>
       <tr><td>supplier_id</td><td>string</td><td>Sempre presente</td><td>Unique supplier identifier (e.g., forn_abc123)</td></tr>
       <tr><td>cnpj</td><td>string</td><td>Sempre presente</td><td>Supplier CNPJ (alphanumeric)</td></tr>
@@ -418,13 +414,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>GET /v1/fornecedores/{cnpj}/representantes</span>
+        <span>GET /v1/suppliers/{cnpj}/representatives</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/14200166000187/representantes</span> \
+      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/suppliers/14200166000187/representatives</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
     </div>
 
@@ -458,13 +454,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>GET /v1/fornecedores/{cnpj}/representantes/{id}</span>
+        <span>GET /v1/suppliers/{cnpj}/representatives/{id}</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/14200166000187/representantes/rep_xyz789</span> \
+      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/suppliers/14200166000187/representatives/rep_xyz789</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
     </div>
 
@@ -478,8 +474,6 @@
   <span class="tok-k">"name"</span>: <span class="tok-s">"John Smith"</span>,
   <span class="tok-k">"email"</span>: <span class="tok-s">"john@fornecedora.com"</span>,
   <span class="tok-k">"phone"</span>: <span class="tok-s">"11987654321"</span>,
-  <span class="tok-k">"rg"</span>: <span class="tok-s">"123456789"</span>,
-  <span class="tok-k">"issuing_body"</span>: <span class="tok-s">"SSP"</span>,
   <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
   <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-08-02T15:30:00.000Z"</span>,
   <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-08-02T15:30:00.000Z"</span>
@@ -494,13 +488,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>PATCH /v1/fornecedores/{cnpj}/representantes/{id}</span>
+        <span>PATCH /v1/suppliers/{cnpj}/representatives/{id}</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/14200166000187/representantes/rep_xyz789</span> \
+      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/suppliers/14200166000187/representatives/rep_xyz789</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Idempotency-Key: rep_xyz789-alteracao-001"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
@@ -531,13 +525,13 @@
 
     <div class="code-block">
       <div class="code-head">
-        <span>PATCH /v1/fornecedores/{cnpj}/representantes/{id}/status</span>
+        <span>PATCH /v1/suppliers/{cnpj}/representatives/{id}/status</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/14200166000187/representantes/rep_xyz789/status</span> \
+      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/suppliers/14200166000187/representatives/rep_xyz789/status</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Idempotency-Key: status-rep_xyz789-001"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \

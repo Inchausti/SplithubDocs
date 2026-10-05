@@ -73,6 +73,42 @@
       documentação da API do Splithub.
     </p>
 
+    <h2 id="v1-3-0">v1.3.0 — 5 de outubro de 2026</h2>
+    <p>
+      Rotas e campos da API em inglês, envio de arquivo com prévia e os dois modos de pagamento da guia RAD. Esta versão
+      <strong>quebra compatibilidade</strong> com a v1.2.0 em rotas, campos e nomes de evento. Não há período de transição.
+    </p>
+
+    <h3>⚠️ Mudanças que quebram compatibilidade</h3>
+    <ul>
+      <li><strong>Rotas em inglês</strong> — <code>/v1/fornecedores</code> passa a <code>/v1/suppliers</code>, <code>…/representantes</code> a <code>…/representatives</code>, <code>/v1/contratos</code> a <code>/v1/contracts</code>, <code>/v1/documentos-fiscais</code> a <code>/v1/fiscal-documents</code> e <code>/v1/rad/guias</code> a <code>/v1/rad/guides</code>.</li>
+      <li><strong>Campos e valores em inglês</strong> — na consulta de guias (<code>tax_type</code>, <code>period</code>, <code>status</code>, <code>due_date</code>, <code>total_value</code>, <code>extinction_type</code>), no envio de comprovante (<code>payment_type</code>, <code>pix.pix_key</code>, <code>bank_slip.*</code>, <code>amount_paid</code>, <code>paid_at</code>) e no evento de comprovante (<code>proof_id</code>, <code>payment.*</code>, <code>rfb_tracking.*</code>). O método de pagamento passa a <code>rad</code> ou <code>supplier</code>. <a href="rad.html">RAD</a></li>
+      <li><strong>Eventos de guia</strong> — <code>rad.darf_recebida</code> passa a <code>rad.darf_received</code>, e <code>rad.darf_recebida_lote</code> a <code>rad.darf_batch_received</code>.</li>
+      <li><strong>CSV no lote</strong> — sai o envio de CSV por <code>POST /v1/fiscal-documents/batch</code>; o lote em JSON de até 500 documentos fica. Arquivo entra pelo envio de arquivo.</li>
+      <li><strong>Representante fiscal</strong> — saem <code>rg</code> e <code>issuing_body</code>.</li>
+      <li><strong>Contrato</strong> — passam a ser obrigatórios <code>payment_method</code> (<code>rad</code> ou <code>supplier</code>) e <code>payment_term_days</code>. <a href="contratos.html#criar-contrato">Contratos</a></li>
+    </ul>
+
+    <h3>✨ Novas funcionalidades</h3>
+    <ul>
+      <li><strong>Envio de arquivo</strong> — <code>POST /v1/uploads</code> e <code>POST /v1/ingestions</code>, com prévia do que entra e do que não entra antes de importar, confirmação, cancelamento e acompanhamento. JSON, XML assinado, ZIP de XMLs e CSV com uma linha por documento, no nível do documento. Novo modelo CSV com 23 colunas. <a href="ingestao-dfs.html#enviar-arquivo">Enviar arquivo</a></li>
+      <li><strong>Modos de pagamento da guia RAD</strong> — instrução pelo Splithub, em nome do adquirente, ou pagamento pelo ERP com envio do comprovante. O modo é escolhido na implantação. <a href="rad.html#modos">RAD</a></li>
+      <li><strong>Evento <code>ingestion.completed</code></strong> — avisa a conclusão de uma importação de arquivo.</li>
+    </ul>
+
+    <h3>🔧 Correções</h3>
+    <ul>
+      <li>O evento de comprovante deixa de dizer que o Splithub assume a obrigação tributária: quem recolhe é sempre o adquirente.</li>
+      <li>O exemplo de guia RAD passa a usar a alíquota de IBS de 2026, 0,1%.</li>
+      <li>A página de Contratos deixa de repetir a seção de representantes fiscais, que fica em Fornecedores.</li>
+      <li>A chamada por documento deixa de prometer XML em base64: o XML assinado entra pelo envio de arquivo.</li>
+    </ul>
+
+    <h3>🕒 Em definição</h3>
+    <ul>
+      <li>Contrato da instrução de pagamento pelo Splithub.</li>
+    </ul>
+
     <h2 id="v1-2-0">v1.2.0 — 5 de outubro de 2026</h2>
     <p>
       Novo modelo de crédito e débito: um registro igual para CBS e IBS, com o saldo partido por situação, e um evento por
@@ -214,7 +250,8 @@
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#v1-2-0" class="toc-link active">v1.2.0 — 5 de outubro de 2026</a>
+    <a href="#v1-3-0" class="toc-link active">v1.3.0 — 5 de outubro de 2026</a>
+    <a href="#v1-2-0" class="toc-link">v1.2.0 — 5 de outubro de 2026</a>
     <a href="#v1-1-0" class="toc-link">v1.1.0 — 5 de outubro de 2026</a>
     <a href="#v1-0-0" class="toc-link">v1.0.0 — 29 de julho de 2026</a>
 
