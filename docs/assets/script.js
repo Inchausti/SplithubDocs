@@ -70,7 +70,7 @@ if (searchBox) {
     { page: 'fornecedores.html', title: 'Fornecedores', content: 'CNPJ fornecedor endereço contato representante fiscal situação inativar status' },
     { page: 'ingestao-dfs.html', title: 'Ingestão DFs', content: 'documentos fiscais NF-e NFCe CTe imposto tributo IBS CBS' },
     { page: 'rad.html', title: 'RAD', content: 'recolhimento adquirente DARF webhook comprovante pagamento Pix consultar guias' },
-    { page: 'garantia-credito.html', title: 'Garantia de Crédito', content: 'crédito débito tributário ciclo vida apropriado extinto webhook consultar créditos' },
+    { page: 'garantia-credito.html', title: 'Garantia de Crédito', content: 'crédito débito tributário ciclo vida saldo balances apropriado extinto eventos credit.appropriated credit.utilized debit.settled consultar créditos débitos' },
     { page: 'automacoes.html', title: 'Automações', content: 'regra automação gatilho ação dispara evento' },
     { page: 'contratos.html', title: 'Contratos', content: 'contrato CNPJ vigência valor condição pagamento RAD optante situação term_status' }
   ];

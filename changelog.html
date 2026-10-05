@@ -73,6 +73,42 @@
       documentação da API do Splithub.
     </p>
 
+    <h2 id="v1-2-0">v1.2.0 — 5 de outubro de 2026</h2>
+    <p>
+      Novo modelo de crédito e débito: um registro igual para CBS e IBS, com o saldo partido por situação, e um evento por
+      fato. Esta versão <strong>quebra compatibilidade</strong> com a v1.1.0 nos eventos e na consulta de créditos. Não há
+      período de transição.
+    </p>
+
+    <h3>⚠️ Mudanças que quebram compatibilidade</h3>
+    <ul>
+      <li><strong>Eventos de crédito e débito</strong> — <code>credito.status_alterado</code> e <code>debito.status_alterado</code> dão lugar a um evento por fato: doze de crédito e sete de débito, como <code>credit.appropriated</code>, <code>credit.utilized</code> e <code>debit.settled</code>. Cada evento traz o fato e o registro completo. <a href="garantia-credito.html#eventos">Garantia de crédito</a></li>
+      <li><strong>Consulta de créditos</strong> — <code>GET /v1/creditos</code> passa a <code>GET /v1/credits</code>, com campos em inglês e o saldo partido em <code>balances</code>. O <code>status</code> vira resumo derivado do saldo. <a href="garantia-credito.html#consultar-creditos">Consultar créditos</a></li>
+      <li><strong>Inscrição de webhook</strong> — <code>POST /v1/webhooks/automacoes</code> dá lugar a <code>POST /v1/webhook-subscriptions</code>, uma inscrição para todos os eventos da plataforma. <a href="webhooks.html#webhook-inscricoes">Inscrições</a></li>
+      <li><strong>Guia RAD</strong> — <code>rad.darf_recebida</code> deixa de trazer <code>credit_status_change</code>: a mudança no crédito chega pelos eventos de crédito.</li>
+    </ul>
+
+    <h3>✨ Novas funcionalidades</h3>
+    <ul>
+      <li><strong>Consulta de débitos</strong> — <code>GET /v1/debits</code> e <code>GET /v1/debits/{id}</code>. <a href="garantia-credito.html#consultar-debitos">Consultar débitos</a></li>
+      <li><strong>Alertas</strong> — <code>alert.appropriation_due_soon</code>, <code>alert.appropriation_overdue</code> e <code>alert.credit_expiring</code>, calculados pelo Splithub e separados dos eventos fiscais. <a href="garantia-credito.html#alertas">Alertas</a></li>
+      <li><strong>Gestão de inscrições</strong> — pausa e reativação, rotação de segredo com o anterior aceito por 24 horas, evento de teste, log de entrega e reenvio.</li>
+      <li><strong>Log de eventos</strong> — <code>GET /v1/events</code>, para recuperar o que seu sistema não recebeu. <a href="webhooks.html#webhook-log">Log de eventos</a></li>
+      <li><strong>Escopo <code>webhooks:read</code></strong> — consulta de inscrições e dos logs.</li>
+    </ul>
+
+    <h3>📚 Convenções documentadas</h3>
+    <ul>
+      <li><strong>Ordem pela versão do registro</strong> — os eventos saem em paralelo; <code>record_version</code> diz qual é o mais recente.</li>
+      <li><strong><code>null</code> não é zero</strong> — no IBS, o que o Comitê Gestor não informa vem nulo.</li>
+      <li><strong>Pausa automática</strong> — 72 horas sem entrega com sucesso pausam a inscrição, com aviso.</li>
+    </ul>
+
+    <h3>🕒 Em definição</h3>
+    <ul>
+      <li>Prazo de guarda do log de eventos.</li>
+    </ul>
+
     <h2 id="v1-1-0">v1.1.0 — 5 de outubro de 2026</h2>
     <p>
       Convenções da API alinhadas à proposta técnica do time de desenvolvimento (Manual de Integração v1.0.0, 30/09/2026).
@@ -178,7 +214,8 @@
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#v1-1-0" class="toc-link active">v1.1.0 — 5 de outubro de 2026</a>
+    <a href="#v1-2-0" class="toc-link active">v1.2.0 — 5 de outubro de 2026</a>
+    <a href="#v1-1-0" class="toc-link">v1.1.0 — 5 de outubro de 2026</a>
     <a href="#v1-0-0" class="toc-link">v1.0.0 — 29 de julho de 2026</a>
 
     <div class="help-box">

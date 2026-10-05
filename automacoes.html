@@ -109,47 +109,31 @@
       </div>
     </div>
 
-    <h2 id="webhook-automacoes">Inscrever-se para receber feedback de automações</h2>
+    <h2 id="webhook-automacoes">Receber o retorno das automações</h2>
     <p>
-      Registre uma URL de webhook para receber notificações em tempo real sobre a execução de automações.
-      O portal do Splithub fornece a interface para configurar quais eventos disparam automações.
+      As automações são configuradas na plataforma. O retorno de cada execução chega pelos eventos
+      <code class="inline">automation.executed</code> e <code class="inline">automation.failed</code>: inscreva sua URL em
+      <a href="webhooks.html#webhook-inscricoes">Webhooks → Inscrições</a>, com esses tipos ou com <code class="inline">automation.*</code>.
     </p>
 
     <div class="code-block">
       <div class="code-head">
-        <span>POST /v1/webhooks/automacoes</span>
+        <span>POST /v1/webhook-subscriptions</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/webhooks/automacoes</span> \
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/webhook-subscriptions</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
   -H <span class="tok-s">"Idempotency-Key: wh-automacoes-erp-01"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "url": "https://empresa.com/webhooks/automacoes",
-    "events": ["automation.executed", "automation.failed"]
+    "event_types": ["automation.*"],
+    "description": "Retorno das automações"
   }'</span></pre>
     </div>
-
-    <div class="code-block">
-      <div class="code-head"><span>Resposta 201 Created</span></div>
-      <pre>{
-  <span class="tok-k">"id"</span>: <span class="tok-s">"webhook_abc123"</span>,
-  <span class="tok-k">"url"</span>: <span class="tok-s">"https://empresa.com/webhooks/automacoes"</span>,
-  <span class="tok-k">"events"</span>: [<span class="tok-s">"automation.executed"</span>, <span class="tok-s">"automation.failed"</span>],
-  <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
-  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-08-02T15:30:00.000Z"</span>
-}</pre>
-    </div>
-
-    <p><strong>Mapa de Campos (POST /v1/webhooks/automacoes):</strong></p>
-    <table class="response-table">
-      <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
-      <tr><td>url</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>URL do webhook para receber notificações</td></tr>
-      <tr><td>events</td><td>array</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Tipos de eventos a inscrever (automation.executed, automation.failed). Se vazio, recebe todos</td></tr>
-    </table>
 
     <h2 id="payload-webhook">Payload do webhook de automações</h2>
     <p>

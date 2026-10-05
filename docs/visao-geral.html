@@ -126,7 +126,7 @@
     <table class="response-table">
       <tr><th>Forma</th><th>Onde</th><th>Parâmetros</th><th>Na resposta</th></tr>
       <tr><td><strong>Por página</strong></td><td>Fornecedores, representantes, contratos</td><td><code class="inline">page</code> (a partir de 1) e <code class="inline">page_size</code> (padrão 20, máximo 100; acima disso é reduzido ao máximo)</td><td><code class="inline">total</code>, <code class="inline">page</code>, <code class="inline">page_size</code>, <code class="inline">total_pages</code></td></tr>
-      <tr><td><strong>Por cursor</strong></td><td>Documentos fiscais, créditos, guias</td><td><code class="inline">limit</code> (padrão 50) e <code class="inline">cursor</code>. Com <code class="inline">with_total=true</code>, a resposta traz o total</td><td><code class="inline">next_cursor</code> e <code class="inline">has_more</code>; <code class="inline">total</code> e <code class="inline">total_capped</code> quando pedido</td></tr>
+      <tr><td><strong>Por cursor</strong></td><td>Documentos fiscais, créditos, débitos, guias e o log de eventos</td><td><code class="inline">limit</code> (padrão 50) e <code class="inline">cursor</code>. Com <code class="inline">with_total=true</code>, a resposta traz o total</td><td><code class="inline">next_cursor</code> e <code class="inline">has_more</code>; <code class="inline">total</code> e <code class="inline">total_capped</code> quando pedido</td></tr>
     </table>
     <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>

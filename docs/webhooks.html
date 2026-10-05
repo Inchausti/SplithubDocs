@@ -75,9 +75,66 @@
 
     <h2 id="webhook-conceitos">Conceitos e Configuração</h2>
     <p>
-      Para começar a receber webhooks, configure uma URL pública, em HTTPS, na sua conta Splithub. O Splithub envia cada
-      evento para essa URL por <code class="inline">POST</code>, com o evento no corpo da requisição em JSON.
+      O Splithub envia cada evento por <code class="inline">POST</code>, em JSON, para as URLs que você inscrever. A inscrição
+      é feita pela API, em <a href="#webhook-inscricoes">Inscrições</a>, ou pela tela de Integrações da plataforma — as duas
+      usam o mesmo modelo.
     </p>
+
+    <h2 id="webhook-inscricoes">Inscrições</h2>
+    <p>
+      Uma inscrição é uma URL em HTTPS e a lista de tipos de evento que ela recebe. Vale para todos os eventos da plataforma —
+      <code class="inline">rad.*</code>, <code class="inline">credit.*</code>, <code class="inline">debit.*</code>,
+      <code class="inline">alert.*</code> e <code class="inline">automation.*</code>. O curinga <code class="inline">.*</code>
+      assina a família inteira.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST /v1/webhook-subscriptions</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/webhook-subscriptions</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: erp-contas-a-pagar-01"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "url": "https://erp.cliente.com.br/splithub/eventos",
+    "event_types": ["credit.*", "debit.settled", "debit.partially_settled"],
+    "description": "ERP — contas a pagar"
+  }'</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 201 Created — o segredo aparece uma vez só</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"whs_4c2a9e"</span>,
+  <span class="tok-k">"url"</span>: <span class="tok-s">"https://erp.cliente.com.br/splithub/eventos"</span>,
+  <span class="tok-k">"event_types"</span>: [<span class="tok-s">"credit.*"</span>, <span class="tok-s">"debit.settled"</span>, <span class="tok-s">"debit.partially_settled"</span>],
+  <span class="tok-k">"description"</span>: <span class="tok-s">"ERP — contas a pagar"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
+  <span class="tok-k">"secret"</span>: <span class="tok-s">"whsec_…"</span>,
+  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-10-05T15:00:00Z"</span>
+}</pre>
+    </div>
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
+      <tr><td>url</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Endereço que recebe os eventos. Só HTTPS</td></tr>
+      <tr><td>event_types</td><td>array</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Ao menos um tipo. Aceita curinga por família, como <code class="inline">credit.*</code></td></tr>
+      <tr><td>description</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Nome para identificar a inscrição</td></tr>
+    </table>
+    <table class="response-table">
+      <tr><th>Operação</th><th>Para quê</th></tr>
+      <tr><td><code class="inline">GET /v1/webhook-subscriptions</code> · <code class="inline">/{id}</code></td><td>Listar e consultar</td></tr>
+      <tr><td><code class="inline">PATCH /v1/webhook-subscriptions/{id}</code></td><td>Trocar URL, tipos ou descrição</td></tr>
+      <tr><td><code class="inline">PATCH /v1/webhook-subscriptions/{id}/status</code></td><td><code class="inline">active</code> ou <code class="inline">paused</code>. Não há exclusão: o histórico de entrega fica</td></tr>
+      <tr><td><code class="inline">POST /v1/webhook-subscriptions/{id}/secret-rotation</code></td><td>Gera um segredo novo, exibido uma vez. O anterior segue aceito por 24 horas</td></tr>
+      <tr><td><code class="inline">POST /v1/webhook-subscriptions/{id}/test</code></td><td>Envia um evento <code class="inline">webhook.test</code> para validar o endereço e a assinatura</td></tr>
+      <tr><td><code class="inline">GET /v1/webhook-subscriptions/{id}/deliveries</code></td><td>Log de entrega: cada tentativa, o status HTTP devolvido e o tempo de resposta</td></tr>
+      <tr><td><code class="inline">POST /v1/webhook-deliveries/{id}/retry</code></td><td>Reenvia uma entrega que esgotou as tentativas</td></tr>
+    </table>
 
     <h2 id="webhook-envelope">Envelope do evento</h2>
     <p>Todos os eventos têm o mesmo envelope; o que muda é o conteúdo de <code class="inline">data</code>.</p>
@@ -105,8 +162,63 @@
       <tr><td>Sucesso</td><td>Qualquer resposta 2xx</td></tr>
       <tr><td>Tempo limite</td><td>30 segundos. Processe de forma assíncrona: enfileire o evento e responda logo</td></tr>
       <tr><td>Retentativas</td><td>Até 10, com a espera dobrando a partir de 1 minuto — a última por volta de 17 horas depois — e dispersão aleatória</td></tr>
-      <tr><td>Esgotadas</td><td>O evento fica registrado como não entregue</td></tr>
+      <tr><td>Esgotadas</td><td>O evento fica registrado como não entregue, e pode ser reenviado pela inscrição</td></tr>
+      <tr><td>Garantia</td><td>Pelo menos uma vez. Reentrega repete o mesmo <code class="inline">id</code></td></tr>
+      <tr><td>Ordem</td><td>Não garantida: os eventos saem em paralelo. Nos eventos de crédito e débito, use <code class="inline">record_version</code> para descartar versão antiga</td></tr>
+      <tr><td>Um evento por chamada</td><td>Sem lote no webhook</td></tr>
+      <tr><td>Pausa automática</td><td>72 horas seguidas sem nenhuma entrega com sucesso pausam a inscrição e avisam o administrador da conta. Os eventos continuam no log</td></tr>
+      <tr><td>A partir de quando</td><td>Uma inscrição recebe os eventos ocorridos depois da sua criação. A posição de partida vem pelas consultas de cada recurso</td></tr>
     </table>
+
+    <h2 id="webhook-log">Log de eventos</h2>
+    <p>
+      O webhook é para reagir ao fato. O log é para recuperar o que seu sistema não recebeu: guarde o último
+      <code class="inline">id</code> processado e peça os seguintes. Mesmos eventos, mesmo payload, em ordem de criação e com
+      paginação por cursor.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>GET /v1/events</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/events?after=evt_c41a9e&type=credit.appropriated&limit=100"</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"data"</span>: [
+    {
+      <span class="tok-k">"id"</span>: <span class="tok-s">"evt_c41a9e"</span>,
+      <span class="tok-k">"type"</span>: <span class="tok-s">"credit.appropriated"</span>,
+      <span class="tok-k">"occurred_at"</span>: <span class="tok-s">"2026-10-30T18:40:00-03:00"</span>,
+      <span class="tok-k">"data"</span>: {
+        <span class="tok-k">"…"</span>: <span class="tok-s">"…"</span>
+      }
+    }
+  ],
+  <span class="tok-k">"next_cursor"</span>: <span class="tok-s">"eyJpZCI6ImV2dF9jNDFhOWUifQ"</span>,
+  <span class="tok-k">"has_more"</span>: <span class="tok-s">true</span>
+}</pre>
+    </div>
+    <table class="response-table">
+      <tr><th>Parâmetro</th><th>Descrição</th></tr>
+      <tr><td><code class="inline">after</code></td><td>Id do último evento processado. Devolve os seguintes</td></tr>
+      <tr><td><code class="inline">type</code></td><td>Tipo ou família, como <code class="inline">credit.*</code>. Repetível</td></tr>
+      <tr><td><code class="inline">occurred_from</code> · <code class="inline">occurred_to</code></td><td>Janela de ocorrência</td></tr>
+      <tr><td><code class="inline">limit</code>, <code class="inline">cursor</code></td><td>Ver <a href="visao-geral.html#paginacao">Paginação</a></td></tr>
+    </table>
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">O prazo de guarda do log será publicado neste changelog.</p>
+      </div>
+    </div>
 
     <h2 id="webhook-seguranca">Segurança: Verificação de Assinatura</h2>
     <p>
@@ -184,12 +296,14 @@ app.post("/webhooks/splithub", async (req, res) => {
       <tr><td>Algoritmo</td><td>HMAC-SHA256</td></tr>
       <tr><td>Conteúdo assinado</td><td><code class="inline">timestamp + "." + raw_body</code> — o corpo em bytes, sem parse</td></tr>
       <tr><td>Janela</td><td>5 minutos entre o carimbo e o seu relógio</td></tr>
-      <tr><td>Secret</td><td>Chave única da sua conta, exibida uma única vez no portal</td></tr>
+      <tr><td>Secret</td><td>Um por inscrição, exibido uma única vez — na criação e na rotação. Na rotação, o anterior segue aceito por 24 horas</td></tr>
       <tr><td>Comparação</td><td>Tempo constante — <code class="inline">crypto.timingSafeEqual()</code> no Node.js</td></tr>
     </table>
 
     <h2 id="webhook-best-practices">Melhores Práticas</h2>
     <ul style="margin-left:20px;">
+      <li><strong>Versão do registro:</strong> Nos eventos de crédito e débito, guarde o <code class="inline">record_version</code> de cada registro e ignore evento com versão menor ou igual</li>
+      <li><strong>Recuperação:</strong> Guarde o último <code class="inline">id</code> processado e, depois de uma indisponibilidade, leia o <a href="#webhook-log">log de eventos</a> a partir dele</li>
       <li><strong>Deduplicação:</strong> Use o campo <code class="inline">id</code> do envelope para deduplicar (em cache Redis ou banco de dados) e evitar processar o mesmo evento duas vezes</li>
       <li><strong>Processamento Assíncrono:</strong> Não faça operações pesadas no handler do webhook; enfileire o evento e retorne 200 OK imediatamente</li>
       <li><strong>Logging:</strong> Registre todos os webhooks recebidos (timestamp, ID, tipo de evento, status) para auditoria</li>
@@ -213,8 +327,10 @@ app.post("/webhooks/splithub", async (req, res) => {
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
     <a href="#webhook-conceitos" class="toc-link active">Conceitos e Configuração</a>
+    <a href="#webhook-inscricoes" class="toc-link"><span class="toc-method toc-method-post">POST</span>Inscrições</a>
     <a href="#webhook-envelope" class="toc-link">Envelope do evento</a>
     <a href="#webhook-entrega" class="toc-link">Entrega e retentativas</a>
+    <a href="#webhook-log" class="toc-link"><span class="toc-method toc-method-get">GET</span>Log de eventos</a>
     <a href="#webhook-seguranca" class="toc-link">Segurança: Verificação de Assinatura</a>
     <a href="#webhook-best-practices" class="toc-link">Melhores Práticas</a>
 

@@ -66,131 +66,323 @@
     <div class="breadcrumb">Recursos / Garantia de crédito</div>
     <h1>Garantia de crédito</h1>
     <p class="lede">
-      Um Documento Fiscal (DF) de entrada gera crédito tributário de IBS/CBS para o comprador; um
-      DF de saída gera débito para quem vende. Pela Lei Complementar 214/2025, a apuração do
-      IBS/CBS é não cumulativa e opera por compensação "tributo contra tributo": o débito de uma
-      saída é settled abatendo-se os créditos já appropriateds. O Splithub acompanha esse ciclo de
-      vida por valor de cada DF e avisa seu sistema a cada mudança de status através de dois
-      webhooks.
+      Cada documento fiscal de entrada gera um crédito de IBS e um de CBS; cada documento de saída, um débito de cada
+      tributo. O estado desses créditos e débitos é do Fisco — da Receita Federal na CBS e do Comitê Gestor no IBS. O
+      Splithub recebe esse estado pela apuração assistida, concilia e avisa seu sistema a cada fato, por evento.
     </p>
 
     <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       <div>
-        <p style="margin:0;line-height:1.6;">Diferente do ICMS, em que bastava o destaque do imposto na nota, o direito ao crédito de IBS/CBS depende do pagamento efetivo do tributo na própria NF de entrada. Na apuração da IBS/CBS, débitos e créditos são compensados de forma agregada por período; o Splithub modela esse ciclo por valor de cada DF para dar rastreabilidade a cada crédito e débito individualmente.</p>
+        <p style="margin:0;line-height:1.6;">O direito ao crédito de IBS e CBS depende da extinção do débito do fornecedor — não basta o destaque na nota. O Splithub acompanha o crédito e o débito de cada documento e segue o que a apuração assistida informa: nenhuma ação na plataforma muda o estado de um crédito ou de um débito.</p>
       </div>
     </div>
 
-    <h2 id="ciclo-de-vida">Ciclo de vida do crédito e do débito</h2>
+    <h2 id="ciclo-de-vida">Ciclo de vida e saldo</h2>
     <p>
-      Fluxo completo, por valor de cada DF:
+      Um mesmo crédito pode estar, ao mesmo tempo, <strong>parte apropriado, parte a apropriar e parte suspenso</strong>.
+      Por isso o registro traz o saldo partido por situação, em <code class="inline">balances</code>, e o
+      <code class="inline">status</code> é só um resumo derivado dele. Para conciliar, use o saldo.
     </p>
     <p>
-      1. O fornecedor emite uma NF de entrada para o comprador → nasce um crédito <code class="inline">not_appropriated</code>.<br>
-      2. O tributo dessa NF de entrada é pago → o crédito passa a <code class="inline">appropriated</code>.<br>
-      3. O adquirente (o mesmo comprador, agora na ponta de venda) emite uma NF de saída → nasce um débito <code class="inline">not_settled</code>.<br>
-      4. Essa NF de saída é abatida pelos créditos appropriateds disponíveis (compensação tributo contra tributo) → o crédito utilized nessa compensação passa a <code class="inline">utilized</code> e o débito correspondente passa a <code class="inline">settled</code>, simultaneamente.
+      1. O fornecedor emite a nota → nasce o crédito, com o valor a apropriar (<code class="inline">credit.registered</code>).<br>
+      2. O débito do fornecedor é extinto — por ele, ou pelo seu recolhimento no RAD → o crédito é apropriado (<code class="inline">credit.appropriated</code>).<br>
+      3. O crédito apropriado abate débitos das suas notas de saída → o crédito é utilizado e o débito, extinto (<code class="inline">credit.utilized</code>, <code class="inline">debit.settled</code>).
     </p>
-
+    <p><strong>Status resumido do crédito</strong> — a primeira regra que se aplica decide:</p>
     <table class="response-table">
-      <tr><th>Tributo</th><th>Status</th><th>Quando ocorre</th></tr>
-      <tr><td>Crédito</td><td>not_appropriated</td><td>NF de entrada emitida pelo fornecedor; o tributo dessa NF ainda não foi pago</td></tr>
-      <tr><td>Crédito</td><td>appropriated</td><td>O tributo da NF de entrada foi pago</td></tr>
-      <tr><td>Crédito</td><td>utilized</td><td>O crédito appropriated foi usado para abater (compensar) o débito de uma NF de saída</td></tr>
-      <tr><td>Débito</td><td>not_settled</td><td>NF de saída emitida pelo adquirente; ainda não foi abatida por créditos</td></tr>
-      <tr><td>Débito</td><td>settled</td><td>A NF de saída foi abatida pelos créditos appropriateds disponíveis (compensação tributo contra tributo)</td></tr>
+      <tr><th>Ordem</th><th>Status</th><th>Quando</th></tr>
+      <tr><td>1</td><td><code class="inline">cancelled</code></td><td>O documento foi cancelado</td></tr>
+      <tr><td>2</td><td><code class="inline">disallowed</code></td><td>Todo o apurado está em <code class="inline">not_appropriable</code> ou <code class="inline">not_usable</code></td></tr>
+      <tr><td>3</td><td><code class="inline">expired</code></td><td>Todo o valor ainda não utilizado está em <code class="inline">expired</code></td></tr>
+      <tr><td>4</td><td><code class="inline">utilized</code></td><td>Há valor utilizado, nada disponível e nada a apropriar</td></tr>
+      <tr><td>5</td><td><code class="inline">partially_utilized</code></td><td>Há valor utilizado e ainda há disponível</td></tr>
+      <tr><td>6</td><td><code class="inline">appropriated</code></td><td>Apropriado, sem nada a apropriar e sem uso</td></tr>
+      <tr><td>7</td><td><code class="inline">partially_appropriated</code></td><td>Parte apropriada e parte a apropriar</td></tr>
+      <tr><td>8</td><td><code class="inline">not_appropriated</code></td><td>Nada apropriado ainda</td></tr>
+    </table>
+    <p><strong>Status resumido do débito:</strong> <code class="inline">cancelled</code>; <code class="inline">settled</code> quando nada está em aberto; <code class="inline">partially_settled</code> quando há parte extinta e parte em aberto; <code class="inline">not_settled</code> nos demais casos.</p>
+
+    <h2 id="registro-credito">O registro de crédito</h2>
+    <p>Um por documento de entrada e por tributo. É o mesmo objeto na consulta e nos eventos.</p>
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+      <tr><td>id</td><td>string</td><td>Identificador do crédito</td></tr>
+      <tr><td>record_version</td><td>integer</td><td>Versão do registro. Sobe a cada mudança: aplique só versão maior que a que você guardou</td></tr>
+      <tr><td>tax_type</td><td>string</td><td>cbs ou ibs. IBS e CBS nunca vêm somados</td></tr>
+      <tr><td>authority</td><td>string</td><td>rfb (Receita Federal, CBS) ou cgibs (Comitê Gestor, IBS) — quem detém o estado</td></tr>
+      <tr><td>dfe_key</td><td>string</td><td>Chave de acesso do documento de entrada</td></tr>
+      <tr><td>document_model</td><td>string</td><td>Modelo do documento (55, 65, 62…)</td></tr>
+      <tr><td>document_id</td><td>string</td><td>Documento no Splithub (<code class="inline">df_…</code>), quando ingerido</td></tr>
+      <tr><td>supplier_tax_id</td><td>string</td><td>CNPJ do fornecedor. No IBS, a raiz de 8 posições</td></tr>
+      <tr><td>acquirer_tax_id</td><td>string</td><td>CNPJ do adquirente. Na CBS e no IBS, a raiz</td></tr>
+      <tr><td>issue_date</td><td>timestamp</td><td>Emissão do documento — o fato gerador</td></tr>
+      <tr><td>period</td><td>string</td><td>Competência (YYYY-MM)</td></tr>
+      <tr><td>period_source</td><td>string</td><td>fiscal (informada pelo Fisco) ou derived (calculada pelo Splithub — o IBS não informa competência)</td></tr>
+      <tr><td>payment_method</td><td>string</td><td>rad ou supplier. Sem contrato vigente na emissão, supplier: a plataforma aguarda a confirmação do recolhimento pelo fornecedor</td></tr>
+      <tr><td>contract_id</td><td>string</td><td>Contrato vigente na emissão, se houver</td></tr>
+      <tr><td>status</td><td>string</td><td>Resumo derivado do saldo — ver Ciclo de vida e saldo</td></tr>
+      <tr><td>balances</td><td>object</td><td>Saldo partido por situação — tabela abaixo</td></tr>
+      <tr><td>deadlines.appropriation_due_date</td><td>date</td><td>Prazo para apropriar: último dia do mês seguinte ao da emissão</td></tr>
+      <tr><td>deadlines.expiration_date</td><td>date</td><td>Prazo do art. 54, contado do fato gerador, com regra própria para cada tipo de documento</td></tr>
+      <tr><td>flags</td><td>array</td><td>Marcas do Splithub: appropriation_due_soon, appropriation_overdue, expiring, inconsistency, refund_reserved. Não são estado fiscal</td></tr>
+      <tr><td>updated_at</td><td>timestamp</td><td>Última mudança do registro no Splithub</td></tr>
+    </table>
+    <p><strong>Saldo do crédito — <code class="inline">balances</code>:</strong></p>
+    <table class="response-table">
+      <tr><th>Campo</th><th>Descrição</th><th>No IBS</th></tr>
+      <tr><td>assessed</td><td>Crédito apurado no documento</td><td>Calculado: a apropriar + não utilizado + utilizado</td></tr>
+      <tr><td>unprocessed</td><td>Ainda não processado pela apuração</td><td>null</td></tr>
+      <tr><td>pending</td><td>A apropriar: aguarda a extinção do débito do fornecedor</td><td>Informado</td></tr>
+      <tr><td>appropriated</td><td>Apropriado, no total</td><td>Calculado: não utilizado + utilizado</td></tr>
+      <tr><td>not_appropriable</td><td>Sem direito a crédito</td><td>null</td></tr>
+      <tr><td>suspended</td><td>Apropriação suspensa</td><td>null</td></tr>
+      <tr><td>expired</td><td>Prescrito — fora do prazo do art. 54</td><td>null</td></tr>
+      <tr><td>utilized</td><td>Usado para extinguir débitos</td><td>Informado</td></tr>
+      <tr><td>not_usable</td><td>Apropriado, mas que não pode ser usado</td><td>null</td></tr>
+      <tr><td>restored</td><td>Devolvido ao saldo depois de usado</td><td>null</td></tr>
+      <tr><td>available</td><td>Saldo credor disponível para compensar</td><td>Informado</td></tr>
+      <tr><td>refund_requested</td><td>Em pedido de ressarcimento</td><td>Informado</td></tr>
+      <tr><td>refund_available</td><td>Ressarcimento já disponível para transferência</td><td>Informado. Na CBS, null</td></tr>
+    </table>
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;"><strong><code class="inline">null</code> não é zero.</strong> O IBS não informa suspenso, prescrito, inapropriável, inutilizável nem restabelecido; nesses campos o crédito de IBS vem <code class="inline">null</code> — o ente não informou. Zero significa que o ente informou que não há valor.</p>
+      </div>
+    </div>
+
+    <h2 id="registro-debito">O registro de débito</h2>
+    <p>Um por documento de saída e por tributo. Os campos de identificação seguem o crédito — <code class="inline">id</code>, <code class="inline">record_version</code>, <code class="inline">tax_type</code>, <code class="inline">authority</code>, <code class="inline">dfe_key</code>, <code class="inline">document_model</code>, <code class="inline">document_id</code>, <code class="inline">issue_date</code>, <code class="inline">period</code>, <code class="inline">period_source</code>, <code class="inline">status</code> e <code class="inline">updated_at</code> —, com <code class="inline">customer_tax_id</code>, o CNPJ ou CPF do destinatário, no lugar de fornecedor e adquirente.</p>
+    <table class="response-table">
+      <tr><th>Campo</th><th>Descrição</th><th>No IBS</th></tr>
+      <tr><td>balances.assessed</td><td>Débito apurado</td><td>Calculado: em aberto + extinto</td></tr>
+      <tr><td>balances.unprocessed</td><td>Ainda não processado</td><td>null</td></tr>
+      <tr><td>balances.not_enforceable</td><td>Não exigível</td><td>null</td></tr>
+      <tr><td>balances.suspended</td><td>Exigibilidade suspensa</td><td>null</td></tr>
+      <tr><td>balances.settled</td><td>Extinto</td><td>Informado</td></tr>
+      <tr><td>balances.outstanding</td><td>Em aberto</td><td>Informado</td></tr>
+      <tr><td>settlements[].method</td><td>credit_offset (compensação com créditos), payment (guia paga por você) ou rad (recolhido pelo adquirente)</td><td>Pela movimentação</td></tr>
+      <tr><td>settlements[].amount</td><td>Parcela extinta por esse meio</td><td>Informado</td></tr>
+      <tr><td>settlements[].darf_number · paid_at</td><td>Guia e data, quando houve pagamento</td><td>null — a arrecadação do IBS ainda não tem API</td></tr>
+      <tr><td>settlements[].credits[]</td><td>Créditos usados na compensação, com credit_dfe_key e amount</td><td>Calculado</td></tr>
+      <tr><td>settlements[].allocation</td><td>splithub: o Fisco não informa qual crédito extinguiu qual débito; o vínculo é calculado pelo Splithub</td><td>—</td></tr>
     </table>
 
     <h2 id="consultar-creditos">Consultar créditos</h2>
     <p>
-      Os eventos abaixo avisam cada mudança de status. A consulta é o caminho de <strong>reconciliação</strong>: use-a para
-      conferir a posição dos créditos ou recuperar o que um evento perdido teria trazido. Uma linha por crédito — um documento
-      gera um crédito de IBS e outro de CBS. Paginação por cursor.
+      Os eventos avisam cada fato. A consulta é o caminho de <strong>reconciliação</strong> e de posição inicial: devolve o
+      registro atual de cada crédito, com a paginação por cursor.
     </p>
 
     <div class="code-block">
       <div class="code-head">
-        <span>GET /v1/creditos</span>
+        <span>GET /v1/credits</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/creditos?competencia=2026-07&competencia=2026-09&status=nao_apropriado&tributo=cbs&limit=50"</span> \
+      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/credits?period=2026-07&period=2026-09&status=partially_appropriated&tax_type=cbs&limit=50"</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+    <p>A resposta traz <code class="inline">data</code> — uma lista de registros de crédito —, <code class="inline">next_cursor</code> e <code class="inline">has_more</code>.</p>
+    <table class="response-table">
+      <tr><th>Parâmetro</th><th>Descrição</th></tr>
+      <tr><td><code class="inline">period</code></td><td>Competência da <strong>emissão</strong> (YYYY-MM). Repetível — <code class="inline">?period=2026-07&period=2026-09</code> —, porque a seleção admite meses não contíguos</td></tr>
+      <tr><td><code class="inline">status</code></td><td>Status resumido: not_appropriated, partially_appropriated, appropriated, partially_utilized, utilized, disallowed, expired ou cancelled</td></tr>
+      <tr><td><code class="inline">payment_method</code></td><td>rad ou supplier</td></tr>
+      <tr><td><code class="inline">tax_type</code></td><td>ibs ou cbs</td></tr>
+      <tr><td><code class="inline">supplier_id</code></td><td>Identificador do fornecedor (<code class="inline">forn_...</code>)</td></tr>
+      <tr><td><code class="inline">appropriation_due_month</code></td><td>Mês do prazo para apropriar (YYYY-MM)</td></tr>
+      <tr><td><code class="inline">expiration_month</code></td><td>Mês do prazo do art. 54 (YYYY-MM)</td></tr>
+      <tr><td><code class="inline">limit</code>, <code class="inline">cursor</code>, <code class="inline">with_total</code></td><td>Ver <a href="visao-geral.html#paginacao">Paginação</a></td></tr>
+    </table>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>GET /v1/credits/{id}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/credits/cred_cbs_8f3a1c2b</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
     </div>
 
     <div class="code-block">
       <div class="code-head"><span>Resposta 200 OK</span></div>
       <pre>{
-  <span class="tok-k">"data"</span>: [
-    {
-      <span class="tok-k">"id"</span>: <span class="tok-s">"cred_cbs_8f3a1c2b"</span>,
-      <span class="tok-k">"chave_dfe"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
-      <span class="tok-k">"tributo"</span>: <span class="tok-s">"cbs"</span>,
-      <span class="tok-k">"status_credito"</span>: <span class="tok-s">"nao_apropriado"</span>,
-      <span class="tok-k">"metodo_pagamento"</span>: <span class="tok-s">"rad"</span>,
-      <span class="tok-k">"valor"</span>: <span class="tok-s">"57.60"</span>,
-      <span class="tok-k">"used_value"</span>: <span class="tok-s">"0.00"</span>,
-      <span class="tok-k">"saldo"</span>: <span class="tok-s">"57.60"</span>,
-      <span class="tok-k">"appropriated_at"</span>: <span class="tok-s">null</span>,
-      <span class="tok-k">"extincao_em"</span>: <span class="tok-s">null</span>,
-      <span class="tok-k">"vencimento_em"</span>: <span class="tok-s">"2026-08-31"</span>,
-      <span class="tok-k">"flags"</span>: [],
-      <span class="tok-k">"extincao_debito"</span>: <span class="tok-s">"rad"</span>,
-      <span class="tok-k">"glosa_reason"</span>: <span class="tok-s">null</span>
-    }
-  ],
-  <span class="tok-k">"next_cursor"</span>: <span class="tok-s">null</span>,
-  <span class="tok-k">"has_more"</span>: <span class="tok-s">false</span>
+  <span class="tok-k">"id"</span>: <span class="tok-s">"cred_cbs_8f3a1c2b"</span>,
+  <span class="tok-k">"record_version"</span>: <span class="tok-s">3</span>,
+  <span class="tok-k">"tax_type"</span>: <span class="tok-s">"cbs"</span>,
+  <span class="tok-k">"authority"</span>: <span class="tok-s">"rfb"</span>,
+  <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"43260998765432000110550010000402211000402219"</span>,
+  <span class="tok-k">"document_model"</span>: <span class="tok-s">"55"</span>,
+  <span class="tok-k">"document_id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>,
+  <span class="tok-k">"supplier_tax_id"</span>: <span class="tok-s">"98765432000110"</span>,
+  <span class="tok-k">"acquirer_tax_id"</span>: <span class="tok-s">"12345678000190"</span>,
+  <span class="tok-k">"issue_date"</span>: <span class="tok-s">"2026-09-10T08:15:00-03:00"</span>,
+  <span class="tok-k">"period"</span>: <span class="tok-s">"2026-09"</span>,
+  <span class="tok-k">"period_source"</span>: <span class="tok-s">"fiscal"</span>,
+  <span class="tok-k">"payment_method"</span>: <span class="tok-s">"rad"</span>,
+  <span class="tok-k">"contract_id"</span>: <span class="tok-s">"ctr_5f8a2d"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"partially_utilized"</span>,
+  <span class="tok-k">"balances"</span>: {
+    <span class="tok-k">"assessed"</span>: <span class="tok-s">"12000.00"</span>,
+    <span class="tok-k">"unprocessed"</span>: <span class="tok-s">"0.00"</span>,
+    <span class="tok-k">"pending"</span>: <span class="tok-s">"0.00"</span>,
+    <span class="tok-k">"appropriated"</span>: <span class="tok-s">"12000.00"</span>,
+    <span class="tok-k">"not_appropriable"</span>: <span class="tok-s">"0.00"</span>,
+    <span class="tok-k">"suspended"</span>: <span class="tok-s">"0.00"</span>,
+    <span class="tok-k">"expired"</span>: <span class="tok-s">"0.00"</span>,
+    <span class="tok-k">"utilized"</span>: <span class="tok-s">"7500.00"</span>,
+    <span class="tok-k">"not_usable"</span>: <span class="tok-s">"0.00"</span>,
+    <span class="tok-k">"restored"</span>: <span class="tok-s">"0.00"</span>,
+    <span class="tok-k">"available"</span>: <span class="tok-s">"4500.00"</span>,
+    <span class="tok-k">"refund_requested"</span>: <span class="tok-s">"0.00"</span>,
+    <span class="tok-k">"refund_available"</span>: <span class="tok-s">null</span>
+  },
+  <span class="tok-k">"deadlines"</span>: {
+    <span class="tok-k">"appropriation_due_date"</span>: <span class="tok-s">"2026-10-31"</span>,
+    <span class="tok-k">"expiration_date"</span>: <span class="tok-s">"2031-09-10"</span>
+  },
+  <span class="tok-k">"flags"</span>: [],
+  <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-10-31T06:05:14-03:00"</span>
 }</pre>
     </div>
-    <p><strong>Filtros:</strong></p>
+
+    <h2 id="consultar-debitos">Consultar débitos</h2>
+    <p>O mesmo para os débitos das suas notas de saída.</p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>GET /v1/debits</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/debits?period=2026-09&status=partially_settled&tax_type=cbs&limit=50"</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
     <table class="response-table">
       <tr><th>Parâmetro</th><th>Descrição</th></tr>
-      <tr><td><code class="inline">competencia</code></td><td>Competência da <strong>emissão</strong> do documento, no formato YYYY-MM. Repetível — <code class="inline">?competencia=2026-07&competencia=2026-09</code> —, porque a seleção admite meses não contíguos</td></tr>
-      <tr><td><code class="inline">status</code></td><td>nao_apropriado, apropriado, utilizado ou glosado</td></tr>
-      <tr><td><code class="inline">metodo</code></td><td>split_payment, rad ou fornecedor</td></tr>
-      <tr><td><code class="inline">tributo</code></td><td>ibs ou cbs</td></tr>
-      <tr><td><code class="inline">fornecedor</code></td><td>Identificador do fornecedor (<code class="inline">forn_...</code>)</td></tr>
-      <tr><td><code class="inline">vencimento_mes</code></td><td>Mês do prazo para apropriar (YYYY-MM)</td></tr>
-      <tr><td><code class="inline">prescricao_mes</code></td><td>Mês do prazo do art. 54 (YYYY-MM)</td></tr>
+      <tr><td><code class="inline">period</code></td><td>Competência da emissão (YYYY-MM). Repetível</td></tr>
+      <tr><td><code class="inline">status</code></td><td>not_settled, partially_settled, settled ou cancelled</td></tr>
+      <tr><td><code class="inline">tax_type</code></td><td>ibs ou cbs</td></tr>
+      <tr><td><code class="inline">customer_tax_id</code></td><td>CNPJ ou CPF do destinatário</td></tr>
       <tr><td><code class="inline">limit</code>, <code class="inline">cursor</code>, <code class="inline">with_total</code></td><td>Ver <a href="visao-geral.html#paginacao">Paginação</a></td></tr>
     </table>
-    <p><strong>Campos:</strong></p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>GET /v1/debits/{id}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl <span class="tok-k">https://api.splithub.com.br/v1/debits/deb_cbs_77a02c19</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"deb_cbs_77a02c19"</span>,
+  <span class="tok-k">"record_version"</span>: <span class="tok-s">4</span>,
+  <span class="tok-k">"tax_type"</span>: <span class="tok-s">"cbs"</span>,
+  <span class="tok-k">"authority"</span>: <span class="tok-s">"rfb"</span>,
+  <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"43260912345678000190550010000128841000128847"</span>,
+  <span class="tok-k">"document_model"</span>: <span class="tok-s">"55"</span>,
+  <span class="tok-k">"document_id"</span>: <span class="tok-s">"df_77a02c19"</span>,
+  <span class="tok-k">"customer_tax_id"</span>: <span class="tok-s">"55443322000166"</span>,
+  <span class="tok-k">"issue_date"</span>: <span class="tok-s">"2026-09-14T10:02:00-03:00"</span>,
+  <span class="tok-k">"period"</span>: <span class="tok-s">"2026-09"</span>,
+  <span class="tok-k">"period_source"</span>: <span class="tok-s">"fiscal"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"settled"</span>,
+  <span class="tok-k">"balances"</span>: {
+    <span class="tok-k">"assessed"</span>: <span class="tok-s">"9000.00"</span>,
+    <span class="tok-k">"unprocessed"</span>: <span class="tok-s">"0.00"</span>,
+    <span class="tok-k">"not_enforceable"</span>: <span class="tok-s">"0.00"</span>,
+    <span class="tok-k">"suspended"</span>: <span class="tok-s">"0.00"</span>,
+    <span class="tok-k">"settled"</span>: <span class="tok-s">"9000.00"</span>,
+    <span class="tok-k">"outstanding"</span>: <span class="tok-s">"0.00"</span>
+  },
+  <span class="tok-k">"settlements"</span>: [
+    {
+      <span class="tok-k">"method"</span>: <span class="tok-s">"credit_offset"</span>,
+      <span class="tok-k">"amount"</span>: <span class="tok-s">"6000.00"</span>,
+      <span class="tok-k">"allocation"</span>: <span class="tok-s">"splithub"</span>,
+      <span class="tok-k">"credits"</span>: [
+        {
+          <span class="tok-k">"credit_dfe_key"</span>: <span class="tok-s">"43260998765432000110550010000402211000402219"</span>,
+          <span class="tok-k">"amount"</span>: <span class="tok-s">"6000.00"</span>
+        }
+      ]
+    },
+    {
+      <span class="tok-k">"method"</span>: <span class="tok-s">"payment"</span>,
+      <span class="tok-k">"amount"</span>: <span class="tok-s">"3000.00"</span>,
+      <span class="tok-k">"darf_number"</span>: <span class="tok-s">"07.17.26303.1234567-8"</span>,
+      <span class="tok-k">"paid_at"</span>: <span class="tok-s">"2026-10-30T14:12:00-03:00"</span>
+    }
+  ],
+  <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-11-04T08:10:05-03:00"</span>
+}</pre>
+    </div>
+
+    <h2 id="eventos"><span id="webhook-credito"></span><span id="webhook-debito"></span>Eventos de crédito e débito</h2>
+    <p>
+      Um evento por fato: assine só o que interessa ao seu sistema — por exemplo, <code class="inline">credit.appropriated</code>
+      e <code class="inline">debit.settled</code>, ou todos com <code class="inline">credit.*</code>. A inscrição está em
+      <a href="webhooks.html#webhook-inscricoes">Webhooks → Inscrições</a>.
+    </p>
     <table class="response-table">
-      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>id</td><td>string</td><td>Identificador do crédito</td></tr>
-      <tr><td>chave_dfe</td><td>string</td><td>Chave de acesso do documento de entrada (44 dígitos)</td></tr>
-      <tr><td>tributo</td><td>string</td><td>ibs ou cbs. IBS e CBS nunca vêm somados</td></tr>
-      <tr><td>status_credito</td><td>string</td><td>nao_apropriado, apropriado, utilizado ou glosado</td></tr>
-      <tr><td>metodo_pagamento</td><td>string</td><td>split_payment, rad ou fornecedor — quem recolhe o débito do fornecedor. Sem contrato vigente, vale split_payment, o mecanismo padrão</td></tr>
-      <tr><td>valor</td><td>string (decimal)</td><td>Valor do crédito</td></tr>
-      <tr><td>used_value</td><td>string (decimal)</td><td>Parcela já utilizada em compensação</td></tr>
-      <tr><td>saldo</td><td>string (decimal)</td><td>Valor menos a parcela utilizada</td></tr>
-      <tr><td>appropriated_at</td><td>string</td><td>Competência da apropriação (YYYY-MM). Ausente enquanto o crédito não for apropriado</td></tr>
-      <tr><td>extincao_em</td><td>date</td><td>Prazo do art. 54. Ausente enquanto não houver apropriação — a ausência não indica erro nem prescrição</td></tr>
-      <tr><td>vencimento_em</td><td>date</td><td>Prazo para apropriar: último dia do mês seguinte ao da emissão. Sempre presente, e diferente de <code class="inline">extincao_em</code></td></tr>
-      <tr><td>flags</td><td>array</td><td>Riscos de prazo identificados. Vazio indica ausência de risco de prazo, não ausência de pendência</td></tr>
-      <tr><td>extincao_debito</td><td>string</td><td>Modalidade de extinção do débito correspondente</td></tr>
-      <tr><td>glosa_reason</td><td>string</td><td>Motivo, quando <code class="inline">status_credito</code> é glosado</td></tr>
+      <tr><th>Tipo</th><th>O que aconteceu</th><th>Observação</th></tr>
+      <tr><td colspan="3"><strong>Crédito</strong></td></tr>
+      <tr><td><code class="inline">credit.registered</code></td><td>O crédito apareceu na apuração assistida</td><td></td></tr>
+      <tr><td><code class="inline">credit.appropriated</code></td><td>Parte ou todo o crédito foi apropriado</td><td></td></tr>
+      <tr><td><code class="inline">credit.utilized</code></td><td>Crédito usado para extinguir débito</td><td></td></tr>
+      <tr><td><code class="inline">credit.restored</code></td><td>Crédito usado voltou ao saldo</td><td>Só CBS por enquanto</td></tr>
+      <tr><td><code class="inline">credit.disallowed</code></td><td>Glosa: parte ou todo o crédito perdeu o direito</td><td>No IBS, só quando a movimentação permite identificar</td></tr>
+      <tr><td><code class="inline">credit.suspended</code> · <code class="inline">credit.released</code></td><td>Apropriação suspensa, e a suspensão levantada</td><td>Só CBS por enquanto</td></tr>
+      <tr><td><code class="inline">credit.expired</code></td><td>Parte do crédito prescreveu</td><td>Só CBS por enquanto</td></tr>
+      <tr><td><code class="inline">credit.refund_requested</code></td><td>Parte do crédito entrou em pedido de ressarcimento</td><td></td></tr>
+      <tr><td><code class="inline">credit.refund_available</code></td><td>Ressarcimento liberado para transferência</td><td>Só IBS</td></tr>
+      <tr><td><code class="inline">credit.cancelled</code></td><td>O documento foi cancelado</td><td></td></tr>
+      <tr><td><code class="inline">credit.adjusted</code></td><td>O valor mudou sem um fato reconhecido — devolução, perecimento ou ajuste do Fisco</td><td>Traz a origem informada pelo Fisco</td></tr>
+      <tr><td colspan="3"><strong>Débito</strong></td></tr>
+      <tr><td><code class="inline">debit.registered</code></td><td>O débito apareceu na apuração assistida</td><td></td></tr>
+      <tr><td><code class="inline">debit.partially_settled</code></td><td>Parte do débito foi extinta</td><td></td></tr>
+      <tr><td><code class="inline">debit.settled</code></td><td>O débito foi extinto por inteiro</td><td></td></tr>
+      <tr><td><code class="inline">debit.suspended</code> · <code class="inline">debit.released</code></td><td>Exigibilidade suspensa, e levantada</td><td>Só CBS por enquanto</td></tr>
+      <tr><td><code class="inline">debit.cancelled</code> · <code class="inline">debit.adjusted</code></td><td>Como no crédito</td><td></td></tr>
+    </table>
+    <p>
+      Cada evento usa o <a href="webhooks.html#webhook-envelope">envelope padrão</a>. Em <code class="inline">data</code> vêm
+      duas partes: <code class="inline">change</code>, o fato, e <code class="inline">credit</code> ou <code class="inline">debit</code>,
+      o registro inteiro como ficou depois dele. <code class="inline">occurred_at</code> é quando o fato aconteceu no Fisco.
+    </p>
+    <table class="response-table">
+      <tr><th>Campo de <code class="inline">change</code></th><th>Descrição</th></tr>
+      <tr><td>amount</td><td>Quanto mudou</td></tr>
+      <tr><td>from · to</td><td>De qual parcela do saldo para qual — por exemplo, de pending para appropriated</td></tr>
+      <tr><td>cause</td><td>Por quê, quando o Fisco permite saber: rad_payment (você recolheu a guia RAD do documento), supplier_settlement (o débito do fornecedor foi extinto por ele), credit_offset (compensação com créditos), payment (guia paga por você), rad (recolhido pelo adquirente) ou unknown</td></tr>
+      <tr><td>payment</td><td>A guia, quando o fato veio de um pagamento: darf_number, paid_at e os valores</td></tr>
+      <tr><td>offsets[]</td><td>Nos créditos utilizados, os débitos compensados, com allocation: "splithub"</td></tr>
+      <tr><td>source</td><td>De onde veio: authority, a coleta ou o arquivo do Fisco e o lançamento, fiscal_updated_at, received_at e, no IBS, movement — a descrição da movimentação — e integrity</td></tr>
     </table>
     <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       <div>
-        <p style="margin:0;line-height:1.6;"><strong>Dois pontos em definição.</strong> O vocabulário de status desta consulta está em português, e o dos eventos desta página, em inglês — a unificação está em decisão. E a forma de contagem de <code class="inline">extincao_em</code> está em validação: trate a data como informativa até a confirmação, que será publicada neste changelog.</p>
+        <p style="margin:0;line-height:1.6;"><strong>Eventos do IBS e o campo <code class="inline">integrity</code>.</strong> O Comitê Gestor ainda não publicou como conferir que o extrato veio completo. Até lá, os eventos do IBS saem com <code class="inline">source.integrity: "unverified"</code>. Publicada a regra, só sai evento de extrato conferido.</p>
       </div>
     </div>
 
-    <h2 id="webhook-credito">Webhook event: mudança de status do crédito</h2>
-    <p>
-      Disparado sempre que o crédito tributário referente a um DF de entrada muda de status
-      (<code class="inline">not_appropriated</code> → <code class="inline">appropriated</code> →
-      <code class="inline">utilized</code>). No exemplo abaixo, o crédito acabou de ser
-      utilized para compensar o débito de uma NF de saída — por isso o evento traz também a
-      <code class="inline">compensated_debt_dfe_key</code>.
-    </p>
-
+    <h3>Crédito de CBS apropriado pelo RAD</h3>
     <div class="code-block">
       <div class="code-head">
         <span>POST {sua_url_de_webhook}</span>
@@ -200,45 +392,71 @@
         </button>
       </div>
       <pre>{
-  <span class="tok-k">"id"</span>: <span class="tok-s">"evt_9f2a3c"</span>,
-  <span class="tok-k">"type"</span>: <span class="tok-s">"credito.status_alterado"</span>,
-  <span class="tok-k">"occurred_at"</span>: <span class="tok-s">"2026-07-29T15:00:00.000Z"</span>,
+  <span class="tok-k">"id"</span>: <span class="tok-s">"evt_c41a9e"</span>,
+  <span class="tok-k">"type"</span>: <span class="tok-s">"credit.appropriated"</span>,
+  <span class="tok-k">"occurred_at"</span>: <span class="tok-s">"2026-10-30T18:40:00-03:00"</span>,
   <span class="tok-k">"data"</span>: {
-    <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
-    <span class="tok-k">"tax_type"</span>: <span class="tok-s">"cbs"</span>,
-    <span class="tok-k">"credit_amount"</span>: <span class="tok-s">"9.00"</span>,
-    <span class="tok-k">"previous_status"</span>: <span class="tok-s">"appropriated"</span>,
-    <span class="tok-k">"current_status"</span>: <span class="tok-s">"utilized"</span>,
-    <span class="tok-k">"change_reason"</span>: <span class="tok-s">"outbound_debt_offset"</span>,
-    <span class="tok-k">"compensated_debt_dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000098769876543210"</span>
+    <span class="tok-k">"change"</span>: {
+      <span class="tok-k">"amount"</span>: <span class="tok-s">"2000.00"</span>,
+      <span class="tok-k">"from"</span>: <span class="tok-s">"pending"</span>,
+      <span class="tok-k">"to"</span>: <span class="tok-s">"appropriated"</span>,
+      <span class="tok-k">"cause"</span>: <span class="tok-s">"rad_payment"</span>,
+      <span class="tok-k">"payment"</span>: {
+        <span class="tok-k">"darf_number"</span>: <span class="tok-s">"07.17.26301.7654321-0"</span>,
+        <span class="tok-k">"paid_at"</span>: <span class="tok-s">"2026-10-28T10:30:00-03:00"</span>,
+        <span class="tok-k">"amount"</span>: <span class="tok-s">"2000.00"</span>
+      },
+      <span class="tok-k">"source"</span>: {
+        <span class="tok-k">"authority"</span>: <span class="tok-s">"rfb"</span>,
+        <span class="tok-k">"endpoint"</span>: <span class="tok-s">"creditos"</span>,
+        <span class="tok-k">"reference"</span>: <span class="tok-s">"a41c9d02-7e3b-4f55-8c21-0b9e6d3f1a88"</span>,
+        <span class="tok-k">"fiscal_updated_at"</span>: <span class="tok-s">"2026-10-30T18:40:00-03:00"</span>,
+        <span class="tok-k">"received_at"</span>: <span class="tok-s">"2026-10-31T06:05:12-03:00"</span>
+      }
+    },
+    <span class="tok-k">"credit"</span>: {
+      <span class="tok-k">"id"</span>: <span class="tok-s">"cred_cbs_8f3a1c2b"</span>,
+      <span class="tok-k">"record_version"</span>: <span class="tok-s">3</span>,
+      <span class="tok-k">"tax_type"</span>: <span class="tok-s">"cbs"</span>,
+      <span class="tok-k">"authority"</span>: <span class="tok-s">"rfb"</span>,
+      <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"43260998765432000110550010000402211000402219"</span>,
+      <span class="tok-k">"document_model"</span>: <span class="tok-s">"55"</span>,
+      <span class="tok-k">"document_id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>,
+      <span class="tok-k">"supplier_tax_id"</span>: <span class="tok-s">"98765432000110"</span>,
+      <span class="tok-k">"acquirer_tax_id"</span>: <span class="tok-s">"12345678000190"</span>,
+      <span class="tok-k">"issue_date"</span>: <span class="tok-s">"2026-09-10T08:15:00-03:00"</span>,
+      <span class="tok-k">"period"</span>: <span class="tok-s">"2026-09"</span>,
+      <span class="tok-k">"period_source"</span>: <span class="tok-s">"fiscal"</span>,
+      <span class="tok-k">"payment_method"</span>: <span class="tok-s">"rad"</span>,
+      <span class="tok-k">"contract_id"</span>: <span class="tok-s">"ctr_5f8a2d"</span>,
+      <span class="tok-k">"status"</span>: <span class="tok-s">"partially_utilized"</span>,
+      <span class="tok-k">"balances"</span>: {
+        <span class="tok-k">"assessed"</span>: <span class="tok-s">"12000.00"</span>,
+        <span class="tok-k">"unprocessed"</span>: <span class="tok-s">"0.00"</span>,
+        <span class="tok-k">"pending"</span>: <span class="tok-s">"0.00"</span>,
+        <span class="tok-k">"appropriated"</span>: <span class="tok-s">"12000.00"</span>,
+        <span class="tok-k">"not_appropriable"</span>: <span class="tok-s">"0.00"</span>,
+        <span class="tok-k">"suspended"</span>: <span class="tok-s">"0.00"</span>,
+        <span class="tok-k">"expired"</span>: <span class="tok-s">"0.00"</span>,
+        <span class="tok-k">"utilized"</span>: <span class="tok-s">"7500.00"</span>,
+        <span class="tok-k">"not_usable"</span>: <span class="tok-s">"0.00"</span>,
+        <span class="tok-k">"restored"</span>: <span class="tok-s">"0.00"</span>,
+        <span class="tok-k">"available"</span>: <span class="tok-s">"4500.00"</span>,
+        <span class="tok-k">"refund_requested"</span>: <span class="tok-s">"0.00"</span>,
+        <span class="tok-k">"refund_available"</span>: <span class="tok-s">null</span>
+      },
+      <span class="tok-k">"deadlines"</span>: {
+        <span class="tok-k">"appropriation_due_date"</span>: <span class="tok-s">"2026-10-31"</span>,
+        <span class="tok-k">"expiration_date"</span>: <span class="tok-s">"2031-09-10"</span>
+      },
+      <span class="tok-k">"flags"</span>: [],
+      <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-10-31T06:05:14-03:00"</span>
+    }
   }
 }</pre>
     </div>
 
-    <p>Seu endpoint deve responder <code class="inline">200 OK</code> para confirmar o recebimento. Sem essa confirmação, o Splithub reenvia o evento.</p>
-
-    <table class="response-table">
-      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>id</td><td>string</td><td>Identificador do evento. Use-o para deduplicar: reentregas repetem o mesmo valor</td></tr>
-      <tr><td>type</td><td>string</td><td>Tipo do evento: credito.status_alterado</td></tr>
-      <tr><td>occurred_at</td><td>timestamp</td><td>Momento em que o fato ocorreu — não o do envio; os dois divergem quando há retentativa</td></tr>
-      <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF de entrada que originou o crédito</td></tr>
-      <tr><td>data.tax_type</td><td>string</td><td>Tributo do crédito: ibs ou cbs</td></tr>
-      <tr><td>data.credit_amount</td><td>string (decimal)</td><td>Valor do crédito referente a este DF</td></tr>
-      <tr><td>data.previous_status / current_status</td><td>string</td><td>not_appropriated, appropriated ou utilized</td></tr>
-      <tr><td>data.change_reason</td><td>string</td><td>inbound_tax_payment (not_appropriated → appropriated) ou outbound_debt_offset (appropriated → utilized)</td></tr>
-      <tr><td>data.compensated_debt_dfe_key</td><td>string</td><td>Presente quando current_status é utilized: chave da NF de saída cujo débito foi compensado por este crédito</td></tr>
-    </table>
-
-    <h2 id="webhook-debito">Webhook event: mudança de status do débito</h2>
-    <p>
-      Disparado sempre que o débito tributário referente a um DF de saída muda de status
-      (<code class="inline">not_settled</code> → <code class="inline">settled</code>). A
-      extinção ocorre quando a NF de saída é abatida pelos créditos appropriateds disponíveis —
-      por isso o evento traz também <code class="inline">utilized_credits</code>, com a
-      chave e o valor de cada crédito usado na compensação.
-    </p>
-
+    <h3>Crédito de IBS usado em compensação</h3>
     <div class="code-block">
       <div class="code-head">
         <span>POST {sua_url_de_webhook}</span>
@@ -248,36 +466,166 @@
         </button>
       </div>
       <pre>{
-  <span class="tok-k">"id"</span>: <span class="tok-s">"evt_7b1d4e"</span>,
-  <span class="tok-k">"type"</span>: <span class="tok-s">"debito.status_alterado"</span>,
-  <span class="tok-k">"occurred_at"</span>: <span class="tok-s">"2026-07-29T15:00:00.000Z"</span>,
+  <span class="tok-k">"id"</span>: <span class="tok-s">"evt_7d20b1"</span>,
+  <span class="tok-k">"type"</span>: <span class="tok-s">"credit.utilized"</span>,
+  <span class="tok-k">"occurred_at"</span>: <span class="tok-s">"2026-11-10T20:10:05-03:00"</span>,
   <span class="tok-k">"data"</span>: {
-    <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000098769876543210"</span>,
-    <span class="tok-k">"tax_type"</span>: <span class="tok-s">"ibs"</span>,
-    <span class="tok-k">"debt_amount"</span>: <span class="tok-s">"1.00"</span>,
-    <span class="tok-k">"previous_status"</span>: <span class="tok-s">"not_settled"</span>,
-    <span class="tok-k">"current_status"</span>: <span class="tok-s">"settled"</span>,
-    <span class="tok-k">"extinction_type"</span>: <span class="tok-s">"inbound_credit_offset"</span>,
-    <span class="tok-k">"utilized_credits"</span>: [
-      { <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>, <span class="tok-k">"utilized_amount"</span>: <span class="tok-s">"1.00"</span> }
-    ]
+    <span class="tok-k">"change"</span>: {
+      <span class="tok-k">"amount"</span>: <span class="tok-s">"350.00"</span>,
+      <span class="tok-k">"from"</span>: <span class="tok-s">"available"</span>,
+      <span class="tok-k">"to"</span>: <span class="tok-s">"utilized"</span>,
+      <span class="tok-k">"cause"</span>: <span class="tok-s">"credit_offset"</span>,
+      <span class="tok-k">"offsets"</span>: [
+        {
+          <span class="tok-k">"debit_dfe_key"</span>: <span class="tok-s">"35261112345678000190550010000099871000099876"</span>,
+          <span class="tok-k">"amount"</span>: <span class="tok-s">"350.00"</span>,
+          <span class="tok-k">"allocation"</span>: <span class="tok-s">"splithub"</span>
+        }
+      ],
+      <span class="tok-k">"source"</span>: {
+        <span class="tok-k">"authority"</span>: <span class="tok-s">"cgibs"</span>,
+        <span class="tok-k">"file"</span>: <span class="tok-s">"36588366_part1.json"</span>,
+        <span class="tok-k">"request_id"</span>: <span class="tok-s">"9120334"</span>,
+        <span class="tok-k">"entry_id"</span>: <span class="tok-s">37363032</span>,
+        <span class="tok-k">"movement"</span>: <span class="tok-s">"COMPENSAÇÃO COM CRÉDITOS POR AQUISIÇÃO"</span>,
+        <span class="tok-k">"integrity"</span>: <span class="tok-s">"unverified"</span>,
+        <span class="tok-k">"received_at"</span>: <span class="tok-s">"2026-11-11T04:12:40-03:00"</span>
+      }
+    },
+    <span class="tok-k">"credit"</span>: {
+      <span class="tok-k">"id"</span>: <span class="tok-s">"cred_ibs_4b7e90aa"</span>,
+      <span class="tok-k">"record_version"</span>: <span class="tok-s">2</span>,
+      <span class="tok-k">"tax_type"</span>: <span class="tok-s">"ibs"</span>,
+      <span class="tok-k">"authority"</span>: <span class="tok-s">"cgibs"</span>,
+      <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35261098765432000110550010000123451000123459"</span>,
+      <span class="tok-k">"document_model"</span>: <span class="tok-s">"55"</span>,
+      <span class="tok-k">"document_id"</span>: <span class="tok-s">"df_4b7e90aa"</span>,
+      <span class="tok-k">"supplier_tax_id"</span>: <span class="tok-s">"98765432"</span>,
+      <span class="tok-k">"acquirer_tax_id"</span>: <span class="tok-s">"12345678"</span>,
+      <span class="tok-k">"issue_date"</span>: <span class="tok-s">"2026-10-20T09:00:00-03:00"</span>,
+      <span class="tok-k">"period"</span>: <span class="tok-s">"2026-10"</span>,
+      <span class="tok-k">"period_source"</span>: <span class="tok-s">"derived"</span>,
+      <span class="tok-k">"payment_method"</span>: <span class="tok-s">"supplier"</span>,
+      <span class="tok-k">"contract_id"</span>: <span class="tok-s">null</span>,
+      <span class="tok-k">"status"</span>: <span class="tok-s">"partially_utilized"</span>,
+      <span class="tok-k">"balances"</span>: {
+        <span class="tok-k">"assessed"</span>: <span class="tok-s">"1000.00"</span>,
+        <span class="tok-k">"unprocessed"</span>: <span class="tok-s">null</span>,
+        <span class="tok-k">"pending"</span>: <span class="tok-s">"0.00"</span>,
+        <span class="tok-k">"appropriated"</span>: <span class="tok-s">"1000.00"</span>,
+        <span class="tok-k">"not_appropriable"</span>: <span class="tok-s">null</span>,
+        <span class="tok-k">"suspended"</span>: <span class="tok-s">null</span>,
+        <span class="tok-k">"expired"</span>: <span class="tok-s">null</span>,
+        <span class="tok-k">"utilized"</span>: <span class="tok-s">"350.00"</span>,
+        <span class="tok-k">"not_usable"</span>: <span class="tok-s">null</span>,
+        <span class="tok-k">"restored"</span>: <span class="tok-s">null</span>,
+        <span class="tok-k">"available"</span>: <span class="tok-s">"650.00"</span>,
+        <span class="tok-k">"refund_requested"</span>: <span class="tok-s">"0.00"</span>,
+        <span class="tok-k">"refund_available"</span>: <span class="tok-s">"0.00"</span>
+      },
+      <span class="tok-k">"deadlines"</span>: {
+        <span class="tok-k">"appropriation_due_date"</span>: <span class="tok-s">"2026-11-30"</span>,
+        <span class="tok-k">"expiration_date"</span>: <span class="tok-s">"2031-10-20"</span>
+      },
+      <span class="tok-k">"flags"</span>: [],
+      <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-11-11T04:12:41-03:00"</span>
+    }
   }
 }</pre>
     </div>
 
-    <p>Seu endpoint deve responder <code class="inline">200 OK</code> para confirmar o recebimento. Sem essa confirmação, o Splithub reenvia o evento.</p>
+    <h3>Débito de CBS extinto</h3>
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST {sua_url_de_webhook}</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"evt_e90f33"</span>,
+  <span class="tok-k">"type"</span>: <span class="tok-s">"debit.settled"</span>,
+  <span class="tok-k">"occurred_at"</span>: <span class="tok-s">"2026-10-30T14:12:00-03:00"</span>,
+  <span class="tok-k">"data"</span>: {
+    <span class="tok-k">"change"</span>: {
+      <span class="tok-k">"amount"</span>: <span class="tok-s">"3000.00"</span>,
+      <span class="tok-k">"from"</span>: <span class="tok-s">"outstanding"</span>,
+      <span class="tok-k">"to"</span>: <span class="tok-s">"settled"</span>,
+      <span class="tok-k">"cause"</span>: <span class="tok-s">"payment"</span>,
+      <span class="tok-k">"payment"</span>: {
+        <span class="tok-k">"darf_number"</span>: <span class="tok-s">"07.17.26303.1234567-8"</span>,
+        <span class="tok-k">"paid_at"</span>: <span class="tok-s">"2026-10-30T14:12:00-03:00"</span>,
+        <span class="tok-k">"principal"</span>: <span class="tok-s">"3000.00"</span>,
+        <span class="tok-k">"penalty"</span>: <span class="tok-s">"0.00"</span>,
+        <span class="tok-k">"interest"</span>: <span class="tok-s">"0.00"</span>
+      },
+      <span class="tok-k">"source"</span>: {
+        <span class="tok-k">"authority"</span>: <span class="tok-s">"rfb"</span>,
+        <span class="tok-k">"endpoint"</span>: <span class="tok-s">"pagamentos"</span>,
+        <span class="tok-k">"reference"</span>: <span class="tok-s">"c9e21b7a-3d05-4a6f-b812-5f0c7a2e9d13"</span>,
+        <span class="tok-k">"received_at"</span>: <span class="tok-s">"2026-11-04T08:10:02-03:00"</span>
+      }
+    },
+    <span class="tok-k">"debit"</span>: {
+      <span class="tok-k">"id"</span>: <span class="tok-s">"deb_cbs_77a02c19"</span>,
+      <span class="tok-k">"record_version"</span>: <span class="tok-s">4</span>,
+      <span class="tok-k">"tax_type"</span>: <span class="tok-s">"cbs"</span>,
+      <span class="tok-k">"authority"</span>: <span class="tok-s">"rfb"</span>,
+      <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"43260912345678000190550010000128841000128847"</span>,
+      <span class="tok-k">"document_model"</span>: <span class="tok-s">"55"</span>,
+      <span class="tok-k">"document_id"</span>: <span class="tok-s">"df_77a02c19"</span>,
+      <span class="tok-k">"customer_tax_id"</span>: <span class="tok-s">"55443322000166"</span>,
+      <span class="tok-k">"issue_date"</span>: <span class="tok-s">"2026-09-14T10:02:00-03:00"</span>,
+      <span class="tok-k">"period"</span>: <span class="tok-s">"2026-09"</span>,
+      <span class="tok-k">"period_source"</span>: <span class="tok-s">"fiscal"</span>,
+      <span class="tok-k">"status"</span>: <span class="tok-s">"settled"</span>,
+      <span class="tok-k">"balances"</span>: {
+        <span class="tok-k">"assessed"</span>: <span class="tok-s">"9000.00"</span>,
+        <span class="tok-k">"unprocessed"</span>: <span class="tok-s">"0.00"</span>,
+        <span class="tok-k">"not_enforceable"</span>: <span class="tok-s">"0.00"</span>,
+        <span class="tok-k">"suspended"</span>: <span class="tok-s">"0.00"</span>,
+        <span class="tok-k">"settled"</span>: <span class="tok-s">"9000.00"</span>,
+        <span class="tok-k">"outstanding"</span>: <span class="tok-s">"0.00"</span>
+      },
+      <span class="tok-k">"settlements"</span>: [
+        {
+          <span class="tok-k">"method"</span>: <span class="tok-s">"credit_offset"</span>,
+          <span class="tok-k">"amount"</span>: <span class="tok-s">"6000.00"</span>,
+          <span class="tok-k">"allocation"</span>: <span class="tok-s">"splithub"</span>,
+          <span class="tok-k">"credits"</span>: [
+            {
+              <span class="tok-k">"credit_dfe_key"</span>: <span class="tok-s">"43260998765432000110550010000402211000402219"</span>,
+              <span class="tok-k">"amount"</span>: <span class="tok-s">"6000.00"</span>
+            }
+          ]
+        },
+        {
+          <span class="tok-k">"method"</span>: <span class="tok-s">"payment"</span>,
+          <span class="tok-k">"amount"</span>: <span class="tok-s">"3000.00"</span>,
+          <span class="tok-k">"darf_number"</span>: <span class="tok-s">"07.17.26303.1234567-8"</span>,
+          <span class="tok-k">"paid_at"</span>: <span class="tok-s">"2026-10-30T14:12:00-03:00"</span>
+        }
+      ],
+      <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-11-04T08:10:05-03:00"</span>
+    }
+  }
+}</pre>
+    </div>
 
+    <p><strong>Ordem.</strong> Os eventos são entregues em paralelo, sem garantia de ordem. Dentro de um registro, use
+      <code class="inline">record_version</code>: aplique só a versão maior que a que você guardou e descarte a mais antiga.</p>
+
+    <h2 id="alertas">Alertas do Splithub</h2>
+    <p>
+      Calculados pelo Splithub a partir dos prazos — não são fato do Fisco e não mudam o saldo. Saem numa família separada,
+      <code class="inline">alert.*</code>, para que você assine só se quiser.
+    </p>
     <table class="response-table">
-      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>id</td><td>string</td><td>Identificador do evento. Use-o para deduplicar: reentregas repetem o mesmo valor</td></tr>
-      <tr><td>type</td><td>string</td><td>Tipo do evento: debito.status_alterado</td></tr>
-      <tr><td>occurred_at</td><td>timestamp</td><td>Momento em que o fato ocorreu — não o do envio; os dois divergem quando há retentativa</td></tr>
-      <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF de saída que originou o débito</td></tr>
-      <tr><td>data.tax_type</td><td>string</td><td>Tributo do débito: ibs ou cbs</td></tr>
-      <tr><td>data.debt_amount</td><td>string (decimal)</td><td>Valor do débito referente a este DF</td></tr>
-      <tr><td>data.previous_status / current_status</td><td>string</td><td>not_settled ou settled</td></tr>
-      <tr><td>data.extinction_type</td><td>string</td><td>inbound_credit_offset</td></tr>
-      <tr><td>data.utilized_credits</td><td>array</td><td>Créditos (dfe_key + utilized_amount) usados para compensar este débito</td></tr>
+      <tr><th>Tipo</th><th>Quando</th></tr>
+      <tr><td><code class="inline">alert.appropriation_due_soon</code></td><td>Crédito a 30 dias do prazo para apropriar</td></tr>
+      <tr><td><code class="inline">alert.appropriation_overdue</code></td><td>Prazo para apropriar vencido</td></tr>
+      <tr><td><code class="inline">alert.credit_expiring</code></td><td>Crédito dentro da janela de prescrição do art. 54</td></tr>
     </table>
 
     <div class="page-footer-nav">
@@ -294,10 +642,13 @@
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#ciclo-de-vida" class="toc-link active">Ciclo de vida do crédito e do débito</a>
+    <a href="#ciclo-de-vida" class="toc-link active">Ciclo de vida e saldo</a>
+    <a href="#registro-credito" class="toc-link">O registro de crédito</a>
+    <a href="#registro-debito" class="toc-link">O registro de débito</a>
     <a href="#consultar-creditos" class="toc-link"><span class="toc-method toc-method-get">GET</span>Consultar créditos</a>
-    <a href="#webhook-credito" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Status do crédito</a>
-    <a href="#webhook-debito" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Status do débito</a>
+    <a href="#consultar-debitos" class="toc-link"><span class="toc-method toc-method-get">GET</span>Consultar débitos</a>
+    <a href="#eventos" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Eventos de crédito e débito</a>
+    <a href="#alertas" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Alertas</a>
 
     <div class="help-box">
       <p>Precisa de ajuda?</p>

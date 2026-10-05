@@ -139,13 +139,6 @@
       <span class="tok-k">"ibs_calculated"</span>: <span class="tok-s">"57.60"</span>,
       <span class="tok-k">"total_tributes_retained"</span>: <span class="tok-s">"115.20"</span>,
       <span class="tok-k">"net_value_to_supplier"</span>: <span class="tok-s">"6284.80"</span>
-    },
-    <span class="tok-k">"credit_status_change"</span>: {
-      <span class="tok-k">"previous_status"</span>: <span class="tok-s">"pending"</span>,
-      <span class="tok-k">"current_status"</span>: <span class="tok-s">"retained"</span>,
-      <span class="tok-k">"cbs_credit_id"</span>: <span class="tok-s">"cred_cbs_8f3a1c2b"</span>,
-      <span class="tok-k">"ibs_credit_id"</span>: <span class="tok-s">"cred_ibs_9g4b2d3c"</span>,
-      <span class="tok-k">"retention_date"</span>: <span class="tok-s">"2026-07-29"</span>
     }
   }
 }</pre>
@@ -204,13 +197,14 @@
       <tr><td>data.fiscal_operation.ibs_calculated</td><td>string (decimal)</td><td>Valor calculado de IBS retido</td></tr>
       <tr><td>data.fiscal_operation.total_tributes_retained</td><td>string (decimal)</td><td>Soma total de CBS + IBS retidos nesta operação</td></tr>
       <tr><td>data.fiscal_operation.net_value_to_supplier</td><td>string (decimal)</td><td>Valor líquido repassado ao fornecedor (gross - tributos)</td></tr>
-      <tr><td colspan="3"><strong>Alteração de Status de Crédito</strong></td></tr>
-      <tr><td>data.credit_status_change.previous_status</td><td>string</td><td>Status anterior: pending, retained, paid, disputed, etc.</td></tr>
-      <tr><td>data.credit_status_change.current_status</td><td>string</td><td>Status atual após retenção: retained</td></tr>
-      <tr><td>data.credit_status_change.cbs_credit_id</td><td>string</td><td>ID único do crédito de CBS para rastreamento</td></tr>
-      <tr><td>data.credit_status_change.ibs_credit_id</td><td>string</td><td>ID único do crédito de IBS para rastreamento</td></tr>
-      <tr><td>data.credit_status_change.retention_date</td><td>date</td><td>Data da retenção dos tributos (YYYY-MM-DD)</td></tr>
     </table>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">A mudança no crédito do documento chega pelos <a href="garantia-credito.html#eventos">eventos de crédito</a> — por exemplo, <code class="inline">credit.appropriated</code> com <code class="inline">cause: "rad_payment"</code> quando o recolhimento é confirmado.</p>
+      </div>
+    </div>
 
     <h2 id="webhook-darf-lote">Webhook event: guia de DARF recebida (em lote)</h2>
     <p>
