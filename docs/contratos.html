@@ -155,6 +155,13 @@
       <tr><td>notes</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Observações e anotações sobre o contrato</td></tr>
     </table>
 
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;"><strong>Método e prazo de pagamento.</strong> <code class="inline">payment_method</code> diz quem recolhe o tributo das notas do contrato — <code class="inline">rad</code>, o adquirente, ou <code class="inline">supplier</code>, o fornecedor —, e <code class="inline">payment_term_days</code>, o prazo de pagamento ao fornecedor. Cada documento fiscal recebe o método e o prazo do contrato vigente na data de emissão. Um documento pode substituí-los com <code class="inline">override_contract_params</code> — ver <a href="ingestao-dfs.html#criar-documento">Ingestão de DFs</a>.</p>
+      </div>
+    </div>
+
     <h2 id="listar-contratos">Listar contratos</h2>
     <p>
       Liste todos os contratos registrados com suporte a paginação e filtros por status, CNPJ
@@ -188,6 +195,8 @@
       <span class="tok-k">"total_value"</span>: <span class="tok-s">"120000.00"</span>,
       <span class="tok-k">"autorenew"</span>: <span class="tok-s">true</span>,
       <span class="tok-k">"rad_eligible"</span>: <span class="tok-s">true</span>,
+      <span class="tok-k">"payment_method"</span>: <span class="tok-s">"rad"</span>,
+      <span class="tok-k">"payment_term_days"</span>: <span class="tok-s">30</span>,
       <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
       <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
     }
@@ -242,7 +251,7 @@
 
     <h2 id="atualizar-contrato">Atualizar um contrato</h2>
     <p>
-      Atualize datas, valor, condições de pagamento ou observações. A situação não muda por aqui: use
+      Atualize datas, valor, condições comerciais, método e prazo de pagamento ou observações. A situação não muda por aqui: use
       <a href="#situacao-contrato">Alterar a situação de um contrato</a>.
     </p>
 
