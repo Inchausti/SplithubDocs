@@ -66,55 +66,77 @@
     <div class="breadcrumb">Introdução e aspectos gerais / Autenticação</div>
     <h1>Autenticação</h1>
     <p class="lede">
-      O Splithub utiliza autenticação JSON Web Token (JWT). Envie suas credenciais de cliente
-      para obter um access token e utilize-o no cabeçalho <code class="inline">Authorization</code>
-      de todas as requisições subsequentes.
+      O Splithub usa OAuth 2.0 no fluxo <em>client credentials</em>. Troque o par de credenciais da sua integração por um
+      token de curta duração e envie-o no cabeçalho <code class="inline">Authorization</code> de todas as requisições.
+      Cada credencial tem escopos: uma chamada fora do escopo concedido responde <code class="inline">403</code>.
     </p>
 
     <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       <div>
-        <p style="margin:0;line-height:1.6;">Nunca envie o access token na URL ou query string. Ele deve ser transmitido apenas no cabeçalho <code class="inline">Authorization</code>, sempre via HTTPS.</p>
+        <p style="margin:0;line-height:1.6;">Nunca envie o token nem o <code class="inline">client_secret</code> na URL ou na query string, e nunca os registre em log nem os transmita por e-mail ou chamado de suporte. Use sempre HTTPS.</p>
       </div>
     </div>
 
     <h2 id="obter-token">Passo 1: obter um token</h2>
     <p>
-      Envie suas credenciais como JSON para o endpoint de login. A resposta traz um
-      <code class="inline">access_token</code> assinado e o tempo de expiração em segundos.
+      Envie o <code class="inline">grant_type</code> e o par de credenciais. O endpoint aceita JSON e também
+      <code class="inline">application/x-www-form-urlencoded</code> com credencial por HTTP Basic, para bibliotecas OAuth 2.0 padrão.
     </p>
 
     <div class="code-block">
       <div class="code-head">
-        <span>POST /v1/auth/login</span>
+        <span>POST /public/oauth/token</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/auth/login</span> \
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/public/oauth/token</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
+    "grant_type": "client_credentials",
     "client_id": "your_client_id",
     "client_secret": "your_client_secret"
   }'</span></pre>
     </div>
 
-    <p>A resposta contém o JWT access token e o tempo de expiração:</p>
+    <div class="code-block">
+      <div class="code-head">
+        <span>POST /public/oauth/token — formulário com HTTP Basic</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/public/oauth/token</span> \
+  -u <span class="tok-s">"your_client_id:your_client_secret"</span> \
+  -d <span class="tok-s">"grant_type=client_credentials"</span></pre>
+    </div>
+
+    <p>A resposta traz o token, a validade em segundos e os escopos concedidos:</p>
 
     <div class="code-block">
       <div class="code-head"><span>Resposta 200 OK</span></div>
       <pre>{
   <span class="tok-k">"access_token"</span>: <span class="tok-s">"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</span>,
-  <span class="tok-k">"expires_in"</span>: <span class="tok-s">3600</span>,
-  <span class="tok-k">"token_type"</span>: <span class="tok-s">"Bearer"</span>
+  <span class="tok-k">"token_type"</span>: <span class="tok-s">"Bearer"</span>,
+  <span class="tok-k">"expires_in"</span>: <span class="tok-s">720</span>,
+  <span class="tok-k">"scope"</span>: [<span class="tok-s">"contracts:read"</span>, <span class="tok-s">"contracts:write"</span>]
 }</pre>
     </div>
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+      <tr><td>access_token</td><td>string</td><td>Token a enviar no cabeçalho Authorization</td></tr>
+      <tr><td>token_type</td><td>string</td><td>Sempre "Bearer"</td></tr>
+      <tr><td>expires_in</td><td>number</td><td>Validade em segundos. Use sempre o valor devolvido; não fixe a validade no código</td></tr>
+      <tr><td>scope</td><td>array</td><td>Escopos concedidos a esta credencial</td></tr>
+    </table>
 
     <h2 id="usar-token">Passo 2: usar o token nas chamadas de API</h2>
     <p>
-      Inclua o access token no cabeçalho <code class="inline">Authorization</code> de todas as requisições
-      usando o formato <code class="inline">Bearer {access_token}</code>.
+      Inclua o token no cabeçalho <code class="inline">Authorization</code> de todas as requisições,
+      no formato <code class="inline">Bearer {access_token}</code>.
     </p>
 
     <div class="code-block">
@@ -129,11 +151,11 @@
   -H <span class="tok-s">"Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."</span></pre>
     </div>
 
-    <h2 id="renovacao">Expiração do token</h2>
+    <h2 id="renovacao">Validade e renovação</h2>
     <p>
-      O access token expira após o tempo especificado em <code class="inline">expires_in</code> (em segundos).
-      Requisições feitas com um token expirado recebem <code class="inline">401 Unauthorized</code>; neste caso,
-      repita o Passo 1 para obter um novo access token.
+      O token vale 12 minutos. <strong>Reutilize-o</strong> enquanto for válido e renove com cerca de 2 minutos de folga — pedir
+      um token por requisição esgota o limite de emissão. Com token expirado, a resposta é <code class="inline">401</code>:
+      obtenha um token novo e repita a chamada.
     </p>
 
     <div class="code-block">
@@ -144,11 +166,34 @@
 }</pre>
     </div>
 
+    <h2 id="erros-token">Erros na emissão do token</h2>
     <table class="response-table">
-      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>access_token</td><td>string</td><td>JWT assinado, usado no cabeçalho Authorization</td></tr>
-      <tr><td>expires_in</td><td>number</td><td>Tempo de vida do token, em segundos</td></tr>
-      <tr><td>token_type</td><td>string</td><td>Sempre "Bearer"</td></tr>
+      <tr><th>Status</th><th>Código</th><th>Quando</th></tr>
+      <tr><td>400</td><td><code class="inline">invalid_request</code></td><td>Corpo ilegível</td></tr>
+      <tr><td>400</td><td><code class="inline">unsupported_grant_type</code></td><td><code class="inline">grant_type</code> diferente de <code class="inline">client_credentials</code></td></tr>
+      <tr><td>401</td><td><code class="inline">invalid_client</code></td><td>Credencial inválida. A resposta não distingue identificador errado de segredo errado: dizer qual metade falhou confirmaria a existência da credencial</td></tr>
+      <tr><td>429</td><td><code class="inline">rate_limited</code></td><td>Limite de emissão de token atingido — ver <a href="visao-geral.html#limites">Limites de requisição</a></td></tr>
+    </table>
+
+    <h2 id="escopos">Escopos</h2>
+    <p>
+      Os escopos são concedidos na criação da credencial. Uma chamada a um recurso fora dos escopos concedidos responde
+      <code class="inline">403 forbidden</code>.
+    </p>
+    <table class="response-table">
+      <tr><th>Escopo</th><th>Permite</th></tr>
+      <tr><td><code class="inline">suppliers:read</code></td><td>Consultar fornecedores</td></tr>
+      <tr><td><code class="inline">suppliers:write</code></td><td>Cadastrar fornecedores e alterar cadastro e situação</td></tr>
+      <tr><td><code class="inline">supplier_representatives:read</code></td><td>Consultar representantes fiscais</td></tr>
+      <tr><td><code class="inline">supplier_representatives:write</code></td><td>Cadastrar e alterar representantes fiscais</td></tr>
+      <tr><td><code class="inline">contracts:read</code></td><td>Consultar contratos</td></tr>
+      <tr><td><code class="inline">contracts:write</code></td><td>Criar contratos e alterar dados e situação</td></tr>
+      <tr><td><code class="inline">dfs:read</code></td><td>Consultar documentos fiscais e lotes</td></tr>
+      <tr><td><code class="inline">dfs:write</code></td><td>Enviar, corrigir e remover documentos fiscais</td></tr>
+      <tr><td><code class="inline">apuracoes:read</code></td><td>Consultar créditos de IBS e CBS</td></tr>
+      <tr><td><code class="inline">supplier_guias:read</code></td><td>Consultar guias de recolhimento (RAD)</td></tr>
+      <tr><td><code class="inline">supplier_guias:pay</code></td><td>Enviar comprovante de pagamento de guia (RAD)</td></tr>
+      <tr><td><code class="inline">webhooks:write</code></td><td>Inscrever URLs de webhook</td></tr>
     </table>
 
     <div class="page-footer-nav">
@@ -167,7 +212,9 @@
     <div class="toc-label">Nesta página</div>
     <a href="#obter-token" class="toc-link active"><span class="toc-method toc-method-post">POST</span>Obter um token</a>
     <a href="#usar-token" class="toc-link"><span class="toc-method toc-method-get">GET</span>Usar o token</a>
-    <a href="#renovacao" class="toc-link">Renovação e expiração</a>
+    <a href="#renovacao" class="toc-link">Validade e renovação</a>
+    <a href="#erros-token" class="toc-link">Erros na emissão do token</a>
+    <a href="#escopos" class="toc-link">Escopos</a>
 
     <div class="help-box">
       <p>Precisa de ajuda?</p>

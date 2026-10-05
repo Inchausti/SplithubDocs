@@ -125,6 +125,7 @@
       </div>
       <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/webhooks/automacoes</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: wh-automacoes-erp-01"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "url": "https://empresa.com/webhooks/automacoes",
@@ -158,16 +159,20 @@
     <div class="code-block">
       <div class="code-head"><span>Webhook Payload - Automação Executada com Sucesso</span></div>
       <pre>{
-  <span class="tok-k">"event"</span>: <span class="tok-s">"automation.executed"</span>,
-  <span class="tok-k">"automation_id"</span>: <span class="tok-s">"auto_xyz789"</span>,
-  <span class="tok-k">"trigger"</span>: <span class="tok-s">"tax_document.completed"</span>,
-  <span class="tok-k">"action_type"</span>: <span class="tok-s">"webhook"</span>,
-  <span class="tok-k">"status"</span>: <span class="tok-s">"success"</span>,
-  <span class="tok-k">"execution_time_ms"</span>: <span class="tok-s">245</span>,
-  <span class="tok-k">"triggered_at"</span>: <span class="tok-s">"2026-08-02T15:45:30.000Z"</span>,
-  <span class="tok-k">"metadata"</span>: {
-    <span class="tok-k">"document_id"</span>: <span class="tok-s">"doc_12345"</span>,
-    <span class="tok-k">"total_value"</span>: <span class="tok-s">5000.00</span>
+  <span class="tok-k">"id"</span>: <span class="tok-s">"evt_4d2e8a"</span>,
+  <span class="tok-k">"type"</span>: <span class="tok-s">"automation.executed"</span>,
+  <span class="tok-k">"occurred_at"</span>: <span class="tok-s">"2026-08-02T15:45:30.000Z"</span>,
+  <span class="tok-k">"data"</span>: {
+    <span class="tok-k">"automation_id"</span>: <span class="tok-s">"auto_xyz789"</span>,
+    <span class="tok-k">"trigger"</span>: <span class="tok-s">"tax_document.completed"</span>,
+    <span class="tok-k">"action_type"</span>: <span class="tok-s">"webhook"</span>,
+    <span class="tok-k">"status"</span>: <span class="tok-s">"success"</span>,
+    <span class="tok-k">"execution_time_ms"</span>: <span class="tok-s">245</span>,
+    <span class="tok-k">"triggered_at"</span>: <span class="tok-s">"2026-08-02T15:45:30.000Z"</span>,
+    <span class="tok-k">"metadata"</span>: {
+      <span class="tok-k">"document_id"</span>: <span class="tok-s">"doc_12345"</span>,
+      <span class="tok-k">"total_value"</span>: <span class="tok-s">"5000.00"</span>
+    }
   }
 }</pre>
     </div>
@@ -175,30 +180,36 @@
     <div class="code-block">
       <div class="code-head"><span>Webhook Payload - Automação com Falha</span></div>
       <pre>{
-  <span class="tok-k">"event"</span>: <span class="tok-s">"automation.failed"</span>,
-  <span class="tok-k">"automation_id"</span>: <span class="tok-s">"auto_xyz789"</span>,
-  <span class="tok-k">"trigger"</span>: <span class="tok-s">"tax_document.completed"</span>,
-  <span class="tok-k">"action_type"</span>: <span class="tok-s">"webhook"</span>,
-  <span class="tok-k">"status"</span>: <span class="tok-s">"failed"</span>,
-  <span class="tok-k">"error_message"</span>: <span class="tok-s">"Webhook URL timeout"</span>,
-  <span class="tok-k">"triggered_at"</span>: <span class="tok-s">"2026-08-02T15:50:15.000Z"</span>,
-  <span class="tok-k">"metadata"</span>: {
-    <span class="tok-k">"document_id"</span>: <span class="tok-s">"doc_12345"</span>
+  <span class="tok-k">"id"</span>: <span class="tok-s">"evt_4d2e8b"</span>,
+  <span class="tok-k">"type"</span>: <span class="tok-s">"automation.failed"</span>,
+  <span class="tok-k">"occurred_at"</span>: <span class="tok-s">"2026-08-02T15:50:15.000Z"</span>,
+  <span class="tok-k">"data"</span>: {
+    <span class="tok-k">"automation_id"</span>: <span class="tok-s">"auto_xyz789"</span>,
+    <span class="tok-k">"trigger"</span>: <span class="tok-s">"tax_document.completed"</span>,
+    <span class="tok-k">"action_type"</span>: <span class="tok-s">"webhook"</span>,
+    <span class="tok-k">"status"</span>: <span class="tok-s">"failed"</span>,
+    <span class="tok-k">"error_message"</span>: <span class="tok-s">"Webhook URL timeout"</span>,
+    <span class="tok-k">"triggered_at"</span>: <span class="tok-s">"2026-08-02T15:50:15.000Z"</span>,
+    <span class="tok-k">"metadata"</span>: {
+      <span class="tok-k">"document_id"</span>: <span class="tok-s">"doc_12345"</span>
+    }
   }
 }</pre>
     </div>
 
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>event</td><td>string</td><td>automation.executed ou automation.failed</td></tr>
-      <tr><td>automation_id</td><td>string</td><td>Identificador único da automação</td></tr>
-      <tr><td>trigger</td><td>string</td><td>Evento que disparou a automação</td></tr>
-      <tr><td>action_type</td><td>string</td><td>Tipo de ação executada</td></tr>
-      <tr><td>status</td><td>string</td><td>success ou failed</td></tr>
-      <tr><td>execution_time_ms</td><td>number</td><td>Tempo de execução em milissegundos (presente apenas em execuções bem-sucedidas)</td></tr>
-      <tr><td>error_message</td><td>string</td><td>Descrição do erro (presente apenas em falhas)</td></tr>
-      <tr><td>triggered_at</td><td>timestamp</td><td>Data e hora da execução da automação</td></tr>
-      <tr><td>metadata</td><td>object</td><td>Dados contextuais relacionados ao evento que disparou a automação</td></tr>
+      <tr><td>id</td><td>string</td><td>Identificador do evento, para deduplicação</td></tr>
+      <tr><td>type</td><td>string</td><td>automation.executed ou automation.failed</td></tr>
+      <tr><td>occurred_at</td><td>timestamp</td><td>Momento da execução</td></tr>
+      <tr><td>data.automation_id</td><td>string</td><td>Identificador único da automação</td></tr>
+      <tr><td>data.trigger</td><td>string</td><td>Evento que disparou a automação</td></tr>
+      <tr><td>data.action_type</td><td>string</td><td>Tipo de ação executada</td></tr>
+      <tr><td>data.status</td><td>string</td><td>success ou failed</td></tr>
+      <tr><td>data.execution_time_ms</td><td>number</td><td>Tempo de execução em milissegundos (presente apenas em execuções bem-sucedidas)</td></tr>
+      <tr><td>data.error_message</td><td>string</td><td>Descrição do erro (presente apenas em falhas)</td></tr>
+      <tr><td>data.triggered_at</td><td>timestamp</td><td>Data e hora da execução da automação</td></tr>
+      <tr><td>data.metadata</td><td>object</td><td>Dados contextuais relacionados ao evento que disparou a automação</td></tr>
     </table>
 
     <div class="page-footer-nav">

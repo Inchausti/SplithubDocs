@@ -73,6 +73,42 @@
       documentação da API do Splithub.
     </p>
 
+    <h2 id="v1-1-0">v1.1.0 — 5 de outubro de 2026</h2>
+    <p>
+      Convenções da API alinhadas à proposta técnica do time de desenvolvimento (Manual de Integração v1.0.0, 30/09/2026).
+      Esta versão <strong>quebra compatibilidade</strong> com a v1.0.0. Não há período de transição: até esta data nenhum
+      cliente estava integrado à v1.0.0.
+    </p>
+
+    <h3>⚠️ Mudanças que quebram compatibilidade</h3>
+    <ul>
+      <li><strong>Autenticação OAuth 2.0</strong> — <code>POST /v1/auth/login</code> substituído por <code>POST /public/oauth/token</code> no fluxo <em>client credentials</em>, com token de 12 minutos e escopos por recurso. <a href="autenticacao.html">Autenticação</a></li>
+      <li><strong>Valores monetários como texto</strong> — Valores em reais (até 2 casas) e alíquotas (até 4 casas) passam a trafegar como texto decimal, em todos os recursos. Número JSON é recusado com <code>400</code>. <a href="visao-geral.html#valores-monetarios">Valores monetários</a></li>
+      <li><strong>Inativar em vez de apagar</strong> — <code>DELETE</code> de fornecedor, representante fiscal e contrato substituído por <code>PATCH …/status</code>. O histórico permanece para auditoria fiscal.</li>
+      <li><strong>Situação do contrato por ato</strong> — <code>status</code> sai do corpo de criação e de alteração do contrato e passa a mudar só pelo endpoint de situação, com transições definidas. A vigência vem das datas no campo somente leitura <code>term_status</code>. <a href="contratos.html#situacao-contrato">Contratos</a></li>
+      <li><strong>Paginação</strong> — Listagens por página usam <code>page</code> e <code>page_size</code> (máximo 100) e devolvem <code>total_pages</code>; documentos fiscais, créditos e guias usam cursor. <a href="visao-geral.html#paginacao">Paginação</a></li>
+      <li><strong>Webhooks</strong> — Envelope único <code>{id, type, occurred_at, data}</code> e assinatura com carimbo de tempo: <code>X-Splithub-Timestamp</code> e <code>X-Splithub-Signature: v1=…</code> sobre <code>timestamp + "." + corpo</code>, janela de 5 minutos. Retentativas e tempo limite documentados. <a href="webhooks.html">Webhooks</a></li>
+    </ul>
+
+    <h3>✨ Novas funcionalidades</h3>
+    <ul>
+      <li><strong>Idempotência</strong> — Cabeçalho <code>Idempotency-Key</code> em toda criação e alteração, válido por 24 horas. <a href="visao-geral.html#idempotencia">Idempotência</a></li>
+      <li><strong>Consulta de créditos</strong> — <code>GET /v1/creditos</code>, uma linha por crédito de IBS ou CBS, para reconciliar a posição sem depender só dos eventos. <a href="garantia-credito.html#consultar-creditos">Garantia de crédito</a></li>
+      <li><strong>Consulta de guias</strong> — <code>GET /v1/rad/guias</code> e <code>GET /v1/rad/guias/{id}</code>, uma linha por guia, com os dados de pagamento. <a href="rad.html#consultar-guias">RAD</a></li>
+    </ul>
+
+    <h3>📚 Convenções documentadas</h3>
+    <ul>
+      <li><strong>Recurso de outra empresa</strong> — Responde <code>404</code>, nunca <code>403</code>. <a href="visao-geral.html#outra-empresa">Visão geral</a></li>
+      <li><strong>Limites de requisição</strong> — Limites por credencial, por operação pesada e na emissão de token, com cabeçalhos <code>RateLimit-*</code> e <code>Retry-After</code>. <a href="visao-geral.html#limites">Limites de requisição</a></li>
+    </ul>
+
+    <h3>🕒 Em definição</h3>
+    <ul>
+      <li>Envio de arquivo com prévia antes da importação, que substituirá o envio de lote por CSV.</li>
+      <li>Vocabulário único de status de crédito entre a consulta e os eventos, e forma de contagem do prazo do art. 54.</li>
+    </ul>
+
     <h2 id="v1-0-0">v1.0.0 — 29 de julho de 2026</h2>
     <p>Lançamento inicial da documentação da API do Splithub com suporte completo à Reforma Tributária 2026.</p>
 
@@ -142,7 +178,8 @@
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#v1-0-0" class="toc-link active">v1.0.0 — 29 de julho de 2026</a>
+    <a href="#v1-1-0" class="toc-link active">v1.1.0 — 5 de outubro de 2026</a>
+    <a href="#v1-0-0" class="toc-link">v1.0.0 — 29 de julho de 2026</a>
 
     <div class="help-box">
       <p>Precisa de ajuda?</p>

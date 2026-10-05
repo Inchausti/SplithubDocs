@@ -137,6 +137,7 @@
       </div>
       <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: nfe-55-1-123456"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "type": "nfe",
@@ -168,27 +169,27 @@
         "ncm": "84713012",            
         "cfop": "5102",              
         "quantity": 2,               
-        "unit_price": 3200.00,       
-        "total_value": 6400.00,      
+        "unit_price": "3200.00",       
+        "total_value": "6400.00",      
         "tax": {                     
           "ibs_cbs": {                
             "cst": "000",            
             "c_class_trib": "000001",
-            "v_bc": 6400.00,         
-            "g_ibs_uf": { "p_ibs_uf": 0.05, "v_ibs_uf": 3.20 },
-            "g_ibs_mun": { "p_ibs_mun": 0.05, "v_ibs_mun": 3.20 },
-            "g_cbs": { "p_cbs": 0.9, "v_cbs": 57.60 }
+            "v_bc": "6400.00",         
+            "g_ibs_uf": { "p_ibs_uf": "0.05", "v_ibs_uf": "3.20" },
+            "g_ibs_mun": { "p_ibs_mun": "0.05", "v_ibs_mun": "3.20" },
+            "g_cbs": { "p_cbs": "0.9", "v_cbs": "57.60" }
           }
         }
       }
     ],
     "total": {                       
-      "products_value": 6400.00,     
-      "total_note_value": 6400.00,   
+      "products_value": "6400.00",     
+      "total_note_value": "6400.00",   
       "ibs_cbs_total": {             
-        "v_bc": 6400.00,             
-        "v_tot_ibs": 6.40,           
-        "v_tot_cbs": 57.60           
+        "v_bc": "6400.00",             
+        "v_tot_ibs": "6.40",           
+        "v_tot_cbs": "57.60"           
       }
     }
   }'</span></pre>
@@ -208,6 +209,7 @@
       </div>
       <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: nfcom-62-1-654321"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "type": "nfcom",
@@ -239,27 +241,27 @@
         "cfop": "5302",
         "quantity": 1,
         "unit": "month",
-        "unit_price": 850.00,
-        "total_value": 850.00,
+        "unit_price": "850.00",
+        "total_value": "850.00",
         "tax": {
           "ibs_cbs": {
             "cst": "10",
             "c_class_trib": "0101",
-            "v_bc": 850.00,
-            "g_ibs_uf": { "p_ibs_uf": 0.05, "v_ibs_uf": 4.25 },
-            "g_ibs_mun": { "p_ibs_mun": 0.05, "v_ibs_mun": 4.25 },
-            "g_cbs": { "p_cbs": 0.9, "v_cbs": 76.50 }
+            "v_bc": "850.00",
+            "g_ibs_uf": { "p_ibs_uf": "0.05", "v_ibs_uf": "4.25" },
+            "g_ibs_mun": { "p_ibs_mun": "0.05", "v_ibs_mun": "4.25" },
+            "g_cbs": { "p_cbs": "0.9", "v_cbs": "76.50" }
           }
         }
       }
     ],
     "total": {
-      "services_value": 850.00,
-      "total_note_value": 850.00,
+      "services_value": "850.00",
+      "total_note_value": "850.00",
       "ibs_cbs_total": {
-        "v_bc": 850.00,
-        "v_tot_ibs": 8.50,
-        "v_tot_cbs": 76.50
+        "v_bc": "850.00",
+        "v_tot_ibs": "8.50",
+        "v_tot_cbs": "76.50"
       }
     }
   }'</span></pre>
@@ -330,6 +332,7 @@
       </div>
       <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/batch</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: lote-2026-08-02-001"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "documents": [
@@ -364,27 +367,27 @@
             "cfop": "1102",
             "quantity": 100,
             "unit": "unit",
-            "unit_price": 64.00,
-            "total_value": 6400.00,
+            "unit_price": "64.00",
+            "total_value": "6400.00",
             "tax": {
               "ibs_cbs": {
                 "cst": "00",
                 "c_class_trib": "0101",
-                "v_bc": 6400.00,
-                "g_ibs_uf": { "p_ibs_uf": 0.05, "v_ibs_uf": 32.00 },
-                "g_ibs_mun": { "p_ibs_mun": 0.05, "v_ibs_mun": 32.00 },
-                "g_cbs": { "p_cbs": 0.9, "v_cbs": 576.00 }
+                "v_bc": "6400.00",
+                "g_ibs_uf": { "p_ibs_uf": "0.05", "v_ibs_uf": "32.00" },
+                "g_ibs_mun": { "p_ibs_mun": "0.05", "v_ibs_mun": "32.00" },
+                "g_cbs": { "p_cbs": "0.9", "v_cbs": "576.00" }
               }
             }
           }
         ],
         "total": {
-          "products_value": 6400.00,
-          "total_note_value": 6400.00,
+          "products_value": "6400.00",
+          "total_note_value": "6400.00",
           "ibs_cbs_total": {
-            "v_bc": 6400.00,
-            "v_tot_ibs": 64.00,
-            "v_tot_cbs": 576.00
+            "v_bc": "6400.00",
+            "v_tot_ibs": "64.00",
+            "v_tot_cbs": "576.00"
           }
         }
       },
@@ -416,27 +419,27 @@
             "cfop": "5102",
             "quantity": 50,
             "unit": "unit",
-            "unit_price": 128.00,
-            "total_value": 6400.00,
+            "unit_price": "128.00",
+            "total_value": "6400.00",
             "tax": {
               "ibs_cbs": {
                 "cst": "00",
                 "c_class_trib": "0101",
-                "v_bc": 6400.00,
-                "g_ibs_uf": { "p_ibs_uf": 0.05, "v_ibs_uf": 32.00 },
-                "g_ibs_mun": { "p_ibs_mun": 0.05, "v_ibs_mun": 32.00 },
-                "g_cbs": { "p_cbs": 0.9, "v_cbs": 576.00 }
+                "v_bc": "6400.00",
+                "g_ibs_uf": { "p_ibs_uf": "0.05", "v_ibs_uf": "32.00" },
+                "g_ibs_mun": { "p_ibs_mun": "0.05", "v_ibs_mun": "32.00" },
+                "g_cbs": { "p_cbs": "0.9", "v_cbs": "576.00" }
               }
             }
           }
         ],
         "total": {
-          "products_value": 6400.00,
-          "total_note_value": 6400.00,
+          "products_value": "6400.00",
+          "total_note_value": "6400.00",
           "ibs_cbs_total": {
-            "v_bc": 6400.00,
-            "v_tot_ibs": 64.00,
-            "v_tot_cbs": 576.00
+            "v_bc": "6400.00",
+            "v_tot_ibs": "64.00",
+            "v_tot_cbs": "576.00"
           }
         }
       }
@@ -483,6 +486,7 @@
       </div>
       <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/batch</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: lote-csv-2026-08-02-001"</span> \
   -H <span class="tok-s">"Content-Type: text/csv"</span> \
   --data-binary @documentos-fiscais-batch.csv</pre>
     </div>
@@ -545,11 +549,11 @@
   <span class="tok-k">"access_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
   <span class="tok-k">"emission"</span>: { <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>, <span class="tok-k">"legal_name"</span>: <span class="tok-s">"Fornecedor Exemplo LTDA"</span> },
   <span class="tok-k">"destination"</span>: { <span class="tok-k">"cnpj_cpf"</span>: <span class="tok-s">"98765432000188"</span>, <span class="tok-k">"name"</span>: <span class="tok-s">"Cliente Exemplo LTDA"</span> },
-  <span class="tok-k">"total_value"</span>: <span class="tok-s">6400.00</span>,
+  <span class="tok-k">"total_value"</span>: <span class="tok-s">"6400.00"</span>,
   <span class="tok-k">"ibs_cbs_total"</span>: {
-    <span class="tok-k">"v_bc"</span>: <span class="tok-s">6400.00</span>,
-    <span class="tok-k">"v_tot_ibs"</span>: <span class="tok-s">6.40</span>,
-    <span class="tok-k">"v_tot_cbs"</span>: <span class="tok-s">57.60</span>
+    <span class="tok-k">"v_bc"</span>: <span class="tok-s">"6400.00"</span>,
+    <span class="tok-k">"v_tot_ibs"</span>: <span class="tok-s">"6.40"</span>,
+    <span class="tok-k">"v_tot_cbs"</span>: <span class="tok-s">"57.60"</span>
   },
   <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T10:00:00.000Z"</span>,
   <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-07-29T10:15:30.000Z"</span>
@@ -559,7 +563,7 @@
     <h2 id="listar-documentos">Listar documentos fiscais</h2>
     <p>
       Liste os documentos ingeridos, com filtros opcionais por <code class="inline">type</code> e
-      <code class="inline">status</code>.
+      <code class="inline">status</code> e paginação por cursor (ver <a href="visao-geral.html#paginacao">Paginação</a>).
     </p>
 
     <div class="code-block">
@@ -570,7 +574,7 @@
           Copiar
         </button>
       </div>
-      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/documentos-fiscais?tipo=nfe&status=concluido"</span> \
+      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/documentos-fiscais?type=nfe&status=completed&limit=50"</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
     </div>
 
@@ -578,11 +582,10 @@
       <div class="code-head"><span>Resposta 200 OK</span></div>
       <pre>{
   <span class="tok-k">"data"</span>: [
-    { <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>, <span class="tok-k">"type"</span>: <span class="tok-s">"nfe"</span>, <span class="tok-k">"model"</span>: <span class="tok-s">"55"</span>, <span class="tok-k">"status"</span>: <span class="tok-s">"completed"</span>, <span class="tok-k">"total_value"</span>: <span class="tok-s">6553.60</span>, <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T10:00:00.000Z"</span> }
+    { <span class="tok-k">"id"</span>: <span class="tok-s">"df_8f3a1c2b"</span>, <span class="tok-k">"type"</span>: <span class="tok-s">"nfe"</span>, <span class="tok-k">"model"</span>: <span class="tok-s">"55"</span>, <span class="tok-k">"status"</span>: <span class="tok-s">"completed"</span>, <span class="tok-k">"total_value"</span>: <span class="tok-s">"6553.60"</span>, <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T10:00:00.000Z"</span> }
   ],
-  <span class="tok-k">"page"</span>: <span class="tok-s">1</span>,
-  <span class="tok-k">"per_page"</span>: <span class="tok-s">20</span>,
-  <span class="tok-k">"total"</span>: <span class="tok-s">1</span>
+  <span class="tok-k">"next_cursor"</span>: <span class="tok-s">null</span>,
+  <span class="tok-k">"has_more"</span>: <span class="tok-s">false</span>
 }</pre>
     </div>
 
@@ -609,6 +612,7 @@
       </div>
       <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/documentos-fiscais/df_8f3a1c2b</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: df_8f3a1c2b-correcao-01"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "destination": {

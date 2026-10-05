@@ -94,7 +94,8 @@
     <h2 id="criar-contrato">Criar um contrato</h2>
     <p>
       Registre um novo contrato entre duas empresas, definindo partes, valor, vigência e
-      condições de pagamento.
+      condições de pagamento. O contrato nasce com situação <code class="inline">active</code>; a situação muda depois, pelo
+      endpoint próprio.
     </p>
 
     <div class="code-block">
@@ -107,6 +108,7 @@
       </div>
       <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/contratos</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: CTR-2026-001"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "external_contract_id": "CTR-2026-001",
@@ -115,11 +117,10 @@
     "supplier_cnpj": "98765432000188",
     "start_date": "2026-08-01",
     "end_date": "2027-07-31",
-    "total_value": 120000.00,
+    "total_value": "120000.00",
     "payment_conditions": "30-60-90",
     "autorenew": true,
     "rad_eligible": true,
-    "status": "active",
     "notes": "Supply contract subject to Tax Reform - IBS/CBS"
   }'</span></pre>
     </div>
@@ -143,11 +144,10 @@
       <tr><td>supplier_cnpj</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>CNPJ da empresa contratada (alfanumérico)</td></tr>
       <tr><td>start_date</td><td>date</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Data de início da vigência (YYYY-MM-DD)</td></tr>
       <tr><td>end_date</td><td>date</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Data de término/vigência (YYYY-MM-DD)</td></tr>
-      <tr><td>total_value</td><td>number</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Valor total do contrato</td></tr>
+      <tr><td>total_value</td><td>string (decimal)</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Valor total do contrato</td></tr>
       <tr><td>payment_conditions</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Condições de pagamento (ex: 30-60-90)</td></tr>
       <tr><td>autorenew</td><td>boolean</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>true ou false — define se o contrato é autorenovável</td></tr>
       <tr><td>rad_eligible</td><td>boolean</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>true ou false — define se é sujeito a RAD</td></tr>
-      <tr><td>status</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>active, closed, suspended ou cancelled</td></tr>
       <tr><td>notes</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Observações e anotações sobre o contrato</td></tr>
     </table>
 
@@ -165,7 +165,7 @@
           Copiar
         </button>
       </div>
-      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/contratos?status=ativo&page=1&limit=20"</span> \
+      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/contratos?status=active&page=1&page_size=20"</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
     </div>
 
@@ -181,16 +181,17 @@
       <span class="tok-k">"supplier_cnpj"</span>: <span class="tok-s">"98765432000188"</span>,
       <span class="tok-k">"start_date"</span>: <span class="tok-s">"2026-08-01"</span>,
       <span class="tok-k">"end_date"</span>: <span class="tok-s">"2027-07-31"</span>,
-      <span class="tok-k">"total_value"</span>: <span class="tok-s">120000.00</span>,
+      <span class="tok-k">"total_value"</span>: <span class="tok-s">"120000.00"</span>,
       <span class="tok-k">"autorenew"</span>: <span class="tok-s">true</span>,
       <span class="tok-k">"rad_eligible"</span>: <span class="tok-s">true</span>,
       <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
       <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
     }
   ],
-  <span class="tok-k">"total"</span>: <span class="tok-s">1</span>,
   <span class="tok-k">"page"</span>: <span class="tok-s">1</span>,
-  <span class="tok-k">"limit"</span>: <span class="tok-s">20</span>
+  <span class="tok-k">"page_size"</span>: <span class="tok-s">20</span>,
+  <span class="tok-k">"total"</span>: <span class="tok-s">1</span>,
+  <span class="tok-k">"total_pages"</span>: <span class="tok-s">1</span>
 }</pre>
     </div>
 
@@ -221,11 +222,12 @@
   <span class="tok-k">"supplier_cnpj"</span>: <span class="tok-s">"98765432000188"</span>,
   <span class="tok-k">"start_date"</span>: <span class="tok-s">"2026-08-01"</span>,
   <span class="tok-k">"end_date"</span>: <span class="tok-s">"2027-07-31"</span>,
-  <span class="tok-k">"total_value"</span>: <span class="tok-s">120000.00</span>,
+  <span class="tok-k">"total_value"</span>: <span class="tok-s">"120000.00"</span>,
   <span class="tok-k">"payment_conditions"</span>: <span class="tok-s">"30-60-90"</span>,
   <span class="tok-k">"autorenew"</span>: <span class="tok-s">true</span>,
   <span class="tok-k">"rad_eligible"</span>: <span class="tok-s">true</span>,
   <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
+  <span class="tok-k">"term_status"</span>: <span class="tok-s">"current"</span>,
   <span class="tok-k">"notes"</span>: <span class="tok-s">"Supply contract subject to Tax Reform - IBS/CBS"</span>,
   <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>,
   <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
@@ -234,7 +236,8 @@
 
     <h2 id="atualizar-contrato">Atualizar um contrato</h2>
     <p>
-      Atualize qualquer campo de um contrato, incluindo status, datas, valor ou observações.
+      Atualize datas, valor, condições de pagamento ou observações. A situação não muda por aqui: use
+      <a href="#situacao-contrato">Alterar a situação de um contrato</a>.
     </p>
 
     <div class="code-block">
@@ -247,11 +250,11 @@
       </div>
       <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/contratos/ctr_5f8a2d</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: CTR-2026-001-aditivo-01"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "end_date": "2027-12-31",
-    "payment_conditions": "30-60-90-120",
-    "status": "active"
+    "payment_conditions": "30-60-90-120"
   }'</span></pre>
     </div>
 
@@ -265,27 +268,53 @@
 }</pre>
     </div>
 
-    <h2 id="deletar-contrato">Deletar um contrato</h2>
+    <h2 id="situacao-contrato">Alterar a situação de um contrato</h2>
     <p>
-      Remova um contrato do sistema. Uma vez deletado, o contrato não poderá ser selecionado
-      em novas operações, mas o histórico permanecerá para auditoria.
+      Não há exclusão de contrato: o histórico precisa permanecer para auditoria fiscal. A situação muda por atos —
+      suspender, reativar, encerrar ou cancelar.
     </p>
 
     <div class="code-block">
       <div class="code-head">
-        <span>DELETE /v1/contratos/{id}</span>
+        <span>PATCH /v1/contratos/{id}/status</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X DELETE <span class="tok-k">https://api.splithub.com.br/v1/contratos/ctr_5f8a2d</span> \
-  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/contratos/ctr_5f8a2d/status</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: status-ctr_5f8a2d-001"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "status": "suspended"
+  }'</span></pre>
     </div>
 
     <div class="code-block">
-      <div class="code-head"><span>Resposta 204 No Content</span></div>
-      <pre></pre>
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"ctr_5f8a2d"</span>,
+  <span class="tok-k">"external_contract_id"</span>: <span class="tok-s">"CTR-2026-001"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"suspended"</span>,
+  <span class="tok-k">"term_status"</span>: <span class="tok-s">"current"</span>,
+  <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-10-05T10:00:00.000Z"</span>
+}</pre>
+    </div>
+
+    <table class="response-table">
+      <tr><th>De</th><th>Para</th><th>Quando</th></tr>
+      <tr><td><code class="inline">active</code></td><td><code class="inline">suspended</code></td><td>Suspensão temporária; o contrato pode voltar</td></tr>
+      <tr><td><code class="inline">suspended</code></td><td><code class="inline">active</code></td><td>Reativação</td></tr>
+      <tr><td><code class="inline">active</code> ou <code class="inline">suspended</code></td><td><code class="inline">closed</code></td><td>Encerramento. <strong>Terminal</strong></td></tr>
+      <tr><td><code class="inline">active</code> ou <code class="inline">suspended</code></td><td><code class="inline">cancelled</code></td><td>Cancelamento. <strong>Terminal</strong></td></tr>
+    </table>
+    <p>Transição fora da tabela responde <code class="inline">409 invalid_status_transition</code>.</p>
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;"><strong>A situação é ato; a vigência é calculada.</strong> Se o contrato está vigente, ainda não começou ou já terminou vem das datas, a cada leitura, no campo <code class="inline">term_status</code> (<code class="inline">upcoming</code>, <code class="inline">current</code>, <code class="inline">expired</code>) — nunca é enviado. Um contrato <code class="inline">active</code> com <code class="inline">term_status: expired</code> não cobre notas novas.</p>
+      </div>
     </div>
 
     <table class="response-table">
@@ -297,11 +326,12 @@
       <tr><td>supplier_cnpj</td><td>string</td><td>CNPJ da empresa contratada (alfanumérico: letras e números)</td></tr>
       <tr><td>start_date</td><td>date</td><td>Data de início da vigência (YYYY-MM-DD)</td></tr>
       <tr><td>end_date</td><td>date</td><td>Data de término/vigência (YYYY-MM-DD)</td></tr>
-      <tr><td>total_value</td><td>number</td><td>Valor total do contrato</td></tr>
+      <tr><td>total_value</td><td>string (decimal)</td><td>Valor total do contrato</td></tr>
       <tr><td>payment_conditions</td><td>string</td><td>Condições de pagamento (ex: 30-60-90)</td></tr>
       <tr><td>autorenew</td><td>boolean</td><td>true ou false — define se o contrato é autorenovável ao término da vigência</td></tr>
       <tr><td>rad_eligible</td><td>boolean</td><td>true ou false — define se o contrato é sujeito a RAD (Recolhimento pelo Adquirente)</td></tr>
-      <tr><td>status</td><td>string</td><td>active, closed, suspended or cancelled</td></tr>
+      <tr><td>status</td><td>string</td><td>Situação por ato: active, suspended, closed ou cancelled — muda pelo endpoint de situação</td></tr>
+      <tr><td>term_status</td><td>string</td><td>Vigência calculada pelas datas a cada leitura: upcoming, current ou expired. Somente leitura</td></tr>
       <tr><td>notes</td><td>string</td><td>Observações e anotações sobre o contrato</td></tr>
       <tr><td>created_at</td><td>timestamp</td><td>Data e hora da criação</td></tr>
       <tr><td>updated_at</td><td>timestamp</td><td>Data e hora da última atualização</td></tr>
@@ -338,6 +368,7 @@
       </div>
       <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/14200166000187/representantes</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: rep-12345678910"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "cpf": "12345678910",
@@ -405,7 +436,11 @@
       <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
       <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-08-02T15:30:00.000Z"</span>
     }
-  ]
+  ],
+  <span class="tok-k">"page"</span>: <span class="tok-s">1</span>,
+  <span class="tok-k">"page_size"</span>: <span class="tok-s">20</span>,
+  <span class="tok-k">"total"</span>: <span class="tok-s">1</span>,
+  <span class="tok-k">"total_pages"</span>: <span class="tok-s">1</span>
 }</pre>
     </div>
 
@@ -459,6 +494,7 @@
       </div>
       <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/14200166000187/representantes/rep_xyz789</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: rep_xyz789-alteracao-001"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "email": "newemail@fornecedora.com.br",
@@ -478,27 +514,36 @@
 }</pre>
     </div>
 
-    <h3 id="deletar-representante">Deletar um representante fiscal</h3>
+    <h3 id="situacao-representante">Alterar a situação de um representante fiscal</h3>
     <p>
-      Remova um representante fiscal do sistema. Uma vez deletado, o representante não poderá ser
-      utilizado em novas validações de documentos fiscais, mas os históricos permanecerão para auditoria.
+      Não há exclusão de representante: o histórico precisa permanecer para auditoria. Mude a situação para
+      <code class="inline">inactive</code> para tirá-lo de uso, ou <code class="inline">active</code> para reativá-lo.
     </p>
 
     <div class="code-block">
       <div class="code-head">
-        <span>DELETE /v1/fornecedores/{cnpj}/representantes/{id}</span>
+        <span>PATCH /v1/fornecedores/{cnpj}/representantes/{id}/status</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X DELETE <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/14200166000187/representantes/rep_xyz789</span> \
-  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/14200166000187/representantes/rep_xyz789/status</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: status-rep_xyz789-001"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "status": "inactive"
+  }'</span></pre>
     </div>
 
     <div class="code-block">
-      <div class="code-head"><span>Resposta 204 No Content</span></div>
-      <pre></pre>
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"rep_xyz789"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"inactive"</span>,
+  <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-10-05T10:00:00.000Z"</span>
+}</pre>
     </div>
 
     <div class="page-footer-nav">
@@ -519,7 +564,7 @@
     <a href="#listar-contratos" class="toc-link"><span class="toc-method toc-method-get">GET</span>Listar contratos</a>
     <a href="#consultar-contrato" class="toc-link"><span class="toc-method toc-method-get">GET</span>Consultar um contrato</a>
     <a href="#atualizar-contrato" class="toc-link"><span class="toc-method toc-method-patch">PATCH</span>Atualizar um contrato</a>
-    <a href="#deletar-contrato" class="toc-link"><span class="toc-method toc-method-delete">DELETE</span>Deletar um contrato</a>
+    <a href="#situacao-contrato" class="toc-link"><span class="toc-method toc-method-patch">PATCH</span>Alterar a situação</a>
 
     <div class="help-box">
       <p>Precisa de ajuda?</p>

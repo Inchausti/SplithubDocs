@@ -101,6 +101,87 @@
       <tr><td>Débito</td><td>settled</td><td>A NF de saída foi abatida pelos créditos appropriateds disponíveis (compensação tributo contra tributo)</td></tr>
     </table>
 
+    <h2 id="consultar-creditos">Consultar créditos</h2>
+    <p>
+      Os eventos abaixo avisam cada mudança de status. A consulta é o caminho de <strong>reconciliação</strong>: use-a para
+      conferir a posição dos créditos ou recuperar o que um evento perdido teria trazido. Uma linha por crédito — um documento
+      gera um crédito de IBS e outro de CBS. Paginação por cursor.
+    </p>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>GET /v1/creditos</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/creditos?competencia=2026-07&competencia=2026-09&status=nao_apropriado&tributo=cbs&limit=50"</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"data"</span>: [
+    {
+      <span class="tok-k">"id"</span>: <span class="tok-s">"cred_cbs_8f3a1c2b"</span>,
+      <span class="tok-k">"chave_dfe"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
+      <span class="tok-k">"tributo"</span>: <span class="tok-s">"cbs"</span>,
+      <span class="tok-k">"status_credito"</span>: <span class="tok-s">"nao_apropriado"</span>,
+      <span class="tok-k">"metodo_pagamento"</span>: <span class="tok-s">"rad"</span>,
+      <span class="tok-k">"valor"</span>: <span class="tok-s">"57.60"</span>,
+      <span class="tok-k">"used_value"</span>: <span class="tok-s">"0.00"</span>,
+      <span class="tok-k">"saldo"</span>: <span class="tok-s">"57.60"</span>,
+      <span class="tok-k">"appropriated_at"</span>: <span class="tok-s">null</span>,
+      <span class="tok-k">"extincao_em"</span>: <span class="tok-s">null</span>,
+      <span class="tok-k">"vencimento_em"</span>: <span class="tok-s">"2026-08-31"</span>,
+      <span class="tok-k">"flags"</span>: [],
+      <span class="tok-k">"extincao_debito"</span>: <span class="tok-s">"rad"</span>,
+      <span class="tok-k">"glosa_reason"</span>: <span class="tok-s">null</span>
+    }
+  ],
+  <span class="tok-k">"next_cursor"</span>: <span class="tok-s">null</span>,
+  <span class="tok-k">"has_more"</span>: <span class="tok-s">false</span>
+}</pre>
+    </div>
+    <p><strong>Filtros:</strong></p>
+    <table class="response-table">
+      <tr><th>Parâmetro</th><th>Descrição</th></tr>
+      <tr><td><code class="inline">competencia</code></td><td>Competência da <strong>emissão</strong> do documento, no formato YYYY-MM. Repetível — <code class="inline">?competencia=2026-07&competencia=2026-09</code> —, porque a seleção admite meses não contíguos</td></tr>
+      <tr><td><code class="inline">status</code></td><td>nao_apropriado, apropriado, utilizado ou glosado</td></tr>
+      <tr><td><code class="inline">metodo</code></td><td>split_payment, rad ou fornecedor</td></tr>
+      <tr><td><code class="inline">tributo</code></td><td>ibs ou cbs</td></tr>
+      <tr><td><code class="inline">fornecedor</code></td><td>Identificador do fornecedor (<code class="inline">forn_...</code>)</td></tr>
+      <tr><td><code class="inline">vencimento_mes</code></td><td>Mês do prazo para apropriar (YYYY-MM)</td></tr>
+      <tr><td><code class="inline">prescricao_mes</code></td><td>Mês do prazo do art. 54 (YYYY-MM)</td></tr>
+      <tr><td><code class="inline">limit</code>, <code class="inline">cursor</code>, <code class="inline">with_total</code></td><td>Ver <a href="visao-geral.html#paginacao">Paginação</a></td></tr>
+    </table>
+    <p><strong>Campos:</strong></p>
+    <table class="response-table">
+      <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+      <tr><td>id</td><td>string</td><td>Identificador do crédito</td></tr>
+      <tr><td>chave_dfe</td><td>string</td><td>Chave de acesso do documento de entrada (44 dígitos)</td></tr>
+      <tr><td>tributo</td><td>string</td><td>ibs ou cbs. IBS e CBS nunca vêm somados</td></tr>
+      <tr><td>status_credito</td><td>string</td><td>nao_apropriado, apropriado, utilizado ou glosado</td></tr>
+      <tr><td>metodo_pagamento</td><td>string</td><td>split_payment, rad ou fornecedor — quem recolhe o débito do fornecedor. Sem contrato vigente, vale split_payment, o mecanismo padrão</td></tr>
+      <tr><td>valor</td><td>string (decimal)</td><td>Valor do crédito</td></tr>
+      <tr><td>used_value</td><td>string (decimal)</td><td>Parcela já utilizada em compensação</td></tr>
+      <tr><td>saldo</td><td>string (decimal)</td><td>Valor menos a parcela utilizada</td></tr>
+      <tr><td>appropriated_at</td><td>string</td><td>Competência da apropriação (YYYY-MM). Ausente enquanto o crédito não for apropriado</td></tr>
+      <tr><td>extincao_em</td><td>date</td><td>Prazo do art. 54. Ausente enquanto não houver apropriação — a ausência não indica erro nem prescrição</td></tr>
+      <tr><td>vencimento_em</td><td>date</td><td>Prazo para apropriar: último dia do mês seguinte ao da emissão. Sempre presente, e diferente de <code class="inline">extincao_em</code></td></tr>
+      <tr><td>flags</td><td>array</td><td>Riscos de prazo identificados. Vazio indica ausência de risco de prazo, não ausência de pendência</td></tr>
+      <tr><td>extincao_debito</td><td>string</td><td>Modalidade de extinção do débito correspondente</td></tr>
+      <tr><td>glosa_reason</td><td>string</td><td>Motivo, quando <code class="inline">status_credito</code> é glosado</td></tr>
+    </table>
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;"><strong>Dois pontos em definição.</strong> O vocabulário de status desta consulta está em português, e o dos eventos desta página, em inglês — a unificação está em decisão. E a forma de contagem de <code class="inline">extincao_em</code> está em validação: trate a data como informativa até a confirmação, que será publicada neste changelog.</p>
+      </div>
+    </div>
+
     <h2 id="webhook-credito">Webhook event: mudança de status do crédito</h2>
     <p>
       Disparado sempre que o crédito tributário referente a um DF de entrada muda de status
@@ -119,12 +200,13 @@
         </button>
       </div>
       <pre>{
-  <span class="tok-k">"event"</span>: <span class="tok-s">"credito.status_alterado"</span>,
-  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:00:00.000Z"</span>,
+  <span class="tok-k">"id"</span>: <span class="tok-s">"evt_9f2a3c"</span>,
+  <span class="tok-k">"type"</span>: <span class="tok-s">"credito.status_alterado"</span>,
+  <span class="tok-k">"occurred_at"</span>: <span class="tok-s">"2026-07-29T15:00:00.000Z"</span>,
   <span class="tok-k">"data"</span>: {
     <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
     <span class="tok-k">"tax_type"</span>: <span class="tok-s">"cbs"</span>,
-    <span class="tok-k">"credit_amount"</span>: <span class="tok-s">9.00</span>,
+    <span class="tok-k">"credit_amount"</span>: <span class="tok-s">"9.00"</span>,
     <span class="tok-k">"previous_status"</span>: <span class="tok-s">"appropriated"</span>,
     <span class="tok-k">"current_status"</span>: <span class="tok-s">"utilized"</span>,
     <span class="tok-k">"change_reason"</span>: <span class="tok-s">"outbound_debt_offset"</span>,
@@ -137,11 +219,12 @@
 
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>event</td><td>string</td><td>Nome do evento: credito.status_alterado</td></tr>
-      <tr><td>created_at</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
+      <tr><td>id</td><td>string</td><td>Identificador do evento. Use-o para deduplicar: reentregas repetem o mesmo valor</td></tr>
+      <tr><td>type</td><td>string</td><td>Tipo do evento: credito.status_alterado</td></tr>
+      <tr><td>occurred_at</td><td>timestamp</td><td>Momento em que o fato ocorreu — não o do envio; os dois divergem quando há retentativa</td></tr>
       <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF de entrada que originou o crédito</td></tr>
       <tr><td>data.tax_type</td><td>string</td><td>Tributo do crédito: ibs ou cbs</td></tr>
-      <tr><td>data.credit_amount</td><td>number</td><td>Valor do crédito referente a este DF</td></tr>
+      <tr><td>data.credit_amount</td><td>string (decimal)</td><td>Valor do crédito referente a este DF</td></tr>
       <tr><td>data.previous_status / current_status</td><td>string</td><td>not_appropriated, appropriated ou utilized</td></tr>
       <tr><td>data.change_reason</td><td>string</td><td>inbound_tax_payment (not_appropriated → appropriated) ou outbound_debt_offset (appropriated → utilized)</td></tr>
       <tr><td>data.compensated_debt_dfe_key</td><td>string</td><td>Presente quando current_status é utilized: chave da NF de saída cujo débito foi compensado por este crédito</td></tr>
@@ -165,17 +248,18 @@
         </button>
       </div>
       <pre>{
-  <span class="tok-k">"event"</span>: <span class="tok-s">"debito.status_alterado"</span>,
-  <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:00:00.000Z"</span>,
+  <span class="tok-k">"id"</span>: <span class="tok-s">"evt_7b1d4e"</span>,
+  <span class="tok-k">"type"</span>: <span class="tok-s">"debito.status_alterado"</span>,
+  <span class="tok-k">"occurred_at"</span>: <span class="tok-s">"2026-07-29T15:00:00.000Z"</span>,
   <span class="tok-k">"data"</span>: {
     <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000098769876543210"</span>,
     <span class="tok-k">"tax_type"</span>: <span class="tok-s">"ibs"</span>,
-    <span class="tok-k">"debt_amount"</span>: <span class="tok-s">1.00</span>,
+    <span class="tok-k">"debt_amount"</span>: <span class="tok-s">"1.00"</span>,
     <span class="tok-k">"previous_status"</span>: <span class="tok-s">"not_settled"</span>,
     <span class="tok-k">"current_status"</span>: <span class="tok-s">"settled"</span>,
     <span class="tok-k">"extinction_type"</span>: <span class="tok-s">"inbound_credit_offset"</span>,
     <span class="tok-k">"utilized_credits"</span>: [
-      { <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>, <span class="tok-k">"utilized_amount"</span>: <span class="tok-s">1.00</span> }
+      { <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>, <span class="tok-k">"utilized_amount"</span>: <span class="tok-s">"1.00"</span> }
     ]
   }
 }</pre>
@@ -185,11 +269,12 @@
 
     <table class="response-table">
       <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
-      <tr><td>event</td><td>string</td><td>Nome do evento: debito.status_alterado</td></tr>
-      <tr><td>created_at</td><td>timestamp</td><td>Data e hora em que o evento foi disparado</td></tr>
+      <tr><td>id</td><td>string</td><td>Identificador do evento. Use-o para deduplicar: reentregas repetem o mesmo valor</td></tr>
+      <tr><td>type</td><td>string</td><td>Tipo do evento: debito.status_alterado</td></tr>
+      <tr><td>occurred_at</td><td>timestamp</td><td>Momento em que o fato ocorreu — não o do envio; os dois divergem quando há retentativa</td></tr>
       <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF de saída que originou o débito</td></tr>
       <tr><td>data.tax_type</td><td>string</td><td>Tributo do débito: ibs ou cbs</td></tr>
-      <tr><td>data.debt_amount</td><td>number</td><td>Valor do débito referente a este DF</td></tr>
+      <tr><td>data.debt_amount</td><td>string (decimal)</td><td>Valor do débito referente a este DF</td></tr>
       <tr><td>data.previous_status / current_status</td><td>string</td><td>not_settled ou settled</td></tr>
       <tr><td>data.extinction_type</td><td>string</td><td>inbound_credit_offset</td></tr>
       <tr><td>data.utilized_credits</td><td>array</td><td>Créditos (dfe_key + utilized_amount) usados para compensar este débito</td></tr>
@@ -210,6 +295,7 @@
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
     <a href="#ciclo-de-vida" class="toc-link active">Ciclo de vida do crédito e do débito</a>
+    <a href="#consultar-creditos" class="toc-link"><span class="toc-method toc-method-get">GET</span>Consultar créditos</a>
     <a href="#webhook-credito" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Status do crédito</a>
     <a href="#webhook-debito" class="toc-link"><span class="toc-method toc-method-webhook">WEBHOOK</span>Status do débito</a>
 

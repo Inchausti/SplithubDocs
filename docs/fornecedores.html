@@ -94,6 +94,7 @@
       </div>
       <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/fornecedores</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: forn-14200166000187"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "cnpj": "14200166000187",                
@@ -157,7 +158,7 @@
 
     <h2 id="listar-fornecedores">Listar fornecedores</h2>
     <p>
-      Liste todos os fornecedores registrados com suporte a paginação e filtros por status ou
+      Liste os fornecedores registrados, com paginação por página (ver <a href="visao-geral.html#paginacao">Paginação</a>) e filtros por situação ou
       razão social.
     </p>
 
@@ -169,7 +170,7 @@
           Copiar
         </button>
       </div>
-      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/fornecedores?status=ativo&page=1&limit=20"</span> \
+      <pre>curl <span class="tok-k">"https://api.splithub.com.br/v1/fornecedores?status=active&page=1&page_size=20"</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
     </div>
 
@@ -186,9 +187,10 @@
       <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-07-29T15:30:00.000Z"</span>
     }
   ],
-  <span class="tok-k">"total"</span>: <span class="tok-s">1</span>,
   <span class="tok-k">"page"</span>: <span class="tok-s">1</span>,
-  <span class="tok-k">"limit"</span>: <span class="tok-s">20</span>
+  <span class="tok-k">"page_size"</span>: <span class="tok-s">20</span>,
+  <span class="tok-k">"total"</span>: <span class="tok-s">1</span>,
+  <span class="tok-k">"total_pages"</span>: <span class="tok-s">1</span>
 }</pre>
     </div>
 
@@ -256,6 +258,7 @@
       </div>
       <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/forn_abc123</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: forn_abc123-alteracao-001"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "trade_name": "Fornecedora Premium",
@@ -277,27 +280,38 @@
 }</pre>
     </div>
 
-    <h2 id="deletar-fornecedor">Deletar um fornecedor</h2>
+    <h2 id="situacao-fornecedor">Alterar a situação de um fornecedor</h2>
     <p>
-      Remova um fornecedor do sistema. Uma vez deletado, o fornecedor não poderá ser selecionado
-      em novas operações, mas os históricos permanecerão para auditoria.
+      Não há exclusão de fornecedor: o histórico precisa permanecer para auditoria fiscal. Para tirá-lo de uso, mude a
+      situação para <code class="inline">inactive</code>; para voltar, <code class="inline">active</code>. Fornecedor inativo não recebe
+      contrato novo (<code class="inline">409 supplier_inactive</code>).
     </p>
 
     <div class="code-block">
       <div class="code-head">
-        <span>DELETE /v1/fornecedores/{id}</span>
+        <span>PATCH /v1/fornecedores/{id}/status</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X DELETE <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/forn_abc123</span> \
-  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/forn_abc123/status</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: status-forn_abc123-001"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "status": "inactive"
+  }'</span></pre>
     </div>
 
     <div class="code-block">
-      <div class="code-head"><span>Resposta 204 No Content</span></div>
-      <pre></pre>
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"forn_abc123"</span>,
+  <span class="tok-k">"cnpj"</span>: <span class="tok-s">"14200166000187"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"inactive"</span>,
+  <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-10-05T10:00:00.000Z"</span>
+}</pre>
     </div>
 
     <table class="response-table">
@@ -356,6 +370,7 @@
       </div>
       <pre>curl -X POST <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/14200166000187/representantes</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: rep-12345678910"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "cpf": "12345678910",
@@ -428,7 +443,11 @@
       <span class="tok-k">"status"</span>: <span class="tok-s">"active"</span>,
       <span class="tok-k">"created_at"</span>: <span class="tok-s">"2026-08-02T15:30:00.000Z"</span>
     }
-  ]
+  ],
+  <span class="tok-k">"page"</span>: <span class="tok-s">1</span>,
+  <span class="tok-k">"page_size"</span>: <span class="tok-s">20</span>,
+  <span class="tok-k">"total"</span>: <span class="tok-s">1</span>,
+  <span class="tok-k">"total_pages"</span>: <span class="tok-s">1</span>
 }</pre>
     </div>
 
@@ -483,6 +502,7 @@
       </div>
       <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/14200166000187/representantes/rep_xyz789</span> \
   -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: rep_xyz789-alteracao-001"</span> \
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "email": "newemail@fornecedora.com.br",
@@ -503,27 +523,36 @@
 }</pre>
     </div>
 
-    <h3 id="deletar-representante">Deletar um representante fiscal</h3>
+    <h3 id="situacao-representante">Alterar a situação de um representante fiscal</h3>
     <p>
-      Remova um representante fiscal do sistema. Uma vez deletado, o representante não poderá ser
-      utilizado em novas validações de documentos fiscais, mas os históricos permanecerão para auditoria.
+      Não há exclusão de representante: o histórico precisa permanecer para auditoria. Mude a situação para
+      <code class="inline">inactive</code> para tirá-lo de uso, ou <code class="inline">active</code> para reativá-lo.
     </p>
 
     <div class="code-block">
       <div class="code-head">
-        <span>DELETE /v1/fornecedores/{cnpj}/representantes/{id}</span>
+        <span>PATCH /v1/fornecedores/{cnpj}/representantes/{id}/status</span>
         <button>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copiar
         </button>
       </div>
-      <pre>curl -X DELETE <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/14200166000187/representantes/rep_xyz789</span> \
-  -H <span class="tok-s">"Authorization: Bearer {token}"</span></pre>
+      <pre>curl -X PATCH <span class="tok-k">https://api.splithub.com.br/v1/fornecedores/14200166000187/representantes/rep_xyz789/status</span> \
+  -H <span class="tok-s">"Authorization: Bearer {token}"</span> \
+  -H <span class="tok-s">"Idempotency-Key: status-rep_xyz789-001"</span> \
+  -H <span class="tok-s">"Content-Type: application/json"</span> \
+  -d <span class="tok-s">'{
+    "status": "inactive"
+  }'</span></pre>
     </div>
 
     <div class="code-block">
-      <div class="code-head"><span>Resposta 204 No Content</span></div>
-      <pre></pre>
+      <div class="code-head"><span>Resposta 200 OK</span></div>
+      <pre>{
+  <span class="tok-k">"id"</span>: <span class="tok-s">"rep_xyz789"</span>,
+  <span class="tok-k">"status"</span>: <span class="tok-s">"inactive"</span>,
+  <span class="tok-k">"updated_at"</span>: <span class="tok-s">"2026-10-05T10:00:00.000Z"</span>
+}</pre>
     </div>
 
     <div class="page-footer-nav">
@@ -544,13 +573,13 @@
     <a href="#listar-fornecedores" class="toc-link"><span class="toc-method toc-method-get">GET</span>Listar fornecedores</a>
     <a href="#consultar-fornecedor" class="toc-link"><span class="toc-method toc-method-get">GET</span>Consultar um fornecedor</a>
     <a href="#atualizar-fornecedor" class="toc-link"><span class="toc-method toc-method-patch">PATCH</span>Atualizar um fornecedor</a>
-    <a href="#deletar-fornecedor" class="toc-link"><span class="toc-method toc-method-delete">DELETE</span>Deletar um fornecedor</a>
+    <a href="#situacao-fornecedor" class="toc-link"><span class="toc-method toc-method-patch">PATCH</span>Alterar a situação</a>
     <a href="#representantes-fiscais" class="toc-link">Representantes Fiscais</a>
     <a href="#criar-representante" class="toc-link"><span class="toc-method toc-method-post">POST</span>Registrar um representante</a>
     <a href="#listar-representantes" class="toc-link"><span class="toc-method toc-method-get">GET</span>Listar representantes</a>
     <a href="#consultar-representante" class="toc-link"><span class="toc-method toc-method-get">GET</span>Consultar um representante</a>
     <a href="#atualizar-representante" class="toc-link"><span class="toc-method toc-method-patch">PATCH</span>Atualizar um representante</a>
-    <a href="#deletar-representante" class="toc-link"><span class="toc-method toc-method-delete">DELETE</span>Deletar um representante</a>
+    <a href="#situacao-representante" class="toc-link"><span class="toc-method toc-method-patch">PATCH</span>Alterar a situação do representante</a>
 
     <div class="help-box">
       <p>Precisa de ajuda?</p>
