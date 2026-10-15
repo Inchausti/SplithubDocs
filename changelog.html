@@ -73,6 +73,14 @@
       documentação da API do Splithub.
     </p>
 
+    <h2 id="v1-5-0">v1.5.0 — 15 de outubro de 2026</h2>
+    <p>O comprovante de pagamento da guia RAD passa a registrar o pagamento feito pelo ERP, sem os dados bancários do boleto, e ganha um identificador do lado do cliente. Esta versão <strong>altera o contrato</strong>.</p>
+    <ul>
+      <li><strong>Comprovante por boleto</strong> — saem <code>our_number</code>, <code>barcode</code>, <code>digitable_line</code>, <code>bank_code</code>, <code>branch</code> e <code>account</code>. Ficam <code>amount_paid</code>, <code>paid_at</code> e <code>description</code>. <a href="rad.html#submit-proof">RAD</a></li>
+      <li><strong>Rastreabilidade</strong> — novo campo opcional <code>erp_payment_id</code> no envio do comprovante, devolvido na resposta e no evento <code>rad.proof_received</code>. <a href="rad.html#submit-proof">RAD</a></li>
+      <li><strong>Evento <code>rad.proof_received</code></strong> — no boleto, saem <code>payment.identifier</code> e os dados bancários.</li>
+    </ul>
+
     <h2 id="v1-4-0">v1.4.0 — 15 de outubro de 2026</h2>
     <p>A base de cálculo de IBS e CBS sai do envio de documentos fiscais e das guias RAD. Esta versão <strong>altera o contrato</strong>: quem enviava o campo pode deixar de enviar; quem o lia nas guias deixa de recebê-lo.</p>
     <ul>
@@ -264,7 +272,8 @@
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#v1-4-0" class="toc-link active">v1.4.0 — 15 de outubro de 2026</a>
+    <a href="#v1-5-0" class="toc-link active">v1.5.0 — 15 de outubro de 2026</a>
+    <a href="#v1-4-0" class="toc-link">v1.4.0 — 15 de outubro de 2026</a>
     <a href="#v1-3-1" class="toc-link">v1.3.1 — 5 de outubro de 2026</a>
     <a href="#v1-3-0" class="toc-link">v1.3.0 — 5 de outubro de 2026</a>
     <a href="#v1-2-0" class="toc-link">v1.2.0 — 5 de outubro de 2026</a>

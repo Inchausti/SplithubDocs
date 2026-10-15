@@ -450,13 +450,14 @@
 
     <h2 id="submit-proof">Enviar o comprovante de pagamento</h2>
     <p>
-      No modo de pagamento pelo ERP, depois de pagar a guia por PIX ou boleto, envie o comprovante ao Splithub para conciliar a
-      retenção com o pagamento efetivamente realizado. Utilize <code class="inline">payment_type</code>
+      No modo de pagamento pelo ERP, depois de pagar a guia por PIX ou boleto, registre o pagamento no Splithub: é com ele que a
+      plataforma monta o comprovante e concilia o que foi pago com a guia. Utilize <code class="inline">payment_type</code>
       para indicar o método e inclua os campos específicos: <code class="inline">pix</code> (com
       <code class="inline">end_to_end_id</code>, <code class="inline">txid</code>, <code class="inline">pix_key</code>,
       <code class="inline">amount</code>, <code class="inline">paid_at</code>) ou <code class="inline">bank_slip</code>
-      (com <code class="inline">our_number</code>, <code class="inline">barcode</code>,
-      <code class="inline">amount_paid</code>, <code class="inline">paid_at</code>).
+      (com <code class="inline">amount_paid</code> e <code class="inline">paid_at</code>). Informe também, se quiser,
+      <code class="inline">erp_payment_id</code>, o identificador do registro de pagamento no seu ERP: ele volta no evento
+      <code class="inline">rad.proof_received</code> e mantém a rastreabilidade entre o Splithub e o seu sistema.
     </p>
 
     <div class="code-block">
@@ -473,6 +474,7 @@
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "darf_id": "darf_9f21ab",                   
+    "erp_payment_id": "PAG-2026-000123",       <span class="tok-c">// OPTIONAL - id do pagamento no seu ERP</span>
     "payment_type": "pix",                   
     "pix": {                                    <span class="tok-c">// REQUIRED (when payment_type=pix)</span>
       "end_to_end_id": "E14200166...",        
@@ -499,14 +501,9 @@
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "darf_id": "darf_8e32kc",                  
+    "erp_payment_id": "PAG-2026-000124",       <span class="tok-c">// OPTIONAL - id do pagamento no seu ERP</span>
     "payment_type": "bank_slip",                
     "bank_slip": {                                 <span class="tok-c">// REQUIRED (when payment_type=bank_slip)</span>
-      "our_number": "12345678",             
-      "barcode": "00190123456...",       <span class="tok-c">// REQUIRED - 44 dígitos</span>
-      "digitable_line": "00190.12345...",     <span class="tok-c">// REQUIRED - 48 dígitos</span>
-      "bank_code": "001",                          <span class="tok-c">// REQUIRED - código banco</span>
-      "branch": "1234",                      
-      "account": "123456",                      
       "amount_paid": "125.40",                 
       "paid_at": "2026-07-31T14:30...", <span class="tok-c">// REQUIRED - ISO 8601</span>
       "description": "Pagamento DARF IBS..."     
@@ -519,6 +516,7 @@
       <pre>{
   <span class="tok-k">"id"</span>: <span class="tok-s">"comp_5e21fa"</span>,
   <span class="tok-k">"darf_id"</span>: <span class="tok-s">"darf_9f21ab"</span>,
+  <span class="tok-k">"erp_payment_id"</span>: <span class="tok-s">"PAG-2026-000123"</span>,
   <span class="tok-k">"payment_type"</span>: <span class="tok-s">"pix"</span>,
   <span class="tok-k">"status"</span>: <span class="tok-s">"confirmed"</span>,
   <span class="tok-k">"amount_paid"</span>: <span class="tok-s">"57.60"</span>,
@@ -531,6 +529,7 @@
       <tr><th>Campo</th><th>Tipo</th><th>Status</th><th>Descrição</th></tr>
       <tr><td>darf_id</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Identificador do DARF ao qual este comprovante se refere</td></tr>
       <tr><td>payment_type</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>pix ou bank_slip</td></tr>
+      <tr><td>erp_payment_id</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Identificador do registro de pagamento no seu ERP. Volta no evento rad.proof_received e mantém a rastreabilidade</td></tr>
       <tr><td colspan="4"><strong>Campos de PIX (quando payment_type = pix)</strong></td></tr>
       <tr><td>pix.end_to_end_id</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Identificador único end-to-end da transação PIX</td></tr>
       <tr><td>pix.txid</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>ID da transação PIX (ID único por agência/conta)</td></tr>
@@ -539,12 +538,6 @@
       <tr><td>pix.paid_at</td><td>timestamp</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Data e hora de liquidação do PIX (ISO 8601)</td></tr>
       <tr><td>pix.description</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Informação livre ou memo da transação</td></tr>
       <tr><td colspan="4"><strong>Campos de boleto (quando payment_type = bank_slip)</strong></td></tr>
-      <tr><td>bank_slip.our_number</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Identificação única no sistema do banco emissor</td></tr>
-      <tr><td>bank_slip.barcode</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Código de barras do boleto (44 dígitos)</td></tr>
-      <tr><td>bank_slip.digitable_line</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Linha digitável do boleto (48 dígitos)</td></tr>
-      <tr><td>bank_slip.bank_code</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Código do banco (3 dígitos, ex: 001 para Banco do Brasil)</td></tr>
-      <tr><td>bank_slip.branch</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Número da agência</td></tr>
-      <tr><td>bank_slip.account</td><td>string</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Número da conta corrente</td></tr>
       <tr><td>bank_slip.amount_paid</td><td>string (decimal)</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Valor efetivamente pago</td></tr>
       <tr><td>bank_slip.paid_at</td><td>timestamp</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Data e hora do pagamento (ISO 8601)</td></tr>
       <tr><td>bank_slip.description</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Informação livre ou memo da transação</td></tr>
@@ -579,6 +572,7 @@
   <span class="tok-k">"data"</span>: {
     <span class="tok-k">"proof_id"</span>: <span class="tok-s">"comp_5e21fa"</span>,
     <span class="tok-k">"darf_id"</span>: <span class="tok-s">"darf_9f21ab"</span>,
+    <span class="tok-k">"erp_payment_id"</span>: <span class="tok-s">"PAG-2026-000123"</span>,
     <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000012341234567890"</span>,
     <span class="tok-k">"darf_type"</span>: <span class="tok-s">"cbs"</span>,
     <span class="tok-k">"status"</span>: <span class="tok-s">"success"</span>,
@@ -625,6 +619,7 @@
   <span class="tok-k">"data"</span>: {
     <span class="tok-k">"proof_id"</span>: <span class="tok-s">"comp_7g32hb"</span>,
     <span class="tok-k">"darf_id"</span>: <span class="tok-s">"darf_8e32kc"</span>,
+    <span class="tok-k">"erp_payment_id"</span>: <span class="tok-s">"PAG-2026-000124"</span>,
     <span class="tok-k">"dfe_key"</span>: <span class="tok-s">"35260714200166000187550010000054321098765432"</span>,
     <span class="tok-k">"darf_type"</span>: <span class="tok-s">"ibs"</span>,
     <span class="tok-k">"status"</span>: <span class="tok-s">"pending"</span>,
@@ -639,16 +634,8 @@
     },
     <span class="tok-k">"payment"</span>: {
       <span class="tok-k">"method"</span>: <span class="tok-s">"bank_slip"</span>,
-      <span class="tok-k">"identifier"</span>: {
-        <span class="tok-k">"our_number"</span>: <span class="tok-s">"12345678"</span>,
-        <span class="tok-k">"digitable_line"</span>: <span class="tok-s">"00190.12345 00012345678 00123456789 1 12345678901234"</span>,
-        <span class="tok-k">"barcode"</span>: <span class="tok-s">"00190123456000012345678001234567890112345"</span>
-      },
       <span class="tok-k">"amount_paid"</span>: <span class="tok-s">"125.40"</span>,
       <span class="tok-k">"paid_at"</span>: <span class="tok-s">"2026-07-31T14:30:00.000Z"</span>,
-      <span class="tok-k">"bank_code"</span>: <span class="tok-s">"001"</span>,
-      <span class="tok-k">"branch"</span>: <span class="tok-s">"1234"</span>,
-      <span class="tok-k">"account"</span>: <span class="tok-s">"123456"</span>,
       <span class="tok-k">"description"</span>: <span class="tok-s">"Pagamento DARF IBS - chave DFe 35260714200166000187550010000054321098765432"</span>
     },
     <span class="tok-k">"rfb_tracking"</span>: {
@@ -674,6 +661,7 @@
       <tr><td>occurred_at</td><td>timestamp</td><td>Momento em que o fato ocorreu — não o do envio; os dois divergem quando há retentativa</td></tr>
       <tr><td>data.proof_id</td><td>string</td><td>Identificador único do comprovante enviado</td></tr>
       <tr><td>data.darf_id</td><td>string</td><td>Identificador do DARF que foi pago</td></tr>
+      <tr><td>data.erp_payment_id</td><td>string</td><td>Identificador do registro de pagamento no seu ERP, quando informado no envio do comprovante</td></tr>
       <tr><td>data.dfe_key</td><td>string</td><td>Chave de acesso do DF-e original</td></tr>
       <tr><td>data.darf_type</td><td>string</td><td>Tributo: ibs ou cbs</td></tr>
       <tr><td>data.status</td><td>string</td><td>success (pagamento confirmado), pending (confirmação em andamento) ou failed (falha na transação)</td></tr>
@@ -688,14 +676,8 @@
       <tr><td>data.payment.identifier.end_to_end_id</td><td>string</td><td>End-to-end PIX (PIX apenas)</td></tr>
       <tr><td>data.payment.identifier.txid</td><td>string</td><td>TXID da transação PIX (PIX apenas)</td></tr>
       <tr><td>data.payment.identifier.pix_key</td><td>string</td><td>Chave PIX utilizada (PIX apenas)</td></tr>
-      <tr><td>data.payment.identifier.our_number</td><td>string</td><td>Nosso número do boleto (Boleto apenas)</td></tr>
-      <tr><td>data.payment.identifier.digitable_line</td><td>string</td><td>Linha digitável do boleto (Boleto apenas)</td></tr>
-      <tr><td>data.payment.identifier.barcode</td><td>string</td><td>Código de barras do boleto (Boleto apenas)</td></tr>
       <tr><td>data.payment.amount_paid</td><td>string (decimal)</td><td>Valor efetivamente pago</td></tr>
       <tr><td>data.payment.paid_at</td><td>timestamp</td><td>Data e hora do pagamento</td></tr>
-      <tr><td>data.payment.bank_code</td><td>string</td><td>Código do banco (boleto apenas)</td></tr>
-      <tr><td>data.payment.branch</td><td>string</td><td>Agência do banco (boleto apenas)</td></tr>
-      <tr><td>data.payment.account</td><td>string</td><td>Número da conta (boleto apenas)</td></tr>
       <tr><td>data.payment.description</td><td>string</td><td>Descrição/memo do pagamento</td></tr>
       <tr><td>data.rfb_tracking.payment_protocol</td><td>string</td><td>Protocolo da Receita Federal</td></tr>
       <tr><td>data.rfb_tracking.rdoc_status</td><td>string</td><td>Status no RDOC: pending, confirmed ou rejected</td></tr>
