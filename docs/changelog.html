@@ -73,6 +73,13 @@
       documentação da API do Splithub.
     </p>
 
+    <h2 id="v1-4-0">v1.4.0 — 15 de outubro de 2026</h2>
+    <p>A base de cálculo de IBS e CBS sai do envio de documentos fiscais e das guias RAD. Esta versão <strong>altera o contrato</strong>: quem enviava o campo pode deixar de enviar; quem o lia nas guias deixa de recebê-lo.</p>
+    <ul>
+      <li><strong>Ingestão de DFs</strong> — sai <code>v_bc</code> de <code>items[].tax.ibs_cbs</code> e de <code>total.ibs_cbs_total</code>, no envio individual, no lote e na consulta do documento. O modelo CSV passa a 22 colunas, sem <code>total_ibs_cbs_total_v_bc</code>. <a href="ingestao-dfs.html#criar-documento">Ingestão de DFs</a></li>
+      <li><strong>RAD</strong> — saem <code>cbs_base</code> e <code>ibs_base</code> de <code>fiscal_operation</code> no evento <code>rad.darf_received</code>, e <code>dfe_base</code> no evento em lote. Alíquotas, valores calculados, total retido e valor líquido ao fornecedor continuam. <a href="rad.html">RAD</a></li>
+    </ul>
+
     <h2 id="v1-3-1">v1.3.1 — 5 de outubro de 2026</h2>
     <p>Esclarecimentos sobre o método e o prazo de pagamento do contrato. Sem mudança de contrato da API.</p>
     <ul>
@@ -257,7 +264,8 @@
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#v1-3-1" class="toc-link active">v1.3.1 — 5 de outubro de 2026</a>
+    <a href="#v1-4-0" class="toc-link active">v1.4.0 — 15 de outubro de 2026</a>
+    <a href="#v1-3-1" class="toc-link">v1.3.1 — 5 de outubro de 2026</a>
     <a href="#v1-3-0" class="toc-link">v1.3.0 — 5 de outubro de 2026</a>
     <a href="#v1-2-0" class="toc-link">v1.2.0 — 5 de outubro de 2026</a>
     <a href="#v1-1-0" class="toc-link">v1.1.0 — 5 de outubro de 2026</a>

@@ -147,10 +147,8 @@
     },
     <span class="tok-k">"fiscal_operation"</span>: {
       <span class="tok-k">"gross_value"</span>: <span class="tok-s">"6400.00"</span>,
-      <span class="tok-k">"cbs_base"</span>: <span class="tok-s">"6400.00"</span>,
       <span class="tok-k">"cbs_rate"</span>: <span class="tok-s">"0.9"</span>,
       <span class="tok-k">"cbs_calculated"</span>: <span class="tok-s">"57.60"</span>,
-      <span class="tok-k">"ibs_base"</span>: <span class="tok-s">"6400.00"</span>,
       <span class="tok-k">"ibs_rate"</span>: <span class="tok-s">"0.1"</span>,
       <span class="tok-k">"ibs_calculated"</span>: <span class="tok-s">"6.40"</span>,
       <span class="tok-k">"total_tributes_retained"</span>: <span class="tok-s">"64.00"</span>,
@@ -205,10 +203,8 @@
       <tr><td>data.ibs_guide.total_value</td><td>string (decimal)</td><td>Valor total da guia IBS a recolher</td></tr>
       <tr><td colspan="3"><strong>Informações Financeiras da Operação</strong></td></tr>
       <tr><td>data.fiscal_operation.gross_value</td><td>string (decimal)</td><td>Valor bruto da operação fiscal</td></tr>
-      <tr><td>data.fiscal_operation.cbs_base</td><td>string (decimal)</td><td>Base de cálculo para CBS</td></tr>
       <tr><td>data.fiscal_operation.cbs_rate</td><td>string (decimal)</td><td>Alíquota de CBS (em percentual, ex: 0.9 = 0,9%)</td></tr>
       <tr><td>data.fiscal_operation.cbs_calculated</td><td>string (decimal)</td><td>Valor calculado de CBS retido</td></tr>
-      <tr><td>data.fiscal_operation.ibs_base</td><td>string (decimal)</td><td>Base de cálculo para IBS</td></tr>
       <tr><td>data.fiscal_operation.ibs_rate</td><td>string (decimal)</td><td>Alíquota de IBS (em percentual, ex: 0.1 = 0,1%)</td></tr>
       <tr><td>data.fiscal_operation.ibs_calculated</td><td>string (decimal)</td><td>Valor calculado de IBS retido</td></tr>
       <tr><td>data.fiscal_operation.total_tributes_retained</td><td>string (decimal)</td><td>Soma total de CBS + IBS retidos nesta operação</td></tr>
@@ -282,7 +278,6 @@
           <span class="tok-k">"darf_total_value"</span>: <span class="tok-s">"125.40"</span>
         },
         <span class="tok-k">"fiscal_operation"</span>: {
-          <span class="tok-k">"dfe_base"</span>: <span class="tok-s">"1000.00"</span>,
           <span class="tok-k">"cbs_rate"</span>: <span class="tok-s">"0.0576"</span>,
           <span class="tok-k">"ibs_rate"</span>: <span class="tok-s">"0.1254"</span>,
           <span class="tok-k">"net_value_to_supplier"</span>: <span class="tok-s">"816.80"</span>
@@ -353,10 +348,9 @@
       <tr><td>guides[].ibs_guide.darf_interest_value</td><td>string (decimal)</td><td>Valor de juros (se houver)</td></tr>
       <tr><td>guides[].ibs_guide.darf_total_value</td><td>string (decimal)</td><td>Valor total da guia IBS</td></tr>
       <tr><th colspan="3"><strong>Informações Financeiras (data.guides[].fiscal_operation)</strong></th></tr>
-      <tr><td>guides[].fiscal_operation.dfe_base</td><td>string (decimal)</td><td>Base de cálculo do DF-e (valor da operação)</td></tr>
       <tr><td>guides[].fiscal_operation.cbs_rate</td><td>string (decimal)</td><td>Alíquota CBS aplicada (ex: 0.0576 = 5.76%)</td></tr>
       <tr><td>guides[].fiscal_operation.ibs_rate</td><td>string (decimal)</td><td>Alíquota IBS aplicada (ex: 0.1254 = 12.54%)</td></tr>
-      <tr><td>guides[].fiscal_operation.net_value_to_supplier</td><td>string (decimal)</td><td>Valor líquido a repassar ao fornecedor (base - CBS - IBS)</td></tr>
+      <tr><td>guides[].fiscal_operation.net_value_to_supplier</td><td>string (decimal)</td><td>Valor líquido a repassar ao fornecedor: valor da operação menos a CBS e o IBS retidos</td></tr>
       <tr><th colspan="3"><strong>Sumário Consolidado (data.summary)</strong></th></tr>
       <tr><td>summary.total_documents</td><td>integer</td><td>Quantidade de documentos processados no lote</td></tr>
       <tr><td>summary.total_cbs_retained</td><td>string (decimal)</td><td>Soma de todas as retenções CBS</td></tr>
