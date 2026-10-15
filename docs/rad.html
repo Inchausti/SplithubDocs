@@ -455,7 +455,7 @@
       para indicar o método e inclua os campos específicos: <code class="inline">pix</code> (com
       <code class="inline">end_to_end_id</code>, <code class="inline">txid</code>, <code class="inline">pix_key</code>,
       <code class="inline">amount</code>, <code class="inline">paid_at</code>) ou <code class="inline">bank_slip</code>
-      (com <code class="inline">amount_paid</code> e <code class="inline">paid_at</code>). Informe também, se quiser,
+      (com os campos que o seu ERP lê no retorno CNAB 240 do banco &mdash; veja o de-para abaixo). Informe também, se quiser,
       <code class="inline">erp_payment_id</code>, o identificador do registro de pagamento no seu ERP: ele volta no evento
       <code class="inline">rad.proof_received</code> e mantém a rastreabilidade entre o Splithub e o seu sistema.
     </p>
@@ -501,12 +501,19 @@
   -H <span class="tok-s">"Content-Type: application/json"</span> \
   -d <span class="tok-s">'{
     "darf_id": "darf_8e32kc",                  
-    "erp_payment_id": "PAG-2026-000124",       <span class="tok-c">// OPTIONAL - id do pagamento no seu ERP</span>
-    "payment_type": "bank_slip",                
+    "erp_payment_id": "PAG-2026-000124",       <span class="tok-c">// OPTIONAL - seu número no CNAB</span>
+    "payment_type": "bank_slip",
     "bank_slip": {                                 <span class="tok-c">// REQUIRED (when payment_type=bank_slip)</span>
-      "amount_paid": "125.40",                 
-      "paid_at": "2026-07-31T14:30...", <span class="tok-c">// REQUIRED - ISO 8601</span>
-      "description": "Pagamento DARF IBS..."     
+      "amount_paid": "125.40",                  <span class="tok-c">// REQUIRED - valor líquido pago</span>
+      "paid_at": "2026-07-31",                  <span class="tok-c">// REQUIRED - data real da efetivação</span>
+      "face_value": "125.40",                   <span class="tok-c">// OPTIONAL - valor do título</span>
+      "discount_value": "0.00",                 <span class="tok-c">// OPTIONAL - descontos e abatimentos</span>
+      "interest_penalty_value": "0.00",         <span class="tok-c">// OPTIONAL - juros e multa</span>
+      "occurrence_code": "00",                  <span class="tok-c">// OPTIONAL - 00 = pagamento efetivado</span>
+      "authentication": "A7F3C9D21B8E4F60...",  <span class="tok-c">// OPTIONAL - autenticação (Segmento Z)</span>
+      "bank_protocol": "0000000000000000000045678", <span class="tok-c">// OPTIONAL - protocolo (Segmento Z)</span>
+      "our_number": "000000000012345",          <span class="tok-c">// OPTIONAL - nosso número</span>
+      "description": "Pagamento DARF IBS..."
     }
   }'</span></pre>
     </div>
@@ -537,11 +544,40 @@
       <tr><td>pix.amount</td><td>string (decimal)</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Valor da transação PIX</td></tr>
       <tr><td>pix.paid_at</td><td>timestamp</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Data e hora de liquidação do PIX (ISO 8601)</td></tr>
       <tr><td>pix.description</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Informação livre ou memo da transação</td></tr>
-      <tr><td colspan="4"><strong>Campos de boleto (quando payment_type = bank_slip)</strong></td></tr>
-      <tr><td>bank_slip.amount_paid</td><td>string (decimal)</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Valor efetivamente pago</td></tr>
-      <tr><td>bank_slip.paid_at</td><td>timestamp</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Data e hora do pagamento (ISO 8601)</td></tr>
+      <tr><td colspan="4"><strong>Campos de boleto (quando payment_type = bank_slip) &mdash; lidos pelo ERP no retorno CNAB 240</strong></td></tr>
+      <tr><td>bank_slip.amount_paid</td><td>string (decimal)</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Valor líquido pago. No CNAB, o valor pago do Segmento J ou do Segmento O</td></tr>
+      <tr><td>bank_slip.paid_at</td><td>date ou timestamp</td><td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OBRIGATÓRIO</span></td><td>Data real da efetivação do pagamento. O retorno traz DDMMAAAA: envie AAAA-MM-DD, ou data e hora em ISO 8601 se o ERP tiver a hora</td></tr>
+      <tr><td>bank_slip.face_value</td><td>string (decimal)</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Valor do título, como emitido. Confere com o valor total da guia</td></tr>
+      <tr><td>bank_slip.discount_value</td><td>string (decimal)</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Valor dos descontos e abatimentos (Segmento J)</td></tr>
+      <tr><td>bank_slip.interest_penalty_value</td><td>string (decimal)</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Valor dos juros e da multa pagos em atraso (Segmento J). Confere com a multa e os juros da guia</td></tr>
+      <tr><td>bank_slip.occurrence_code</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Código de ocorrência do retorno. Recomendado: 00 confirma o pagamento efetivado</td></tr>
+      <tr><td>bank_slip.authentication</td><td>string (até 64)</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Autenticação eletrônica do banco, o número do comprovante (Segmento Z). Recomendado: é a prova bancária e aparece no comprovante montado pelo Splithub</td></tr>
+      <tr><td>bank_slip.bank_protocol</td><td>string (até 25)</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Protocolo bancário de validação do pagamento (Segmento Z)</td></tr>
+      <tr><td>bank_slip.our_number</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Nosso número: identificador do documento atribuído pelo banco</td></tr>
       <tr><td>bank_slip.description</td><td>string</td><td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:3px;font-size:0.85em;font-weight:600;">OPCIONAL</span></td><td>Informação livre ou memo da transação</td></tr>
     </table>
+
+    <p><strong>De-para do retorno CNAB 240:</strong> o seu ERP lê estes campos no arquivo de retorno do banco e os envia no comprovante.</p>
+    <table class="response-table">
+      <tr><th>Campo no retorno CNAB 240</th><th>Segmento</th><th>Campo no Splithub</th></tr>
+      <tr><td>Autenticação eletrônica / número do comprovante (até 64)</td><td>Z</td><td>bank_slip.authentication</td></tr>
+      <tr><td>Protocolo bancário (25 posições)</td><td>Z</td><td>bank_slip.bank_protocol</td></tr>
+      <tr><td>Data real da efetivação (DDMMAAAA)</td><td>Z, J ou O</td><td>bank_slip.paid_at</td></tr>
+      <tr><td>Valor do título</td><td>J ou O</td><td>bank_slip.face_value</td></tr>
+      <tr><td>Valor dos descontos / abatimentos</td><td>J</td><td>bank_slip.discount_value</td></tr>
+      <tr><td>Valor dos juros / multa</td><td>J</td><td>bank_slip.interest_penalty_value</td></tr>
+      <tr><td>Valor líquido pago</td><td>J ou O</td><td>bank_slip.amount_paid</td></tr>
+      <tr><td>Código de movimento / ocorrência</td><td>J ou O</td><td>bank_slip.occurrence_code</td></tr>
+      <tr><td>Seu número (identificador no ERP)</td><td>J ou O</td><td>erp_payment_id</td></tr>
+      <tr><td>Nosso número</td><td>J ou O</td><td>bank_slip.our_number</td></tr>
+    </table>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">A guia de CBS e a de IBS são documentos de arrecadação (código de barras iniciado em 8): no retorno, costumam vir no Segmento O, que não traz desconto nem juros e multa. Envie só os campos que o retorno trouxer. Envie o comprovante quando o pagamento estiver efetivado (ocorrência <code class="inline">00</code> no padrão FEBRABAN): ocorrências de inclusão ou agendamento aceitos, como <code class="inline">BD</code>, não comprovam o pagamento. Posições e tabela de ocorrências variam por banco &mdash; confira no layout do seu banco. Quando os valores vierem, o Splithub confere: valor pago = valor do título &minus; descontos + juros e multa.</p>
+      </div>
+    </div>
 
     <h2 id="webhook-proof">Webhook event: recepção comprovante</h2>
     <p>
@@ -635,7 +671,14 @@
     <span class="tok-k">"payment"</span>: {
       <span class="tok-k">"method"</span>: <span class="tok-s">"bank_slip"</span>,
       <span class="tok-k">"amount_paid"</span>: <span class="tok-s">"125.40"</span>,
-      <span class="tok-k">"paid_at"</span>: <span class="tok-s">"2026-07-31T14:30:00.000Z"</span>,
+      <span class="tok-k">"paid_at"</span>: <span class="tok-s">"2026-07-31"</span>,
+      <span class="tok-k">"face_value"</span>: <span class="tok-s">"125.40"</span>,
+      <span class="tok-k">"discount_value"</span>: <span class="tok-s">"0.00"</span>,
+      <span class="tok-k">"interest_penalty_value"</span>: <span class="tok-s">"0.00"</span>,
+      <span class="tok-k">"occurrence_code"</span>: <span class="tok-s">"00"</span>,
+      <span class="tok-k">"authentication"</span>: <span class="tok-s">"A7F3C9D21B8E4F60A1C5D7E9F2B4C6D8"</span>,
+      <span class="tok-k">"bank_protocol"</span>: <span class="tok-s">"0000000000000000000045678"</span>,
+      <span class="tok-k">"our_number"</span>: <span class="tok-s">"000000000012345"</span>,
       <span class="tok-k">"description"</span>: <span class="tok-s">"Pagamento DARF IBS - chave DFe 35260714200166000187550010000054321098765432"</span>
     },
     <span class="tok-k">"rfb_tracking"</span>: {
@@ -677,7 +720,14 @@
       <tr><td>data.payment.identifier.txid</td><td>string</td><td>TXID da transação PIX (PIX apenas)</td></tr>
       <tr><td>data.payment.identifier.pix_key</td><td>string</td><td>Chave PIX utilizada (PIX apenas)</td></tr>
       <tr><td>data.payment.amount_paid</td><td>string (decimal)</td><td>Valor efetivamente pago</td></tr>
-      <tr><td>data.payment.paid_at</td><td>timestamp</td><td>Data e hora do pagamento</td></tr>
+      <tr><td>data.payment.paid_at</td><td>date ou timestamp</td><td>Data do pagamento; com hora quando informada no envio</td></tr>
+      <tr><td>data.payment.face_value</td><td>string (decimal)</td><td>Valor do título (boleto apenas, quando enviado)</td></tr>
+      <tr><td>data.payment.discount_value</td><td>string (decimal)</td><td>Descontos e abatimentos (boleto apenas, quando enviado)</td></tr>
+      <tr><td>data.payment.interest_penalty_value</td><td>string (decimal)</td><td>Juros e multa (boleto apenas, quando enviado)</td></tr>
+      <tr><td>data.payment.occurrence_code</td><td>string</td><td>Código de ocorrência do retorno CNAB (boleto apenas, quando enviado)</td></tr>
+      <tr><td>data.payment.authentication</td><td>string</td><td>Autenticação eletrônica do banco (boleto apenas, quando enviada)</td></tr>
+      <tr><td>data.payment.bank_protocol</td><td>string</td><td>Protocolo bancário (boleto apenas, quando enviado)</td></tr>
+      <tr><td>data.payment.our_number</td><td>string</td><td>Nosso número (boleto apenas, quando enviado)</td></tr>
       <tr><td>data.payment.description</td><td>string</td><td>Descrição/memo do pagamento</td></tr>
       <tr><td>data.rfb_tracking.payment_protocol</td><td>string</td><td>Protocolo da Receita Federal</td></tr>
       <tr><td>data.rfb_tracking.rdoc_status</td><td>string</td><td>Status no RDOC: pending, confirmed ou rejected</td></tr>

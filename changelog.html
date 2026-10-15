@@ -73,6 +73,15 @@
       documentação da API do Splithub.
     </p>
 
+    <h2 id="v1-6-0">v1.6.0 — 15 de outubro de 2026</h2>
+    <p>O comprovante de pagamento por boleto passa a levar os campos que o ERP lê no retorno CNAB 240 do banco. Mudança só de acréscimo: os campos novos são opcionais, e quem já envia o comprovante da v1.5.0 continua válido.</p>
+    <ul>
+      <li><strong>Comprovante por boleto</strong> — novos campos opcionais em <code>bank_slip</code>: <code>face_value</code>, <code>discount_value</code>, <code>interest_penalty_value</code>, <code>occurrence_code</code>, <code>authentication</code>, <code>bank_protocol</code> e <code>our_number</code>. <code>amount_paid</code> passa a ser o valor líquido pago. <a href="rad.html#submit-proof">RAD</a></li>
+      <li><strong>Data do pagamento</strong> — <code>bank_slip.paid_at</code> aceita só a data (AAAA-MM-DD), que é o que o retorno traz, ou data e hora em ISO 8601. <a href="rad.html#submit-proof">RAD</a></li>
+      <li><strong>De-para do retorno CNAB 240</strong> — tabela que liga cada campo do retorno (Segmentos J, O e Z) ao campo do comprovante; o seu número vai em <code>erp_payment_id</code>. <a href="rad.html#submit-proof">RAD</a></li>
+      <li><strong>Evento <code>rad.proof_received</code></strong> — no boleto, devolve os campos do CNAB que foram enviados. <a href="rad.html#webhook-proof">RAD</a></li>
+    </ul>
+
     <h2 id="v1-5-0">v1.5.0 — 15 de outubro de 2026</h2>
     <p>O comprovante de pagamento da guia RAD passa a registrar o pagamento feito pelo ERP, sem os dados bancários do boleto, e ganha um identificador do lado do cliente. Esta versão <strong>altera o contrato</strong>.</p>
     <ul>
@@ -272,7 +281,8 @@
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#v1-5-0" class="toc-link active">v1.5.0 — 15 de outubro de 2026</a>
+    <a href="#v1-6-0" class="toc-link active">v1.6.0 — 15 de outubro de 2026</a>
+    <a href="#v1-5-0" class="toc-link">v1.5.0 — 15 de outubro de 2026</a>
     <a href="#v1-4-0" class="toc-link">v1.4.0 — 15 de outubro de 2026</a>
     <a href="#v1-3-1" class="toc-link">v1.3.1 — 5 de outubro de 2026</a>
     <a href="#v1-3-0" class="toc-link">v1.3.0 — 5 de outubro de 2026</a>
