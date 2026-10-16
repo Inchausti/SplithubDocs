@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collection Postman · Splithub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .response-table.text-first td:first-child{font-family:var(--font-body);font-weight:var(--font-weight-medium);}
+  .response-table .grp td{background:var(--bg-sunken);font-family:var(--font-body);font-weight:var(--font-weight-semibold);color:var(--ink);}
+  .steps{margin:0 0 24px;padding-left:22px;line-height:var(--line-height-normal);}
+  .steps li{margin:0 0 8px;}
+  .downloads{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:0 0 28px;}
+  .download{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;background:var(--bg);}
+  .download .kind{font-size:var(--font-size-xs);font-weight:var(--font-weight-semibold);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);}
+  .download .name{font-family:var(--font-display);font-weight:var(--font-weight-bold);font-size:var(--font-size-lg);color:var(--ink);margin:4px 0 6px;}
+  .download p{font-size:13.5px;color:var(--ink-soft);margin:0 0 10px;}
+  .download a{font-size:13.5px;font-weight:var(--font-weight-semibold);color:var(--green-dark);border-bottom:1px solid var(--green-dark);}
+  .download .file{display:block;font-family:var(--font-mono);font-size:var(--font-size-xs);color:var(--ink-faint);margin-top:8px;overflow-wrap:anywhere;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="menu-toggle" aria-label="Abrir menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <div class="brand"><span class="mark"></span><span class="wordmark">splithub</span></div>
+  <nav class="topnav">
+    <a href="visao-geral.html" class="active">Guias</a>
+    <a href="em-breve.html">Referência</a>
+    <a href="changelog.html">Changelog</a>
+  </nav>
+  <div class="topbar-right">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      Buscar na documentação
+      <span class="kbd">⌘K</span>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <a href="index.html" class="nav-flat">Home</a>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Introdução e aspectos gerais
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="visao-geral.html" class="nav-item">Visão geral</a>
+        <a href="mapa-integracao.html" class="nav-item">Mapa de Integração</a>
+        <a href="autenticacao.html" class="nav-item">Autenticação</a>
+        <a href="webhooks.html" class="nav-item">Webhooks</a>
+        <a href="postman.html" class="nav-item active">Collection Postman</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">
+        Recursos
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <div class="nav-items">
+        <a href="ingestao-dfs.html" class="nav-item">Ingestão DFs</a>
+        <a href="rad.html" class="nav-item">RAD</a>
+        <a href="garantia-credito.html" class="nav-item">Garantia de crédito</a>
+        <a href="automacoes.html" class="nav-item">Automações</a>
+        <a href="contratos.html" class="nav-item">Contratos</a>
+        <a href="fornecedores.html" class="nav-item">Fornecedores</a>      </div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="breadcrumb">Introdução e aspectos gerais / Collection Postman</div>
+    <h1>Collection Postman</h1>
+    <p class="lede">
+      Uma collection do Postman que faz o papel do seu ERP, de ponta a ponta: obtém o token, cadastra fornecedor e
+      contrato, envia documentos fiscais — um a um e em lote — e confere cada resposta com testes automáticos. Use-a
+      para validar a sua credencial no ambiente de testes e ver cada requisição funcionando antes de escrever a integração.
+    </p>
+
+    <h2 id="arquivos">Baixar os arquivos</h2>
+    <p>São dois arquivos no formato Postman Collection v2.1. Importe os dois: a collection traz as requisições, e o environment traz o endereço do ambiente e as variáveis que elas usam.</p>
+
+    <div class="downloads">
+      <div class="download">
+        <div class="kind">Collection</div>
+        <div class="name">SplitHub API v1 (cliente ERP)</div>
+        <p>32 requisições em 4 pastas: autenticação, fornecedores, contratos e documentos fiscais, com testes em cada resposta.</p>
+        <a href="assets/postman/splithub-api-v1-cliente-erp.postman_collection.json" download>Baixar a collection</a>
+        <span class="file">splithub-api-v1-cliente-erp.postman_collection.json</span>
+      </div>
+      <div class="download">
+        <div class="kind">Environment</div>
+        <div class="name">staging</div>
+        <p>Endereço do ambiente de testes e as variáveis da collection. As credenciais vêm vazias.</p>
+        <a href="assets/postman/splithub-staging.postman_environment.json" download>Baixar o environment</a>
+        <span class="file">splithub-staging.postman_environment.json</span>
+      </div>
+    </div>
+
+    <h2 id="antes">Antes de começar</h2>
+    <table class="response-table text-first">
+      <tr><th>Você precisa de</th><th>Por quê</th></tr>
+      <tr><td>Postman, no app de desktop ou na web</td><td>Qualquer versão atual importa o formato v2.1. Para rodar pela linha de comando, use o <a href="#newman">newman</a></td></tr>
+      <tr><td>Uma credencial do staging</td><td><code class="inline">client_id</code> e <code class="inline">client_secret</code> fornecidos pelo Splithub, com os escopos <code class="inline">suppliers:read</code>, <code class="inline">suppliers:write</code>, <code class="inline">contracts:read</code>, <code class="inline">contracts:write</code>, <code class="inline">dfs:read</code> e <code class="inline">dfs:write</code> — ver <a href="autenticacao.html#escopos">Escopos</a></td></tr>
+      <tr><td>O estabelecimento comprador cadastrado</td><td>Os documentos são enviados para o CNPJ em <code class="inline">buyer_cnpj</code>. Ele precisa estar cadastrado na organização da credencial; se não estiver, o documento termina com <code class="inline">recipient_not_registered</code></td></tr>
+    </table>
+
+    <h2 id="importar">Importar no Postman</h2>
+    <ol class="steps">
+      <li>Baixe os dois arquivos acima.</li>
+      <li>No Postman, clique em <strong>Import</strong>, no alto da barra lateral, ou use <span class="kbd">Ctrl</span> + <span class="kbd">O</span> (<span class="kbd">⌘</span> + <span class="kbd">O</span> no Mac).</li>
+      <li>Arraste os dois arquivos para a janela de importação, ou clique em <strong>files</strong> para escolhê-los, e confirme com <strong>Import</strong>.</li>
+      <li>A collection <strong>SplitHub API v1 (cliente ERP)</strong> aparece em <strong>Collections</strong>, e o environment <strong>staging</strong>, em <strong>Environments</strong>.</li>
+      <li>No seletor de environment, no canto superior direito, escolha <strong>staging</strong>. Sem ele, <code class="inline">{{base_url}}</code> não é resolvido e as requisições falham por endereço inválido.</li>
+    </ol>
+
+    <h2 id="configurar">Configurar o environment</h2>
+    <p>Abra o environment <strong>staging</strong> e preencha as variáveis abaixo. As outras ficam vazias: a collection as preenche durante a execução.</p>
+    <table class="response-table">
+      <tr><th>Variável</th><th>O que informar</th></tr>
+      <tr><td>client_id</td><td><strong>Obrigatória.</strong> Identificador da sua credencial</td></tr>
+      <tr><td>client_secret</td><td><strong>Obrigatória.</strong> Segredo da credencial. É do tipo <em>secret</em>: o Postman mostra mascarado</td></tr>
+      <tr><td>base_url</td><td>Já vem com o endereço do staging. Não altere</td></tr>
+      <tr><td>buyer_cnpj</td><td>CNPJ do estabelecimento comprador da sua organização, com 14 dígitos. Vem com um exemplo: troque pelo seu</td></tr>
+      <tr><td>buyer_name</td><td>Razão social do comprador</td></tr>
+      <tr><td>buyer_state</td><td>UF do comprador</td></tr>
+      <tr><td>fallback_supplier_cnpj</td><td>Opcional. CNPJ emitente usado quando o fornecedor da rodada ainda não foi gerado</td></tr>
+    </table>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">Preencha <code class="inline">client_id</code> e <code class="inline">client_secret</code> no <strong>valor atual</strong> (<em>Current value</em>), que fica só na sua máquina, e deixe o valor inicial vazio. Assim o segredo não vai junto quando o environment é sincronizado com o workspace, compartilhado ou exportado. Nunca envie o environment com o segredo preenchido.</p>
+      </div>
+    </div>
+
+    <p>As variáveis <code class="inline">access_token</code>, <code class="inline">token_expires_at</code>, <code class="inline">run_id</code>, <code class="inline">supplier_*</code>, <code class="inline">contract_id</code>, <code class="inline">document_id</code>, <code class="inline">batch_id</code> e as demais são gravadas pela própria collection. Algumas ficam reservadas para pastas futuras — envio de arquivo, guias RAD, créditos e webhooks — e podem continuar vazias.</p>
+
+    <h2 id="executar">Executar a collection</h2>
+
+    <h3 id="runner">Tudo de uma vez, pelo Runner</h3>
+    <ol class="steps">
+      <li>Na barra lateral, abra o menu <strong>⋯</strong> da collection e escolha <strong>Run collection</strong>.</li>
+      <li>Mantenha todas as requisições marcadas, na ordem em que vêm, e o environment <strong>staging</strong> selecionado.</li>
+      <li>Clique em <strong>Run SplitHub API v1 (cliente ERP)</strong>. O Runner executa as 32 requisições e mostra, para cada uma, os testes que passaram e os que falharam.</li>
+    </ol>
+
+    <h3 id="uma-a-uma">Uma requisição por vez</h3>
+    <p>
+      Comece pela <strong>01.1 Cadastrar fornecedor</strong>: ela abre uma rodada nova, com um fornecedor novo. Depois siga a
+      numeração. As pastas dependem das anteriores: os contratos usam o fornecedor da 01.1, e os documentos usam o
+      fornecedor e o contrato da 02.1. O resultado dos testes aparece na aba <strong>Test Results</strong> da resposta.
+    </p>
+
+    <h3 id="newman">Pela linha de comando, com o newman</h3>
+    <p>O newman roda a collection fora do Postman — no terminal ou no seu CI — e termina com erro se algum teste falhar.</p>
+    <div class="code-block">
+      <div class="code-head">
+        <span>newman</span>
+        <button>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar
+        </button>
+      </div>
+      <pre>npm install -g newman
+
+newman run <span class="tok-s">splithub-api-v1-cliente-erp.postman_collection.json</span> \
+  -e <span class="tok-s">splithub-staging.postman_environment.json</span> \
+  --env-var <span class="tok-s">"client_id=$SPLITHUB_CLIENT_ID"</span> \
+  --env-var <span class="tok-s">"client_secret=$SPLITHUB_CLIENT_SECRET"</span></pre>
+    </div>
+    <p>Guarde as credenciais em variáveis de ambiente do sistema ou no cofre de segredos do CI, nunca no arquivo do environment.</p>
+
+    <h2 id="automatico">O que a collection faz sozinha</h2>
+    <table class="response-table text-first">
+      <tr><th>O quê</th><th>Como</th></tr>
+      <tr><td>Token</td><td>Antes de cada requisição, o script da collection pede um token quando ele falta ou quando faltam menos de 2 minutos para expirar (validade de 720 segundos), e o grava em <code class="inline">access_token</code>. Não é preciso rodar a 00.1 antes: ela serve para conferir a credencial e os escopos</td></tr>
+      <tr><td>Dados novos a cada rodada</td><td>A 01.1 gera um CNPJ de fornecedor fictício e o identificador externo do contrato (<code class="inline">CTR-…</code>). Rodar de novo não colide com a rodada anterior</td></tr>
+      <tr><td>Chaves de acesso</td><td>Cada envio de documento gera uma chave de 44 dígitos, com dígito verificador válido, emitida pelo fornecedor da rodada</td></tr>
+      <tr><td>Vigência do contrato</td><td>Calculada a partir de hoje: início há 30 dias e fim em 365 dias. O contrato está sempre em vigor na emissão dos documentos</td></tr>
+      <tr><td>Idempotência</td><td>Toda escrita leva uma <code class="inline">Idempotency-Key</code> nova — ver <a href="visao-geral.html">Visão geral</a></td></tr>
+      <tr><td>Encadeamento</td><td>Os identificadores devolvidos — fornecedor, contrato, documento e lote — são gravados no environment e usados pelas requisições seguintes</td></tr>
+      <tr><td>Testes</td><td>Cada requisição confere o status esperado, os campos da resposta e a presença dos cabeçalhos <code class="inline">RateLimit-*</code></td></tr>
+    </table>
+
+    <h2 id="pastas">Pastas e requisições</h2>
+    <p>Algumas requisições existem para mostrar uma recusa da API: 01.6, 02.9, 03.13 e 03.15 esperam erro. Nelas, o teste passa quando a API recusa como deve.</p>
+    <table class="response-table">
+      <tr><th>#</th><th>Requisição</th><th>Rota</th><th>Resultado esperado</th></tr>
+      <tr class="grp"><td colspan="4">00 Autenticação</td></tr>
+      <tr><td>00.1</td><td>Obter token</td><td>POST /public/oauth/token</td><td>200 — token Bearer de 720 s, com o escopo <code class="inline">dfs:write</code></td></tr>
+      <tr class="grp"><td colspan="4">01 Fornecedores</td></tr>
+      <tr><td>01.1</td><td>Cadastrar fornecedor</td><td>POST /v1/suppliers</td><td>201 — fornecedor criado. Abre uma rodada nova</td></tr>
+      <tr><td>01.2</td><td>Listar fornecedores</td><td>GET /v1/suppliers</td><td>200 — paginação, com o fornecedor da 01.1</td></tr>
+      <tr><td>01.3</td><td>Consultar fornecedor</td><td>GET /v1/suppliers/{id}</td><td>200 — registro completo, com endereço e contato</td></tr>
+      <tr><td>01.4</td><td>Atualizar fornecedor</td><td>PATCH /v1/suppliers/{id}</td><td>200 — campos alterados; os demais ficam como estavam</td></tr>
+      <tr><td>01.5</td><td>Inativar fornecedor</td><td>PATCH /v1/suppliers/{id}/status</td><td>200 — situação <code class="inline">inactive</code></td></tr>
+      <tr><td>01.6</td><td>Contrato para fornecedor inativo</td><td>POST /v1/contracts</td><td>409 <code class="inline">supplier_inactive</code></td></tr>
+      <tr><td>01.7</td><td>Reativar fornecedor</td><td>PATCH /v1/suppliers/{id}/status</td><td>200 — situação <code class="inline">active</code></td></tr>
+      <tr class="grp"><td colspan="4">02 Contratos</td></tr>
+      <tr><td>02.1</td><td>Cadastrar contrato</td><td>POST /v1/contracts</td><td>201 — contrato RAD ativo, com o fornecedor da 01.1</td></tr>
+      <tr><td>02.2</td><td>Listar contratos</td><td>GET /v1/contracts</td><td>200 — paginação, com o contrato da 02.1 em vigor</td></tr>
+      <tr><td>02.3</td><td>Consultar contrato</td><td>GET /v1/contracts/{id}</td><td>200 — registro completo</td></tr>
+      <tr><td>02.4</td><td>Atualizar contrato</td><td>PATCH /v1/contracts/{id}</td><td>200 — dados alterados; a situação não muda por aqui</td></tr>
+      <tr><td>02.5</td><td>Cadastrar contrato para o ciclo de situação</td><td>POST /v1/contracts</td><td>201 — segundo contrato, só para percorrer as situações</td></tr>
+      <tr><td>02.6</td><td>Suspender contrato</td><td>PATCH /v1/contracts/{id}/status</td><td>200 — <code class="inline">suspended</code></td></tr>
+      <tr><td>02.7</td><td>Reativar contrato</td><td>PATCH /v1/contracts/{id}/status</td><td>200 — <code class="inline">active</code></td></tr>
+      <tr><td>02.8</td><td>Encerrar contrato</td><td>PATCH /v1/contracts/{id}/status</td><td>200 — <code class="inline">closed</code>, situação terminal</td></tr>
+      <tr><td>02.9</td><td>Reabrir contrato encerrado</td><td>PATCH /v1/contracts/{id}/status</td><td>409 <code class="inline">invalid_status_transition</code></td></tr>
+      <tr class="grp"><td colspan="4">03 Documentos fiscais</td></tr>
+      <tr><td>03.1</td><td>Enviar documento fiscal</td><td>POST /v1/fiscal-documents</td><td>202 — NF-e aceita para processamento</td></tr>
+      <tr><td>03.2</td><td>Enviar documento fiscal com contrato</td><td>POST /v1/fiscal-documents</td><td>202 — vinculada ao contrato da 02.1 pelo <code class="inline">contract_id</code></td></tr>
+      <tr><td>03.3</td><td>Consultar documento fiscal</td><td>GET /v1/fiscal-documents/{id}</td><td>200 — dados do documento da 03.1</td></tr>
+      <tr><td>03.4</td><td>Consultar documento fiscal com contrato</td><td>GET /v1/fiscal-documents/{id}</td><td>200 — documento vinculado ao contrato</td></tr>
+      <tr><td>03.5</td><td>Listar documentos fiscais</td><td>GET /v1/fiscal-documents</td><td>200 — paginação por cursor</td></tr>
+      <tr><td>03.6</td><td>Enviar documentos em lote</td><td>POST /v1/fiscal-documents/batch</td><td>202 — lote aceito</td></tr>
+      <tr><td>03.7</td><td>Consultar lote</td><td>GET /v1/fiscal-documents/batch/{id}</td><td>200 — os 2 documentos, nenhum rejeitado</td></tr>
+      <tr><td>03.8</td><td>Enviar NFCom</td><td>POST /v1/fiscal-documents</td><td>202 — NFCom (modelo 62), com competência</td></tr>
+      <tr><td>03.9</td><td>Enviar documento com método e prazo próprios</td><td>POST /v1/fiscal-documents</td><td>202 — com <code class="inline">override_contract_params</code></td></tr>
+      <tr><td>03.10</td><td>Enviar documento com destinatário fora da organização</td><td>POST /v1/fiscal-documents</td><td>202 — aceito; a recusa vem no processamento</td></tr>
+      <tr><td>03.11</td><td>Consultar documento rejeitado</td><td>GET /v1/fiscal-documents/{id}</td><td>200 — status <code class="inline">error</code>, com <code class="inline">recipient_not_registered</code></td></tr>
+      <tr><td>03.12</td><td>Corrigir documento rejeitado</td><td>PATCH /v1/fiscal-documents/{id}</td><td>200 — destinatário corrigido</td></tr>
+      <tr><td>03.13</td><td>Atualizar documento concluído</td><td>PATCH /v1/fiscal-documents/{id}</td><td>409 <code class="inline">invalid_status_transition</code> — documento concluído não muda</td></tr>
+      <tr><td>03.14</td><td>Remover documento fiscal</td><td>DELETE /v1/fiscal-documents/{id}</td><td>204 — remove o registro no Splithub; não cancela o documento no Fisco</td></tr>
+      <tr><td>03.15</td><td>Consultar documento removido</td><td>GET /v1/fiscal-documents/{id}</td><td>404 <code class="inline">not_found</code></td></tr>
+    </table>
+
+    <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <p style="margin:0;line-height:1.6;">Cada rodada cria no staging um fornecedor e dois contratos que ficam lá: a API não exclui fornecedor nem contrato, só muda a situação. Use a collection apenas no ambiente de testes.</p>
+      </div>
+    </div>
+
+    <h2 id="problemas">Problemas comuns</h2>
+    <table class="response-table text-first">
+      <tr><th>O que aparece</th><th>Causa e o que fazer</th></tr>
+      <tr><td>“Defina client_id e client_secret no environment”</td><td>As credenciais estão vazias ou o environment <strong>staging</strong> não está selecionado. Preencha as duas e selecione o environment</td></tr>
+      <tr><td>Endereço inválido, com <code class="inline">{{base_url}}</code> na URL</td><td>Nenhum environment selecionado. Escolha <strong>staging</strong> no canto superior direito</td></tr>
+      <tr><td>401 <code class="inline">invalid_client</code></td><td>Credencial errada. A resposta não diz qual das duas metades falhou: confira as duas</td></tr>
+      <tr><td>403 <code class="inline">forbidden</code></td><td>Falta um escopo na credencial. A 00.1 mostra os escopos concedidos</td></tr>
+      <tr><td>429 <code class="inline">rate_limited</code></td><td>Limite de requisições. O lote (03.6) conta no limite das rotas pesadas, de 20 por minuto. Espere o tempo do cabeçalho <code class="inline">RateLimit-Reset</code> e rode de novo — ver <a href="visao-geral.html#limites">Limites de requisição</a></td></tr>
+      <tr><td>03.1 termina com <code class="inline">recipient_not_registered</code></td><td>O <code class="inline">buyer_cnpj</code> não está cadastrado na organização da credencial. Informe o CNPJ de um estabelecimento seu</td></tr>
+      <tr><td>Documentos e contratos falham depois de rodar uma requisição solta</td><td>Falta o que vem antes. Rode a partir da 01.1, na ordem</td></tr>
+    </table>
+
+    <div class="page-footer-nav">
+      <a href="webhooks.html">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        <span><span class="side-label">Anterior</span>Webhooks</span>
+      </a>
+      <a href="ingestao-dfs.html">
+        <span style="text-align:right;"><span class="side-label">Próximo</span>Ingestão DFs</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+    </div>
+  </main>
+
+  <aside class="toc">
+    <div class="toc-label">Nesta página</div>
+    <a href="#arquivos" class="toc-link active">Baixar os arquivos</a>
+    <a href="#antes" class="toc-link">Antes de começar</a>
+    <a href="#importar" class="toc-link">Importar no Postman</a>
+    <a href="#configurar" class="toc-link">Configurar o environment</a>
+    <a href="#executar" class="toc-link">Executar a collection</a>
+    <a href="#automatico" class="toc-link">O que a collection faz sozinha</a>
+    <a href="#pastas" class="toc-link">Pastas e requisições</a>
+    <a href="#problemas" class="toc-link">Problemas comuns</a>
+
+    <div class="help-box">
+      <p>Precisa de ajuda?</p>
+      <button class="help-btn">Falar com suporte</button>
+    </div>
+  </aside>
+
+</div>
+
+<div class="site-footer">
+  <span class="wordmark">splithub</span>
+  <span>Sua tributação simplificada.</span>
+  <span class="partner">POSITIVO<span>SOLUÇÕES EM PAGAMENTOS</span></span>
+</div>
+
+<script src="assets/script.js"></script>
+</body>
+</html>

@@ -67,6 +67,7 @@ if (searchBox) {
   var searchIndex = [
     { page: 'visao-geral.html', title: 'Visão Geral', content: 'O Splithub traz governança sobre recolhimento fornecedor RAD conciliação financeira convenções valores monetários idempotência Idempotency-Key paginação cursor limites rate limit 404' },
     { page: 'autenticacao.html', title: 'Autenticação', content: 'OAuth 2.0 client credentials token escopos autenticação Bearer' },
+    { page: 'postman.html', title: 'Collection Postman', content: 'Postman collection environment staging importar runner newman testes exemplo baixar' },
     { page: 'fornecedores.html', title: 'Fornecedores', content: 'CNPJ fornecedor endereço contato representante fiscal situação inativar status' },
     { page: 'ingestao-dfs.html', title: 'Ingestão DFs', content: 'documentos fiscais NF-e NFCe CTe imposto tributo IBS CBS' },
     { page: 'rad.html', title: 'RAD', content: 'recolhimento adquirente DARF webhook comprovante pagamento Pix consultar guias' },

@@ -9,6 +9,7 @@ splithub-docs/
 ├── index.html              → Home (landing com links para os guias)
 ├── visao-geral.html         → Guia: Visão geral da API
 ├── autenticacao.html        → Guia: Autenticação (OAuth 2.0)
+├── postman.html             → Guia: Collection Postman (download e uso)
 ├── ingestao-dfs.html        → Recurso: Ingestão DFs
 ├── rad.html                 → Recurso: RAD (Recolhimento pelo Adquirente)
 ├── garantia-credito.html    → Recurso: Garantia de crédito
@@ -16,6 +17,7 @@ splithub-docs/
 ├── contratos.html           → Recurso: Contratos
 ├── em-breve.html            → Placeholder para páginas ainda não escritas
 ├── assets/
+│   ├── postman/             → Collection e environment de staging do Postman
 │   ├── style.css            → Estilos compartilhados por todas as páginas
 │   └── script.js            → Copiar código, menu mobile, destaque do índice
 └── README.md
