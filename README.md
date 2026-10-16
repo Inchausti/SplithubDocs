@@ -17,7 +17,7 @@ splithub-docs/
 ├── contratos.html           → Recurso: Contratos
 ├── em-breve.html            → Placeholder para páginas ainda não escritas
 ├── assets/
-│   ├── postman/             → Collection e environment de staging do Postman
+│   ├── postman/             → Collection do Postman
 │   ├── style.css            → Estilos compartilhados por todas as páginas
 │   └── script.js            → Copiar código, menu mobile, destaque do índice
 └── README.md

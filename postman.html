@@ -13,7 +13,7 @@
   .steps{margin:0 0 24px;padding-left:22px;line-height:var(--line-height-normal);}
   .steps li{margin:0 0 8px;}
   .downloads{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:0 0 28px;}
-  .download{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;background:var(--bg);}
+  .download{max-width:460px;border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;background:var(--bg);}
   .download .kind{font-size:var(--font-size-xs);font-weight:var(--font-weight-semibold);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);}
   .download .name{font-family:var(--font-display);font-weight:var(--font-weight-bold);font-size:var(--font-size-lg);color:var(--ink);margin:4px 0 6px;}
   .download p{font-size:13.5px;color:var(--ink-soft);margin:0 0 10px;}
@@ -82,11 +82,11 @@
     <p class="lede">
       Uma collection do Postman que faz o papel do seu ERP, de ponta a ponta: obtém o token, cadastra fornecedor e
       contrato, envia documentos fiscais — um a um e em lote — e confere cada resposta com testes automáticos. Use-a
-      para validar a sua credencial no ambiente de testes e ver cada requisição funcionando antes de escrever a integração.
+      para validar a sua credencial e ver cada requisição funcionando antes de escrever a integração.
     </p>
 
-    <h2 id="arquivos">Baixar os arquivos</h2>
-    <p>São dois arquivos no formato Postman Collection v2.1. Importe os dois: a collection traz as requisições, e o environment traz o endereço do ambiente e as variáveis que elas usam.</p>
+    <h2 id="arquivos">Baixar a collection</h2>
+    <p>Um arquivo no formato Postman Collection v2.1. As requisições usam variáveis de um environment que você cria no Postman — ver <a href="#configurar">Criar o environment</a>.</p>
 
     <div class="downloads">
       <div class="download">
@@ -96,60 +96,56 @@
         <a href="assets/postman/splithub-api-v1-cliente-erp.postman_collection.json" download>Baixar a collection</a>
         <span class="file">splithub-api-v1-cliente-erp.postman_collection.json</span>
       </div>
-      <div class="download">
-        <div class="kind">Environment</div>
-        <div class="name">staging</div>
-        <p>Endereço do ambiente de testes e as variáveis da collection. As credenciais vêm vazias.</p>
-        <a href="assets/postman/splithub-staging.postman_environment.json" download>Baixar o environment</a>
-        <span class="file">splithub-staging.postman_environment.json</span>
-      </div>
     </div>
 
     <h2 id="antes">Antes de começar</h2>
     <table class="response-table text-first">
       <tr><th>Você precisa de</th><th>Por quê</th></tr>
       <tr><td>Postman, no app de desktop ou na web</td><td>Qualquer versão atual importa o formato v2.1. Para rodar pela linha de comando, use o <a href="#newman">newman</a></td></tr>
-      <tr><td>Uma credencial do staging</td><td><code class="inline">client_id</code> e <code class="inline">client_secret</code> fornecidos pelo Splithub, com os escopos <code class="inline">suppliers:read</code>, <code class="inline">suppliers:write</code>, <code class="inline">contracts:read</code>, <code class="inline">contracts:write</code>, <code class="inline">dfs:read</code> e <code class="inline">dfs:write</code> — ver <a href="autenticacao.html#escopos">Escopos</a></td></tr>
+      <tr><td>Uma credencial de API e o endereço da API</td><td><code class="inline">client_id</code>, <code class="inline">client_secret</code> e o endereço base, fornecidos pelo Splithub. A credencial precisa dos escopos <code class="inline">suppliers:read</code>, <code class="inline">suppliers:write</code>, <code class="inline">contracts:read</code>, <code class="inline">contracts:write</code>, <code class="inline">dfs:read</code> e <code class="inline">dfs:write</code> — ver <a href="autenticacao.html#escopos">Escopos</a></td></tr>
       <tr><td>O estabelecimento comprador cadastrado</td><td>Os documentos são enviados para o CNPJ em <code class="inline">buyer_cnpj</code>. Ele precisa estar cadastrado na organização da credencial; se não estiver, o documento termina com <code class="inline">recipient_not_registered</code></td></tr>
     </table>
 
     <h2 id="importar">Importar no Postman</h2>
     <ol class="steps">
-      <li>Baixe os dois arquivos acima.</li>
+      <li>Baixe a collection acima.</li>
       <li>No Postman, clique em <strong>Import</strong>, no alto da barra lateral, ou use <span class="kbd">Ctrl</span> + <span class="kbd">O</span> (<span class="kbd">⌘</span> + <span class="kbd">O</span> no Mac).</li>
-      <li>Arraste os dois arquivos para a janela de importação, ou clique em <strong>files</strong> para escolhê-los, e confirme com <strong>Import</strong>.</li>
-      <li>A collection <strong>SplitHub API v1 (cliente ERP)</strong> aparece em <strong>Collections</strong>, e o environment <strong>staging</strong>, em <strong>Environments</strong>.</li>
-      <li>No seletor de environment, no canto superior direito, escolha <strong>staging</strong>. Sem ele, <code class="inline">{{base_url}}</code> não é resolvido e as requisições falham por endereço inválido.</li>
+      <li>Arraste o arquivo para a janela de importação, ou clique em <strong>files</strong> para escolhê-lo, e confirme com <strong>Import</strong>.</li>
+      <li>A collection <strong>SplitHub API v1 (cliente ERP)</strong> aparece em <strong>Collections</strong>.</li>
     </ol>
 
-    <h2 id="configurar">Configurar o environment</h2>
-    <p>Abra o environment <strong>staging</strong> e preencha as variáveis abaixo. As outras ficam vazias: a collection as preenche durante a execução.</p>
+    <h2 id="configurar">Criar o environment</h2>
+    <ol class="steps">
+      <li>Na barra lateral do Postman, abra <strong>Environments</strong> e clique em <strong>+</strong> para criar um environment. Dê um nome a ele, como <em>splithub</em>.</li>
+      <li>Crie as variáveis da tabela abaixo e preencha cada uma.</li>
+      <li>Salve e escolha o environment no seletor do canto superior direito. Sem ele selecionado, <code class="inline">{{base_url}}</code> não é resolvido e as requisições falham por endereço inválido.</li>
+    </ol>
     <table class="response-table">
       <tr><th>Variável</th><th>O que informar</th></tr>
       <tr><td>client_id</td><td><strong>Obrigatória.</strong> Identificador da sua credencial</td></tr>
-      <tr><td>client_secret</td><td><strong>Obrigatória.</strong> Segredo da credencial. É do tipo <em>secret</em>: o Postman mostra mascarado</td></tr>
-      <tr><td>base_url</td><td>Já vem com o endereço do staging. Não altere</td></tr>
-      <tr><td>buyer_cnpj</td><td>CNPJ do estabelecimento comprador da sua organização, com 14 dígitos. Vem com um exemplo: troque pelo seu</td></tr>
-      <tr><td>buyer_name</td><td>Razão social do comprador</td></tr>
-      <tr><td>buyer_state</td><td>UF do comprador</td></tr>
+      <tr><td>client_secret</td><td><strong>Obrigatória.</strong> Segredo da credencial. Crie com o tipo <em>secret</em>, para o Postman mostrá-lo mascarado</td></tr>
+      <tr><td>base_url</td><td><strong>Obrigatória.</strong> Endereço base da API, informado pelo Splithub com a credencial, sem barra no final</td></tr>
+      <tr><td>buyer_cnpj</td><td><strong>Obrigatória.</strong> CNPJ do estabelecimento comprador da sua organização, com 14 dígitos</td></tr>
+      <tr><td>buyer_name</td><td><strong>Obrigatória.</strong> Razão social do comprador</td></tr>
+      <tr><td>buyer_state</td><td><strong>Obrigatória.</strong> UF do comprador</td></tr>
       <tr><td>fallback_supplier_cnpj</td><td>Opcional. CNPJ emitente usado quando o fornecedor da rodada ainda não foi gerado</td></tr>
     </table>
 
     <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       <div>
-        <p style="margin:0;line-height:1.6;">Preencha <code class="inline">client_id</code> e <code class="inline">client_secret</code> no <strong>valor atual</strong> (<em>Current value</em>), que fica só na sua máquina, e deixe o valor inicial vazio. Assim o segredo não vai junto quando o environment é sincronizado com o workspace, compartilhado ou exportado. Nunca envie o environment com o segredo preenchido.</p>
+        <p style="margin:0;line-height:1.6;">Preencha <code class="inline">client_id</code> e <code class="inline">client_secret</code> no <strong>valor atual</strong> (<em>Current value</em>), que fica só na sua máquina, e deixe o valor inicial vazio. Assim o segredo não vai junto quando o environment é sincronizado com o workspace, compartilhado ou exportado.</p>
       </div>
     </div>
 
-    <p>As variáveis <code class="inline">access_token</code>, <code class="inline">token_expires_at</code>, <code class="inline">run_id</code>, <code class="inline">supplier_*</code>, <code class="inline">contract_id</code>, <code class="inline">document_id</code>, <code class="inline">batch_id</code> e as demais são gravadas pela própria collection. Algumas ficam reservadas para pastas futuras — envio de arquivo, guias RAD, créditos e webhooks — e podem continuar vazias.</p>
+    <p>Não crie as demais variáveis: <code class="inline">access_token</code>, <code class="inline">token_expires_at</code>, <code class="inline">run_id</code>, <code class="inline">supplier_*</code>, <code class="inline">contract_id</code>, <code class="inline">document_id</code>, <code class="inline">batch_id</code> e as outras são criadas e gravadas pela própria collection no environment selecionado, durante a execução.</p>
 
     <h2 id="executar">Executar a collection</h2>
 
     <h3 id="runner">Tudo de uma vez, pelo Runner</h3>
     <ol class="steps">
       <li>Na barra lateral, abra o menu <strong>⋯</strong> da collection e escolha <strong>Run collection</strong>.</li>
-      <li>Mantenha todas as requisições marcadas, na ordem em que vêm, e o environment <strong>staging</strong> selecionado.</li>
+      <li>Mantenha todas as requisições marcadas, na ordem em que vêm, e o seu environment selecionado.</li>
       <li>Clique em <strong>Run SplitHub API v1 (cliente ERP)</strong>. O Runner executa as 32 requisições e mostra, para cada uma, os testes que passaram e os que falharam.</li>
     </ol>
 
@@ -161,7 +157,7 @@
     </p>
 
     <h3 id="newman">Pela linha de comando, com o newman</h3>
-    <p>O newman roda a collection fora do Postman — no terminal ou no seu CI — e termina com erro se algum teste falhar.</p>
+    <p>O newman roda a collection fora do Postman — no terminal ou no seu CI — e termina com erro se algum teste falhar. As variáveis do environment vão por <code class="inline">--env-var</code>.</p>
     <div class="code-block">
       <div class="code-head">
         <span>newman</span>
@@ -173,11 +169,14 @@
       <pre>npm install -g newman
 
 newman run <span class="tok-s">splithub-api-v1-cliente-erp.postman_collection.json</span> \
-  -e <span class="tok-s">splithub-staging.postman_environment.json</span> \
+  --env-var <span class="tok-s">"base_url=$SPLITHUB_BASE_URL"</span> \
   --env-var <span class="tok-s">"client_id=$SPLITHUB_CLIENT_ID"</span> \
-  --env-var <span class="tok-s">"client_secret=$SPLITHUB_CLIENT_SECRET"</span></pre>
+  --env-var <span class="tok-s">"client_secret=$SPLITHUB_CLIENT_SECRET"</span> \
+  --env-var <span class="tok-s">"buyer_cnpj=$SPLITHUB_BUYER_CNPJ"</span> \
+  --env-var <span class="tok-s">"buyer_name=$SPLITHUB_BUYER_NAME"</span> \
+  --env-var <span class="tok-s">"buyer_state=$SPLITHUB_BUYER_STATE"</span></pre>
     </div>
-    <p>Guarde as credenciais em variáveis de ambiente do sistema ou no cofre de segredos do CI, nunca no arquivo do environment.</p>
+    <p>Guarde as credenciais em variáveis de ambiente do sistema ou no cofre de segredos do CI, nunca em arquivo versionado.</p>
 
     <h2 id="automatico">O que a collection faz sozinha</h2>
     <table class="response-table text-first">
@@ -236,15 +235,15 @@ newman run <span class="tok-s">splithub-api-v1-cliente-erp.postman_collection.js
     <div class="callout" style="display:flex;align-items:flex-start;gap:12px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       <div>
-        <p style="margin:0;line-height:1.6;">Cada rodada cria no staging um fornecedor e dois contratos que ficam lá: a API não exclui fornecedor nem contrato, só muda a situação. Use a collection apenas no ambiente de testes.</p>
+        <p style="margin:0;line-height:1.6;">Cada rodada deixa registrados um fornecedor e dois contratos fictícios: a API não exclui fornecedor nem contrato, só muda a situação. Combine com o Splithub qual credencial e qual endereço usar antes de rodar.</p>
       </div>
     </div>
 
     <h2 id="problemas">Problemas comuns</h2>
     <table class="response-table text-first">
       <tr><th>O que aparece</th><th>Causa e o que fazer</th></tr>
-      <tr><td>“Defina client_id e client_secret no environment”</td><td>As credenciais estão vazias ou o environment <strong>staging</strong> não está selecionado. Preencha as duas e selecione o environment</td></tr>
-      <tr><td>Endereço inválido, com <code class="inline">{{base_url}}</code> na URL</td><td>Nenhum environment selecionado. Escolha <strong>staging</strong> no canto superior direito</td></tr>
+      <tr><td>“Defina client_id e client_secret no environment”</td><td>As credenciais estão vazias ou nenhum environment está selecionado. Preencha as duas e selecione o seu environment</td></tr>
+      <tr><td>Endereço inválido, com <code class="inline">{{base_url}}</code> na URL</td><td>Nenhum environment selecionado, ou falta a variável <code class="inline">base_url</code>. Escolha o seu environment no canto superior direito</td></tr>
       <tr><td>401 <code class="inline">invalid_client</code></td><td>Credencial errada. A resposta não diz qual das duas metades falhou: confira as duas</td></tr>
       <tr><td>403 <code class="inline">forbidden</code></td><td>Falta um escopo na credencial. A 00.1 mostra os escopos concedidos</td></tr>
       <tr><td>429 <code class="inline">rate_limited</code></td><td>Limite de requisições. O lote (03.6) conta no limite das rotas pesadas, de 20 por minuto. Espere o tempo do cabeçalho <code class="inline">RateLimit-Reset</code> e rode de novo — ver <a href="visao-geral.html#limites">Limites de requisição</a></td></tr>
@@ -266,10 +265,10 @@ newman run <span class="tok-s">splithub-api-v1-cliente-erp.postman_collection.js
 
   <aside class="toc">
     <div class="toc-label">Nesta página</div>
-    <a href="#arquivos" class="toc-link active">Baixar os arquivos</a>
+    <a href="#arquivos" class="toc-link active">Baixar a collection</a>
     <a href="#antes" class="toc-link">Antes de começar</a>
     <a href="#importar" class="toc-link">Importar no Postman</a>
-    <a href="#configurar" class="toc-link">Configurar o environment</a>
+    <a href="#configurar" class="toc-link">Criar o environment</a>
     <a href="#executar" class="toc-link">Executar a collection</a>
     <a href="#automatico" class="toc-link">O que a collection faz sozinha</a>
     <a href="#pastas" class="toc-link">Pastas e requisições</a>
